@@ -28,7 +28,7 @@ const SingleEvent = () => {
           <div className="single-event-container">
             <h2>{event.title}</h2>
             <h3>{event.datetime_utc}</h3>
-            <img src={event.image} className="event-img" alt="" />
+            <img src={event.performers[0].image} className="event-img" alt="" />
  {/*            <div>
               <h3>{venue.name_v2}</h3> 
               <p>{venue.address}</p>
