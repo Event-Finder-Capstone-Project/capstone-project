@@ -7,9 +7,9 @@ import {
 } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { auth } from "../firebase";
-import Signup from "./Signup";
-import Login from "./Login";
-import Signout from "./Signout";
+import Signup from "./Auth/Signup";
+import Login from "./Auth/Login";
+import Signout from "./Auth/Signout";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
