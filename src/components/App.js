@@ -10,6 +10,8 @@ import { auth } from "../firebase";
 import Signup from "./Auth/Signup";
 import Login from "./Auth/Login";
 import Signout from "./Auth/Signout";
+import SingleEvent from "./Events/SingleEvent";
+import AllEvents from "./Events/AllEvents";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -43,6 +45,8 @@ function App() {
                 <Route path="/" element={<Signup />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/events/:id" element={<SingleEvent />} />
+                <Route path="/events" element={<AllEvents />} />
               </Routes>
             </div>
             <div className="front-bottom">

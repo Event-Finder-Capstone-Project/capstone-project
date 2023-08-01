@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { getSingleEvent } from "....."
+import { getSingleEvent } from "../../store/singleEventSlice"
 import BackButton from "../BackButton";
 import Toastify from 'toastify-js'
 
