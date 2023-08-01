@@ -32,7 +32,7 @@ function App() {
           <div className="w-100 mb-3">
             <h2>Taskmaster - Asia </h2>
             <h2>Gitmaster - Richie </h2>
-            <h2>Testmaster - Sarsh</h2>
+            <h2>Testmaster - Sarah</h2>
             <p>Coder - Fulong</p>
             <Signout />
           </div>
@@ -46,8 +46,8 @@ function App() {
                 <Route path="/" element={<Signup />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/allevents/:id" element={<SingleEvent />} />
                 <Route path="/events" element={<AllEvents />} />
+                <Route path="/events/:id" element={<SingleEvent />} />
               </Routes>
             </div>
             <div className="front-bottom">
