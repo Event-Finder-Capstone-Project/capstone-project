@@ -1,0 +1,32 @@
+.navbar {
+  background-color: darkgray;
+  height: 3rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+/* default link */
+.navlink {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+}
+/* unvisited link */
+.navlink:link {
+  color: rgb(57, 57, 57);
+}
+
+/* visited link */
+.navlink:visited {
+  color: rgb(57, 57, 57);
+}
+
+/* mouse over link */
+.navlink:hover {
+  color: rgb(57, 57, 57);
+}
+
+/* selected link */
+.navlink:active {
+  color: rgb(57, 57, 57);
+}

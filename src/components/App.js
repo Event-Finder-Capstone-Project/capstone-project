@@ -12,11 +12,11 @@ import Login from "./Auth/Login";
 import Signout from "./Auth/Signout";
 import SingleEvent from "./Events/SingleEvent";
 import AllEvents from "./Events/AllEvents";
+import NavBar from "./NavBar";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUserLoggedIn(!!user);
@@ -26,13 +26,14 @@ function App() {
   }, []);
   return (
     <Router>
+      <NavBar />
       <Container>
         {userLoggedIn ? (
           <div className="w-100 mb-3">
             <h2>Taskmaster - Asia </h2>
             <h2>Gitmaster - Richie </h2>
             <h2>Testmaster - Sarsh</h2>
-            <p>Coder  - Fulong</p>
+            <p>Coder - Fulong</p>
             <Signout />
           </div>
         ) : (
@@ -67,5 +68,4 @@ function App() {
     </Router>
   );
 }
-
 export default App;
