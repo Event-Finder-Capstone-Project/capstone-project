@@ -11,6 +11,8 @@ import Signup from "./Auth/Signup";
 import Login from "./Auth/Login";
 import Signout from "./Auth/Signout";
 import NavBar from "./NavBar";
+import SingleEvent from "./Events/SingleEvent";
+import AllEvents from "./Events/AllEvents";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -35,18 +37,21 @@ function App() {
               <h2>Testmaster - Sarsh</h2>
               <p>Coder - Fulong</p>
               <Signout />
+              <Route path="/allevents/:id" element={<SingleEvent />} />
+                <Route path="/events" element={<AllEvents />} />
             </div>
           ) : (
             <div>
               <div>
+
+              
                 <h1 className="title">Event Finder</h1>
-              </div>
-              <div>
-                <Routes>
-                  <Route path="/" element={<Signup />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/login" element={<Login />} />
-                </Routes>
+
+              <Routes>
+                <Route path="/" element={<Signup />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<Login />} />
+              </Routes>
               </div>
               <div className="front-bottom">
                 <div className="front-bottom-item">
