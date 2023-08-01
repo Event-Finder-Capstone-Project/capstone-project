@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { Button } from "react-bootstrap";
 

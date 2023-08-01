@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { getSingleEvent } from "....."
-import BackButton from "./BackButton";
+import BackButton from "../BackButton";
 import Toastify from 'toastify-js'
 
 
