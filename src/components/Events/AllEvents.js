@@ -51,11 +51,11 @@ const AllEvents = () => {
         {events ? (
           events.map((event) => (
             <div className="event-container" key={event.id}>
-              <NavLink to={`/allevents/${event.id}`}>
+              <NavLink to={`/events/${event.id}`}>
                 <p id="event-name">{event.title}</p>
                 <img
                   style={{ width: "200px" }}
-                  src={event.image}
+                  src={event.performers[0].image}
                   alt={event.name}
                 />
               </NavLink>
