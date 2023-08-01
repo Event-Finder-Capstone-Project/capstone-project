@@ -10,6 +10,7 @@ import { auth } from "../firebase";
 import Signup from "./Auth/Signup";
 import Login from "./Auth/Login";
 import Signout from "./Auth/Signout";
+import NavBar from "./NavBar";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -23,44 +24,48 @@ function App() {
     return () => unsubscribe();
   }, []);
   return (
-    <Router>
-      <Container>
-        {userLoggedIn ? (
-          <div className="w-100 mb-3">
-            <h2>Taskmaster - Asia </h2>
-            <h2>Gitmaster - Richie </h2>
-            <h2>Testmaster - Sarsh</h2>
-            <p>Coder  - Fulong</p>
-            <Signout />
-          </div>
-        ) : (
-          <div>
+    <>
+      <Router>
+        <NavBar />
+        <Container>
+          {userLoggedIn ? (
+            <div className="w-100 mb-3">
+              <h2>Taskmaster - Asia </h2>
+              <h2>Gitmaster - Richie </h2>
+              <h2>Testmaster - Sarsh</h2>
+              <p>Coder - Fulong</p>
+              <Signout />
+            </div>
+          ) : (
             <div>
-              <h1 className="title">Event Finder</h1>
-            </div>
-            <div>
-              <Routes>
-                <Route path="/" element={<Signup />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/login" element={<Login />} />
-              </Routes>
-            </div>
-            <div className="front-bottom">
-              <div className="front-bottom-item">
-                <p>
-                  New User? <NavLink to="/signup">Sign Up</NavLink>
-                </p>
+              <div>
+                <h1 className="title">Event Finder</h1>
               </div>
-              <div className="front-bottom-item">
-                <p>
-                  Already have an account? <NavLink to="/login">Log In</NavLink>
-                </p>
+              <div>
+                <Routes>
+                  <Route path="/" element={<Signup />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/login" element={<Login />} />
+                </Routes>
+              </div>
+              <div className="front-bottom">
+                <div className="front-bottom-item">
+                  <p>
+                    New User? <NavLink to="/signup">Sign Up</NavLink>
+                  </p>
+                </div>
+                <div className="front-bottom-item">
+                  <p>
+                    Already have an account?{" "}
+                    <NavLink to="/login">Log In</NavLink>
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </Container>
-    </Router>
+          )}
+        </Container>
+      </Router>
+    </>
   );
 }
 
