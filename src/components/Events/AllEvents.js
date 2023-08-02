@@ -1,12 +1,24 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
+  const [eventsData, setEventsData] = useState([]);
+  const [userEvents, setUserEvents] = useState([]);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,10 +37,47 @@ const AllEvents = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const fetchEventsData = async () => {
+      try {
+        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
+        const eventsData = eventsQuerySnapshot.docs.map(
+          (doc) => doc.data().type
+        );
+        setEventsData(eventsData);
+      } catch (error) {
+        console.error("Error fetching events data:", error);
+      }
+    };
+    const fetchUserEvents = async () => {
+      if (auth.currentUser) {
+        const userDocRef = doc(db, "users", auth.currentUser.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          setUserEvents(userData.events || []);
+        }
+      }
+    };
+    fetchEventsData();
+    fetchUserEvents();
+  }, []);
+
+  const handleAddToCollection = async (eventId) => {
+    if (auth.currentUser) {
+      const userDocRef = doc(db, "users", auth.currentUser.uid);
+
+      // Add the event ID to the user's events array
+      await updateDoc(userDocRef, {
+        events: [...userEvents, eventId],
+      });
+
+      // Update the local state
+      setUserEvents([...userEvents, eventId]);
+    }
+  };
+
   const events = useSelector(selectEvents);
-  //   const filteredEvents = events.filter((event) =>
-  //   event.type.toLowerCase().includes(filter.toLowerCase())
-  // );
 
   const handleFilter = () => {
     setPage(1);
@@ -42,11 +91,11 @@ const AllEvents = () => {
           <label>Event Type</label>
           <select value={filter} onChange={(e) => setFilter(e.target.value)}>
             <option value="">None</option>
-            <option value="concerts">Concerts</option>
-            <option value="sports">Sporting Events</option>
-            <option value="family">Family</option>
-            <option value="comedy">Comedy</option>
-            <option value="dance">Dance</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
           </select>
         </div>
         <button onClick={handleFilter}>Filter</button>
@@ -64,6 +113,11 @@ const AllEvents = () => {
                   alt={event.name}
                 />
               </NavLink>
+              {!userEvents.includes(event.id) && (
+                <button onClick={() => handleAddToCollection(event.id)}>
+                  Add Event
+                </button>
+              )}
             </div>
           ))
         ) : (
