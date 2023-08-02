@@ -56,6 +56,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/events" element={<AllEvents />} />
                 <Route path="/events/:id" element={<SingleEvent />} />
+                <Route path="/" element={<Home />} />
               </Routes>
             </div>
             <div className="front-bottom">
@@ -68,11 +69,6 @@ function App() {
                 <p>
                   Already have an account? <NavLink to="/login">Log In</NavLink>
                 </p>
-                <Routes>
-                  <Route path="/allevents/:id" element={<SingleEvent />} />
-                  <Route path="/events" element={<AllEvents />} />
-                  <Route path="/" element={<Home />} />
-                </Routes>
               </div>
             </div>
           </div>
