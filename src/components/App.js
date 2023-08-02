@@ -22,8 +22,6 @@ import { setLocation } from "../store/locationSlice";
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
-  const [postalCode, setPostalCode] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,6 +31,8 @@ function App() {
     });
     return () => unsubscribe();
   }, []);
+
+  const { postalCode } = useSelector((state) => state.location);
 
   useEffect(() => {
     if ("geolocation" in navigator && !postalCode) {
@@ -55,8 +55,8 @@ function App() {
         {userLoggedIn ? (
           <div className="w-100 mb-3">
             <Routes>
-              <Route path="/events/:id" element={<SingleEvent userLocation={userLocation}/>} />
-              <Route path="/events" element={<AllEvents userLocation={userLocation}/>} />
+              <Route path="/events/:id" element={<SingleEvent/>} />
+              <Route path="/events" element={<AllEvents />} />
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />
               <Route
@@ -75,8 +75,8 @@ function App() {
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/events" element={<AllEvents userLocation={userLocation}/>} />
-                <Route path="/events/:id" element={<SingleEvent userLocation={userLocation}/>} />
+                <Route path="/events" element={<AllEvents />} />
+                <Route path="/events/:id" element={<SingleEvent />} />
                 <Route path="/" element={<Home />} />
               </Routes>
             </div>
