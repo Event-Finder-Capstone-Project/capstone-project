@@ -12,10 +12,10 @@ const NavBar = () => {
 
     const handlePostalCodeSubmit = (e) => {
       e.preventDefault();
-      const isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+      const isValidZip = /(^\d{5}$)/;
       if (!isValidZip.test(inputPostalCode)) {
         Toastify({
-          text: "Please input a valid zip code!",
+          text: "Please input a valid 5-digit zip code!",
           duration: 2000,
           close: true,
           gravity: "top", 
