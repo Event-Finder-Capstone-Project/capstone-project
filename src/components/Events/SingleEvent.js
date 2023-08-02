@@ -15,8 +15,19 @@ const SingleEvent = () => {
   }, [dispatch, id]);
 
   const event = useSelector((state) => state.singleEvent.singleEvent);
-  console.log('this is the event:', event)
-  //const venue = event.venue;
+
+  const formatDate = (datetime_utc) => {
+    const eventDate = new Date(datetime_utc);
+    const formattedDate = eventDate.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+    const formattedTime = eventDate.toLocaleTimeString("en-US", {
+      timeStyle: "short",
+    });
+    return `${formattedDate} at ${formattedTime}`;
+  };
 
   return (
     <div className="event-details">
@@ -24,7 +35,7 @@ const SingleEvent = () => {
         <>
           <div className="single-event-container">
             <h2>{event.title}</h2>
-            <h3>{event.datetime_utc}</h3>
+            <h3>{formatDate(event.datetime_utc)}</h3>
             <img src={event.performers[0].image} className="event-img" alt="" />
             {event.venue ? (
               <div>
