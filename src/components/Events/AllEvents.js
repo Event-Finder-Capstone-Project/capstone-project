@@ -6,11 +6,12 @@ import { useState } from "react";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState(null);
+  const [filter, setFilter] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllEvents({ type: filter }));
+
+    dispatch(getAllEvents({ type: filter, page: page }));
   }, [dispatch, filter, page]);
 
   useEffect(() => {
@@ -24,12 +25,23 @@ const AllEvents = () => {
   }, []);
 
   const events = useSelector(selectEvents);
+  //   const filteredEvents = events.filter((event) =>
+  //   event.type.toLowerCase().includes(filter.toLowerCase())
+  // );
 
   const handleFilter = () => {
     setPage(1);
     dispatch(getAllEvents({ type: filter, page: 1 }));
   };
-  //this filter probably should be a separate component
+
+  const handlePreviousPage = () => {
+    setPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
   return (
     <>
       <div className="filter-container">
@@ -37,18 +49,18 @@ const AllEvents = () => {
           <label>Event Type</label>
           <select value={filter} onChange={(e) => setFilter(e.target.value)}>
             <option value="">None</option>
-            <option value="concerts">Concerts</option>
+            <option value="concert">Concerts</option>
             <option value="sports">Sporting Events</option>
             <option value="family">Family</option>
             <option value="comedy">Comedy</option>
-            <option value="dance">Dance</option>
+            <option value="dance_performance_tour">Dance</option>
           </select>
         </div>
         <button onClick={handleFilter}>Filter</button>
       </div>
 
       <div className="all-events-container">
-        {events ? (
+        {events?.length ? (
           events.map((event) => (
             <div className="event-container" key={event.id}>
               <NavLink to={`/events/${event.id}`}>
@@ -62,16 +74,16 @@ const AllEvents = () => {
             </div>
           ))
         ) : (
-          <p>Loading events...</p>
+          <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
         )}
       </div>
       <div className="pageButtons">
         <button
-          onClick={() => setPage((prevPage) => Math.max(prevPage - 1, 1))}
+          onClick={handlePreviousPage}
         >
           Previous
         </button>
-        <button onClick={() => setPage((prevPage) => prevPage + 1)}>
+        <button onClick={handleNextPage}>
           Next
         </button>
       </div>
