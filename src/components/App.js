@@ -34,7 +34,7 @@ function App() {
         {userLoggedIn ? (
           <div className="w-100 mb-3">
             <Routes>
-              <Route path="/allevents/:id" element={<SingleEvent />} />
+              <Route path="/events/:id" element={<SingleEvent />} />
               <Route path="/events" element={<AllEvents />} />
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />

@@ -17,7 +17,7 @@ const SingleEvent = () => {
   }, [dispatch, id]);
 
   const event = useSelector((state) => state.singleEvent.singleEvent);
-  const venue = useSelector((state) => state.singleEvent.singleEvent.venue);
+  const venue = event.venue;
 
   return (
     <div className="event-details">
@@ -27,13 +27,13 @@ const SingleEvent = () => {
             <h2>{event.title}</h2>
             <h3>{event.datetime_utc}</h3>
             <img src={event.performers[0].image} className="event-img" alt="" />
-            <div>
+        <div>
               <h3>{venue.name_v2}</h3>
               <p>{venue.address}</p>
               <p>
                 {venue.city}, {venue.state}
               </p>
-            </div>
+            </div> 
             <BackButton />
           </div>
         </>
