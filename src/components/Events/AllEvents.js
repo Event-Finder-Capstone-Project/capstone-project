@@ -10,10 +10,9 @@ const AllEvents = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (filter === "") {
-      dispatch(getAllEvents({ type: filter }));
-    }
-  }, [dispatch, filter]);
+
+    dispatch(getAllEvents({ type: filter, page: page }));
+  }, [dispatch, filter, page]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,7 +33,15 @@ const AllEvents = () => {
     setPage(1);
     dispatch(getAllEvents({ type: filter, page: 1 }));
   };
-  //this filter probably should be a separate component
+
+  const handlePreviousPage = () => {
+    setPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
   return (
     <>
       <div className="filter-container">
@@ -42,11 +49,11 @@ const AllEvents = () => {
           <label>Event Type</label>
           <select value={filter} onChange={(e) => setFilter(e.target.value)}>
             <option value="">None</option>
-            <option value="concerts">Concerts</option>
+            <option value="concert">Concerts</option>
             <option value="sports">Sporting Events</option>
             <option value="family">Family</option>
             <option value="comedy">Comedy</option>
-            <option value="dance">Dance</option>
+            <option value="dance_performance_tour">Dance</option>
           </select>
         </div>
         <button onClick={handleFilter}>Filter</button>
@@ -72,10 +79,11 @@ const AllEvents = () => {
       </div>
       <div className="pageButtons">
         <button
-          onClick={() => setPage((prevPage) => Math.max(prevPage - 1, 1))}>
+          onClick={handlePreviousPage}
+        >
           Previous
         </button>
-        <button onClick={() => setPage((prevPage) => prevPage + 1)}>
+        <button onClick={handleNextPage}>
           Next
         </button>
       </div>
