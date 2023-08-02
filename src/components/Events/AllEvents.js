@@ -1,18 +1,47 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
+  const [userLocation, setUserLocation] = useState(null);
+  const [locationInput, setLocationInput] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ latitude, longitude });
+        },
+        (error) => {
+          console.error("Error getting user's location:", error.message);
+        }
+      );
+    }
+  }, []);
 
-    dispatch(getAllEvents({ type: filter, page: page }));
-  }, [dispatch, filter, page]);
+  useEffect(() => {
+    if (userLocation || locationInput) {
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          latitude: userLocation?.latitude || undefined,
+          longitude: userLocation?.longitude || undefined,
+          location: locationInput || undefined,
+        })
+      );
+    }
+  }, [dispatch, filter, page, userLocation, locationInput]);
+
+
+  useEffect(() => {
+    dispatch(getAllEvents({ type: filter, page: page, geoip: userLocation || locationInput }));
+  }, [dispatch, filter, page, userLocation, locationInput]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,9 +54,6 @@ const AllEvents = () => {
   }, []);
 
   const events = useSelector(selectEvents);
-  //   const filteredEvents = events.filter((event) =>
-  //   event.type.toLowerCase().includes(filter.toLowerCase())
-  // );
 
   const handleFilter = () => {
     setPage(1);
@@ -40,6 +66,10 @@ const AllEvents = () => {
 
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
+  };
+
+  const handleLocationInputChange = (event) => {
+    setLocationInput(event.target.value);
   };
 
   return (
@@ -56,6 +86,16 @@ const AllEvents = () => {
             <option value="dance_performance_tour">Dance</option>
           </select>
         </div>
+        <div>
+        <label>Enter Location</label>
+        <input
+          type="text"
+          value={locationInput}
+          onChange={handleLocationInputChange}
+        />
+        <button onClick={handleFilter}>Filter</button>
+      </div>
+
         <button onClick={handleFilter}>Filter</button>
       </div>
 
