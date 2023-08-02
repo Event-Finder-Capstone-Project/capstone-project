@@ -12,11 +12,11 @@ import Login from "./Auth/Login";
 import Signout from "./Auth/Signout";
 import SingleEvent from "./Events/SingleEvent";
 import AllEvents from "./Events/AllEvents";
+import NavBar from "./NavBar";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUserLoggedIn(!!user);
@@ -26,13 +26,14 @@ function App() {
   }, []);
   return (
     <Router>
+      <NavBar />
       <Container>
         {userLoggedIn ? (
           <div className="w-100 mb-3">
             <h2>Taskmaster - Asia </h2>
             <h2>Gitmaster - Richie </h2>
-            <h2>Testmaster - Sarsh</h2>
-            <p>Coder  - Fulong</p>
+            <h2>Testmaster - Sarah</h2>
+            <p>Coder - Fulong</p>
             <Signout />
           </div>
         ) : (
@@ -45,8 +46,8 @@ function App() {
                 <Route path="/" element={<Signup />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/allevents/:id" element={<SingleEvent />} />
                 <Route path="/events" element={<AllEvents />} />
+                <Route path="/events/:id" element={<SingleEvent />} />
               </Routes>
             </div>
             <div className="front-bottom">
@@ -67,5 +68,4 @@ function App() {
     </Router>
   );
 }
-
 export default App;
