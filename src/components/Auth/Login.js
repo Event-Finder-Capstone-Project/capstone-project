@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, googleProvider } from "../firebase";
+import { auth, googleProvider } from "../../firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { Form, Button, Card, Alert } from "react-bootstrap";
 
@@ -24,7 +24,7 @@ const Login = () => {
         emailRef.current.value,
         passwordRef.current.value
       );
-      navigate("/home");
+      navigate("/");
     } catch (err) {
       setError("Failed to log in: " + err.message);
     }
@@ -35,7 +35,7 @@ const Login = () => {
   const handleGoogleLogin = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-      navigate("/home");
+      navigate("/");
     } catch (err) {
       setError("Failed to sign in with Google: " + err.message);
     }

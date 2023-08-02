@@ -7,14 +7,18 @@ import {
 } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { auth } from "../firebase";
-import Signup from "./Signup";
-import Login from "./Login";
-import Signout from "./Signout";
+import Signup from "./Auth/Signup";
+import Login from "./Auth/Login";
+import Signout from "./Auth/Signout";
+import SingleEvent from "./Events/SingleEvent";
+import AllEvents from "./Events/AllEvents";
+import NavBar from "./NavBar";
+import Home from "./Home";
+import UserDetails from "./UserDetails";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUserLoggedIn(!!user);
@@ -24,13 +28,16 @@ function App() {
   }, []);
   return (
     <Router>
+      <NavBar />
       <Container>
         {userLoggedIn ? (
           <div className="w-100 mb-3">
-            <h2>Taskmaster - Asia </h2>
-            <h2>Gitmaster - Richie </h2>
-            <h2>Testmaster - Sarsh</h2>
-            <p>Coder - Fulong ^ _ ^</p>
+            <Routes>
+              <Route path="/allevents/:id" element={<SingleEvent />} />
+              <Route path="/events" element={<AllEvents />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/user-details" element={<UserDetails user={user} />} />
+            </Routes>
             <Signout />
           </div>
         ) : (
@@ -40,9 +47,10 @@ function App() {
             </div>
             <div>
               <Routes>
-                <Route path="/" element={<Signup />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/events" element={<AllEvents />} />
+                <Route path="/events/:id" element={<SingleEvent />} />
               </Routes>
             </div>
             <div className="front-bottom">
@@ -55,6 +63,11 @@ function App() {
                 <p>
                   Already have an account? <NavLink to="/login">Log In</NavLink>
                 </p>
+                <Routes>
+                  <Route path="/allevents/:id" element={<SingleEvent />} />
+                  <Route path="/events" element={<AllEvents />} />
+                  <Route path="/" element={<Home />} />
+                </Routes>
               </div>
             </div>
           </div>
@@ -63,5 +76,4 @@ function App() {
     </Router>
   );
 }
-
 export default App;
