@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,10 +18,15 @@ import CalendarEvents from "./Events/CalendarEvents";
 import Home from "./Home";
 import UserDetails from "./Users/UserDetails";
 import UserProfile from "./Users/UserProfile";
+import { setLocation } from "../store/locationSlice";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [postalCode, setPostalCode] = useState("");
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUserLoggedIn(!!user);
@@ -28,6 +34,21 @@ function App() {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if ("geolocation" in navigator && !postalCode) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          dispatch(setLocation({ latitude, longitude }));
+        },
+        (error) => {
+          console.error("Error getting user's location:", error.message);
+        }
+      );
+    }
+  }, [dispatch, postalCode]);
+
   return (
     <Router>
       <NavBar />
@@ -35,8 +56,8 @@ function App() {
         {userLoggedIn ? (
           <div className="w-100 mb-3">
             <Routes>
-              <Route path="/allevents/:id" element={<SingleEvent />} />
-              <Route path="/events" element={<AllEvents />} />
+              <Route path="/events/:id" element={<SingleEvent userLocation={userLocation}/>} />
+              <Route path="/events" element={<AllEvents userLocation={userLocation}/>} />
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />
               <Route
@@ -55,9 +76,9 @@ function App() {
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/events" element={<AllEvents />} />
-                <Route path="/events/:id" element={<SingleEvent />} />
-                <Route path="/myEvents" element={<CalendarEvents/>} />
+                <Route path="/events" element={<AllEvents userLocation={userLocation}/>} />
+                <Route path="/events/:id" element={<SingleEvent userLocation={userLocation}/>} />
+                <Route path="/" element={<Home />} />
               </Routes>
             </div>
             <div className="front-bottom">
@@ -70,11 +91,6 @@ function App() {
                 <p>
                   Already have an account? <NavLink to="/login">Log In</NavLink>
                 </p>
-                <Routes>
-                  <Route path="/allevents/:id" element={<SingleEvent />} />
-                  <Route path="/events" element={<AllEvents />} />
-                  <Route path="/" element={<Home />} />
-                </Routes>
               </div>
             </div>
           </div>

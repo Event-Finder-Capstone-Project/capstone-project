@@ -1,19 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
+<<<<<<< HEAD
 import { NavLink, Link } from "react-router-dom";
 import { useState } from "react";
 import CalendarEvents from "./CalendarEvents";
+=======
+import { NavLink } from "react-router-dom";
+>>>>>>> main
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
+  const [postalCode, setPostalCode] = useState("");
   const dispatch = useDispatch();
-
-  useEffect(() => {
-
-    dispatch(getAllEvents({ type: filter, page: page }));
-  }, [dispatch, filter, page]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,9 +26,24 @@ const AllEvents = () => {
   }, []);
 
   const events = useSelector(selectEvents);
-  //   const filteredEvents = events.filter((event) =>
-  //   event.type.toLowerCase().includes(filter.toLowerCase())
-  // );
+  const latitude = useSelector((state) => state.location.latitude);
+  const longitude = useSelector((state) => state.location.longitude);
+  
+
+  useEffect(() => {
+    if (latitude && longitude) {
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          latitude: latitude,
+          longitude: longitude,
+        })
+      );
+    }
+  }, [dispatch, filter, page, latitude, longitude]);
+
+
 
   const handleFilter = () => {
     setPage(1);
@@ -42,6 +57,7 @@ const AllEvents = () => {
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
+
 
   return (
     <>
@@ -57,7 +73,15 @@ const AllEvents = () => {
             <option value="dance_performance_tour">Dance</option>
           </select>
         </div>
+        <div>
+        <label>Enter Zip Code</label>
+        <input
+          type="text"
+          value={postalCode}
+          onChange={(e) => setPostalCode(e.target.value)}
+        />
         <button onClick={handleFilter}>Filter</button>
+      </div>
       </div>
 
       <div className="all-events-container">
