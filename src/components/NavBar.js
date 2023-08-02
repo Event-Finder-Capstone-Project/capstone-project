@@ -1,17 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "./style/navbar.css";
 import { setPostalCode } from "../store/locationSlice";
+import Toastify from 'toastify-js'
 
 const NavBar = () => {
-
-  const handlePostalCodeChange = (e) => {
-    dispatch(setPostalCode(e.target.value));
-  };
-
   const dispatch = useDispatch();
   const postalCode = useSelector((state) => state.location.postalCode);
+  const [inputPostalCode, setInputPostalCode] = useState(postalCode);
+
+    const handlePostalCodeSubmit = (e) => {
+      e.preventDefault();
+      const isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+      if (!isValidZip.test(inputPostalCode)) {
+        Toastify({
+          text: "Please input a valid zip code!",
+          duration: 2000,
+          close: true,
+          gravity: "top", 
+          position: "center",
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          },
+        }).showToast();
+      } else {
+        dispatch(setPostalCode(inputPostalCode));
+      }
+    };
 
   return (
     <div id="navbar" className="navbar">
@@ -36,13 +52,15 @@ const NavBar = () => {
       <NavLink to="/signup" className="navlink">
         Sign Up
       </NavLink>
-{/*       we'll need some error handling here in case a user submits an invalid postal code */}
+<form onSubmit={handlePostalCodeSubmit}>
         <input
           type="text"
-          value={postalCode}
-          onChange={handlePostalCodeChange}
+          value={inputPostalCode}
+          onChange={(e) => setInputPostalCode(e.target.value)}
           placeholder="Enter Zip Code"
         />
+        <button type="submit">Submit</button>
+      </form>
       </div>
   );
 };
