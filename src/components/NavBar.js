@@ -1,8 +1,18 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import "./style/navbar.css";
+import { setPostalCode } from "../store/locationSlice";
 
 const NavBar = () => {
+
+  const handlePostalCodeChange = (e) => {
+    dispatch(setPostalCode(e.target.value));
+  };
+
+  const dispatch = useDispatch();
+  const postalCode = useSelector((state) => state.location.postalCode);
+
   return (
     <div id="navbar" className="navbar">
       <NavLink to="/" className="navlink">
@@ -26,7 +36,14 @@ const NavBar = () => {
       <NavLink to="/signup" className="navlink">
         Sign Up
       </NavLink>
-    </div>
+{/*       we'll need some error handling here in case a user submits an invalid postal code */}
+        <input
+          type="text"
+          value={postalCode}
+          onChange={handlePostalCodeChange}
+          placeholder="Enter Zip Code"
+        />
+      </div>
   );
 };
 
