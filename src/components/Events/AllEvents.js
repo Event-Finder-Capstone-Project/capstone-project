@@ -6,42 +6,8 @@ import { NavLink } from "react-router-dom";
 const AllEvents = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
-  const [userLocation, setUserLocation] = useState(null);
-  const [locationInput, setLocationInput] = useState("");
+  const [postalCode, setPostalCode] = useState("");
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLocation({ latitude, longitude });
-        },
-        (error) => {
-          console.error("Error getting user's location:", error.message);
-        }
-      );
-    }
-  }, []);
-
-  useEffect(() => {
-    if (userLocation || locationInput) {
-      dispatch(
-        getAllEvents({
-          type: filter,
-          page: page,
-          latitude: userLocation?.latitude || undefined,
-          longitude: userLocation?.longitude || undefined,
-          location: locationInput || undefined,
-        })
-      );
-    }
-  }, [dispatch, filter, page, userLocation, locationInput]);
-
-
-  useEffect(() => {
-    dispatch(getAllEvents({ type: filter, page: page, geoip: userLocation || locationInput }));
-  }, [dispatch, filter, page, userLocation, locationInput]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,6 +20,24 @@ const AllEvents = () => {
   }, []);
 
   const events = useSelector(selectEvents);
+  const latitude = useSelector((state) => state.location.latitude);
+  const longitude = useSelector((state) => state.location.longitude);
+  
+
+  useEffect(() => {
+    if (latitude && longitude) {
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          latitude: latitude,
+          longitude: longitude,
+        })
+      );
+    }
+  }, [dispatch, filter, page, latitude, longitude]);
+
+
 
   const handleFilter = () => {
     setPage(1);
@@ -68,9 +52,6 @@ const AllEvents = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  const handleLocationInputChange = (event) => {
-    setLocationInput(event.target.value);
-  };
 
   return (
     <>
@@ -87,16 +68,14 @@ const AllEvents = () => {
           </select>
         </div>
         <div>
-        <label>Enter Location</label>
+        <label>Enter Zip Code</label>
         <input
           type="text"
-          value={locationInput}
-          onChange={handleLocationInputChange}
+          value={postalCode}
+          onChange={(e) => setPostalCode(e.target.value)}
         />
         <button onClick={handleFilter}>Filter</button>
       </div>
-
-        <button onClick={handleFilter}>Filter</button>
       </div>
 
       <div className="all-events-container">
