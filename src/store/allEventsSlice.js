@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import CalendarEvents from "../components/Events/CalendarEvents";
 
 export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page }) => {
   try {

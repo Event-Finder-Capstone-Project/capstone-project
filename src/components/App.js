@@ -13,6 +13,7 @@ import Signout from "./Auth/Signout";
 import SingleEvent from "./Events/SingleEvent";
 import AllEvents from "./Events/AllEvents";
 import NavBar from "./NavBar";
+import CalendarEvents from "./Events/CalendarEvents";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -48,6 +49,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/events" element={<AllEvents />} />
                 <Route path="/events/:id" element={<SingleEvent />} />
+                <Route path="/myEvents" element={<CalendarEvents/>} />
               </Routes>
             </div>
             <div className="front-bottom">

@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { useState } from "react";
+import CalendarEvents from "./CalendarEvents";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -82,6 +83,9 @@ const AllEvents = () => {
         <button onClick={handleNextPage}>
           Next
         </button>
+      </div>
+      <div>
+        <CalendarEvents></CalendarEvents>
       </div>
     </>
   );

@@ -6,6 +6,7 @@ import { getSingleEvent } from "../../store/singleEventSlice";
 import BackButton from "../BackButton";
 import Toastify from "toastify-js";
 
+
 const SingleEvent = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
