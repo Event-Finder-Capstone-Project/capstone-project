@@ -45,11 +45,11 @@ const AllEvents = () => {
           <label>Event Type</label>
           <select value={filter} onChange={(e) => setFilter(e.target.value)}>
             <option value="">None</option>
-            <option value="concerts">Concerts</option>
+            <option value="concert">Concerts</option>
             <option value="sports">Sporting Events</option>
             <option value="family">Family</option>
             <option value="comedy">Comedy</option>
-            <option value="dance">Dance</option>
+            <option value="dance_performance_tour">Dance</option>
           </select>
         </div>
         <button onClick={handleFilter}>Filter</button>
