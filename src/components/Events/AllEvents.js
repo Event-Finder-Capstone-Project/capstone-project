@@ -10,7 +10,7 @@ const AllEvents = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllEvents({ type: filter }));
+    dispatch(getAllEvents({ type: filter, page: page }));
   }, [dispatch, filter, page]);
 
   useEffect(() => {
@@ -29,7 +29,15 @@ const AllEvents = () => {
     setPage(1);
     dispatch(getAllEvents({ type: filter, page: 1 }));
   };
-  //this filter probably should be a separate component
+
+  const handlePreviousPage = () => {
+    setPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
   return (
     <>
       <div className="filter-container">
@@ -67,11 +75,11 @@ const AllEvents = () => {
       </div>
       <div className="pageButtons">
         <button
-          onClick={() => setPage((prevPage) => Math.max(prevPage - 1, 1))}
+          onClick={handlePreviousPage}
         >
           Previous
         </button>
-        <button onClick={() => setPage((prevPage) => prevPage + 1)}>
+        <button onClick={handleNextPage}>
           Next
         </button>
       </div>

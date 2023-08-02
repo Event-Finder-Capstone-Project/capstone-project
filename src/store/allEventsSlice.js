@@ -7,10 +7,14 @@ export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page
       username: "MzUzMjU4MjV8MTY5MDgzNjc1MC41OTkwOTEz",
       password: "5204ee3ff5c3c6a060a1e4f6f50552c8e6afa2ba5d638fac32cf2cf5509c9aea",
     };
+    const params = {
+      page: page,
+      type: type,
+    };
 
     const response = await axios.get("https://api.seatgeek.com/2/events", {
       auth: auth,
-  
+  params: params
     });
     console.log(response.data)
     return response.data.events;
