@@ -44,6 +44,8 @@ const AllEvents = () => {
           longitude: longitude,
         })
       );
+       } else {
+        dispatch(getAllEvents({ type: filter, page: page }));
     }
   }, [dispatch, filter, page, latitude, longitude, postalCode]);
 
