@@ -24,7 +24,7 @@ export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page
 const allEventsSlice = createSlice({
   name: "allEvents",
   initialState: {
-    events: [],
+    allEvents: [],
   },
   reducers: {},
   extraReducers: (builder) => {
