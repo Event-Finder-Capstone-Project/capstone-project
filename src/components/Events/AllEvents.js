@@ -6,10 +6,11 @@ import { useState } from "react";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState(null);
+  const [filter, setFilter] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
+
     dispatch(getAllEvents({ type: filter, page: page }));
   }, [dispatch, filter, page]);
 
@@ -24,6 +25,9 @@ const AllEvents = () => {
   }, []);
 
   const events = useSelector(selectEvents);
+  //   const filteredEvents = events.filter((event) =>
+  //   event.type.toLowerCase().includes(filter.toLowerCase())
+  // );
 
   const handleFilter = () => {
     setPage(1);
@@ -56,7 +60,7 @@ const AllEvents = () => {
       </div>
 
       <div className="all-events-container">
-        {events ? (
+        {events?.length ? (
           events.map((event) => (
             <div className="event-container" key={event.id}>
               <NavLink to={`/events/${event.id}`}>
@@ -70,7 +74,7 @@ const AllEvents = () => {
             </div>
           ))
         ) : (
-          <p>Loading events...</p>
+          <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
         )}
       </div>
       <div className="pageButtons">

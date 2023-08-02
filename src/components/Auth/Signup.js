@@ -59,7 +59,7 @@ export default function Signup() {
       // Use addDoc to automatically generate a unique ID for the new document
       await setDoc(doc(db, "users", firebaseUser.uid), userData);
 
-      navigate("/complete-profile");
+      navigate("/user-details");
     } catch (err) {
       setError("Failed to create an account: " + err.message);
     }
@@ -86,7 +86,7 @@ export default function Signup() {
       // Use setDoc to explicitly specify the document ID (user's uid) in the "users" collection
       await setDoc(doc(db, "users", user.uid), userData);
   
-      navigate("/complete-profile");
+      navigate("/user-details");
     }  catch (err) {
       setError("Failed to sign in with Google: " + err.message);
     }
