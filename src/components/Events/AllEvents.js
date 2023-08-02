@@ -10,7 +10,6 @@ const AllEvents = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-
     dispatch(getAllEvents({ type: filter, page: page }));
   }, [dispatch, filter, page]);
 
@@ -62,7 +61,7 @@ const AllEvents = () => {
       <div className="all-events-container">
         {events?.length ? (
           events.map((event) => (
-            <div className="event-container" key={event.id}>
+            <div class="card" className="event-container" key={event.id}>
               <NavLink to={`/events/${event.id}`}>
                 <p id="event-name">{event.title}</p>
                 <img
@@ -78,14 +77,8 @@ const AllEvents = () => {
         )}
       </div>
       <div className="pageButtons">
-        <button
-          onClick={handlePreviousPage}
-        >
-          Previous
-        </button>
-        <button onClick={handleNextPage}>
-          Next
-        </button>
+        <button onClick={handlePreviousPage}>Previous</button>
+        <button onClick={handleNextPage}>Next</button>
       </div>
     </>
   );
