@@ -14,7 +14,8 @@ import SingleEvent from "./Events/SingleEvent";
 import AllEvents from "./Events/AllEvents";
 import NavBar from "./NavBar";
 import Home from "./Home";
-import UserDetails from "./UserDetails";
+import UserDetails from "./Users/UserDetails";
+import UserProfile from "./Users/UserProfile";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -36,7 +37,11 @@ function App() {
               <Route path="/allevents/:id" element={<SingleEvent />} />
               <Route path="/events" element={<AllEvents />} />
               <Route path="/" element={<Home />} />
-              <Route path="/user-details" element={<UserDetails user={user} />} />
+              <Route path="/user-profile" element={<UserProfile />} />
+              <Route
+                path="/user-details"
+                element={<UserDetails user={user} />}
+              />
             </Routes>
             <Signout />
           </div>

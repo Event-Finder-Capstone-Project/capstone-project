@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import {
   collection,
   getDocs,
@@ -91,12 +91,18 @@ const UserDetails = ({ user }) => {
           />
         </div>
         <div>
-          <label>Gender:</label>
-          <input
-            type="text"
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-          />
+        <label className="form-content">
+            Gender:
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              required>
+              <option value="">Select</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
         </div>
         <div>
           <label>Bio/About Me:</label>
