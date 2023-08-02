@@ -13,6 +13,8 @@ import Signout from "./Auth/Signout";
 import SingleEvent from "./Events/SingleEvent";
 import AllEvents from "./Events/AllEvents";
 import NavBar from "./NavBar";
+import Home from "./Home";
+import UserDetails from "./UserDetails";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -30,10 +32,12 @@ function App() {
       <Container>
         {userLoggedIn ? (
           <div className="w-100 mb-3">
-            <h2>Taskmaster - Asia </h2>
-            <h2>Gitmaster - Richie </h2>
-            <h2>Testmaster - Sarah</h2>
-            <p>Coder - Fulong</p>
+            <Routes>
+              <Route path="/allevents/:id" element={<SingleEvent />} />
+              <Route path="/events" element={<AllEvents />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/user-details" element={<UserDetails user={user} />} />
+            </Routes>
             <Signout />
           </div>
         ) : (
@@ -43,7 +47,6 @@ function App() {
             </div>
             <div>
               <Routes>
-                <Route path="/" element={<Signup />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/events" element={<AllEvents />} />
@@ -60,6 +63,11 @@ function App() {
                 <p>
                   Already have an account? <NavLink to="/login">Log In</NavLink>
                 </p>
+                <Routes>
+                  <Route path="/allevents/:id" element={<SingleEvent />} />
+                  <Route path="/events" element={<AllEvents />} />
+                  <Route path="/" element={<Home />} />
+                </Routes>
               </div>
             </div>
           </div>
