@@ -6,6 +6,7 @@ import BackButton from "../BackButton";
 import { auth,db } from "../../firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
+
 const SingleEvent = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -29,6 +30,7 @@ const SingleEvent = () => {
     });
     return `${formattedDate} at ${formattedTime}`;
   };
+
   const handleAddEvent = async () => {
     if (event) {
       try {

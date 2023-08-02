@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
@@ -11,7 +11,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -27,6 +26,7 @@ const AllEvents = () => {
   }, [dispatch, filter, page]);
 
   useEffect(() => {
+
     const handleScroll = () => {
       sessionStorage.setItem("scrollPosition", window.scrollY);
     };
@@ -77,6 +77,36 @@ const AllEvents = () => {
   };
 
   const events = useSelector(selectEvents);
+  const latitude = useSelector((state) => state.location.latitude);
+  const longitude = useSelector((state) => state.location.longitude);
+  const postalCode = useSelector((state) => state.location.postalCode);
+
+  
+
+  useEffect(() => {
+    if (postalCode) {
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          postalCode: postalCode,
+        })
+      );
+    }
+    else if (latitude && longitude) {
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          latitude: latitude,
+          longitude: longitude,
+        })
+      );
+       } else {
+        dispatch(getAllEvents({ type: filter, page: page }));
+    }
+  }, [dispatch, filter, page, latitude, longitude, postalCode]);
+
 
   const handleFilter = () => {
     setPage(1);
@@ -91,10 +121,11 @@ const AllEvents = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
+
   return (
     <>
       <div className="filter-container">
-        <div>
+       <div>
           <label>Event Type</label>
           <select value={filter} onChange={(e) => setFilter(e.target.value)}>
             <option value="">None</option>

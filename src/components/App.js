@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   BrowserRouter as Router,
   Routes,
@@ -16,10 +17,13 @@ import NavBar from "./NavBar";
 import Home from "./Home";
 import UserDetails from "./Users/UserDetails";
 import UserProfile from "./Users/UserProfile";
+import { setLocation } from "../store/locationSlice";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUserLoggedIn(!!user);
@@ -27,6 +31,23 @@ function App() {
     });
     return () => unsubscribe();
   }, []);
+
+  const { postalCode } = useSelector((state) => state.location);
+
+  useEffect(() => {
+    if ("geolocation" in navigator && !postalCode) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          dispatch(setLocation({ latitude, longitude }));
+        },
+        (error) => {
+          console.error("Error getting user's location:", error.message);
+        }
+      );
+    }
+  }, [dispatch, postalCode]);
+
   return (
     <Router>
       <NavBar />
@@ -34,7 +55,7 @@ function App() {
         {userLoggedIn ? (
           <div className="w-100 mb-3">
             <Routes>
-              <Route path="/events/:id" element={<SingleEvent />} />
+              <Route path="/events/:id" element={<SingleEvent/>} />
               <Route path="/events" element={<AllEvents />} />
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />
@@ -56,6 +77,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/events" element={<AllEvents />} />
                 <Route path="/events/:id" element={<SingleEvent />} />
+                <Route path="/" element={<Home />} />
               </Routes>
             </div>
             <div className="front-bottom">
@@ -68,11 +90,6 @@ function App() {
                 <p>
                   Already have an account? <NavLink to="/login">Log In</NavLink>
                 </p>
-                <Routes>
-                  <Route path="/allevents/:id" element={<SingleEvent />} />
-                  <Route path="/events" element={<AllEvents />} />
-                  <Route path="/" element={<Home />} />
-                </Routes>
               </div>
             </div>
           </div>
