@@ -6,7 +6,6 @@ import { NavLink } from "react-router-dom";
 const AllEvents = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
-  const [postalCode, setPostalCode] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,10 +21,21 @@ const AllEvents = () => {
   const events = useSelector(selectEvents);
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
+  const postalCode = useSelector((state) => state.location.postalCode);
+
   
 
   useEffect(() => {
-    if (latitude && longitude) {
+    if (postalCode) {
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          postalCode: postalCode,
+        })
+      );
+    }
+    else if (latitude && longitude) {
       dispatch(
         getAllEvents({
           type: filter,
@@ -34,8 +44,10 @@ const AllEvents = () => {
           longitude: longitude,
         })
       );
+       } else {
+        dispatch(getAllEvents({ type: filter, page: page }));
     }
-  }, [dispatch, filter, page, latitude, longitude]);
+  }, [dispatch, filter, page, latitude, longitude, postalCode]);
 
 
 
@@ -68,12 +80,6 @@ const AllEvents = () => {
           </select>
         </div>
         <div>
-        <label>Enter Zip Code</label>
-        <input
-          type="text"
-          value={postalCode}
-          onChange={(e) => setPostalCode(e.target.value)}
-        />
         <button onClick={handleFilter}>Filter</button>
       </div>
       </div>
