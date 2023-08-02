@@ -33,7 +33,7 @@ function App() {
             <h2>Taskmaster - Asia </h2>
             <h2>Gitmaster - Richie </h2>
             <h2>Testmaster - Sarah</h2>
-            <p>Coder - Fulong</p>
+            <h2>Coder - Fulong</h2>
             <Signout />
           </div>
         ) : (
