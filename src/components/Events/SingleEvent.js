@@ -11,13 +11,12 @@ const SingleEvent = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    if (id) {
       dispatch(getSingleEvent(id));
-    }
   }, [dispatch, id]);
 
   const event = useSelector((state) => state.singleEvent.singleEvent);
-  const venue = event.venue;
+  console.log('this is the event:', event)
+  //const venue = event.venue;
 
   return (
     <div className="event-details">
@@ -27,13 +26,16 @@ const SingleEvent = () => {
             <h2>{event.title}</h2>
             <h3>{event.datetime_utc}</h3>
             <img src={event.performers[0].image} className="event-img" alt="" />
-        <div>
-              <h3>{venue.name_v2}</h3>
-              <p>{venue.address}</p>
+            {event.venue ? (
+              <div>
+              <h3>{event.venue.name_v2}</h3>
+              <p>{event.venue.address}</p>
               <p>
-                {venue.city}, {venue.state}
+                {event.venue.city}, {event.venue.state}
               </p>
-            </div> 
+            </div>  ) :( null
+             )}
+
             <BackButton />
           </div>
         </>
