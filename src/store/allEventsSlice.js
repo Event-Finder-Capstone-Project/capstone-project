@@ -13,7 +13,7 @@ export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page
       type: type,
     };
 
-    const response = await axios.get("https://api.seatgeek.com/2/events", {
+    const response = await axios.get(`https://api.seatgeek.com/2/events?type=${type}`, {
       auth: auth,
   params: params
     });

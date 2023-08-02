@@ -9,6 +9,7 @@ import {getStorage} from 'firebase/storage'
 const firebaseConfig = {
   apiKey: "AIzaSyDeIUoycMggQumCdlJN24Xp-IbYYA6YAe0",
   authDomain: "event-finder-test-56e2e.firebaseapp.com",
+  databaseURL: "https://event-finder-test-56e2e-default-rtdb.firebaseio.com/",
   projectId: "event-finder-test-56e2e",
   storageBucket: "event-finder-test-56e2e.appspot.com",
   messagingSenderId: "142795023154",
