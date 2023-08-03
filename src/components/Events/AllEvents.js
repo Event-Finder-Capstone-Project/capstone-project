@@ -56,8 +56,7 @@ const AllEvents = () => {
           postalCode: postalCode,
         })
       );
-    }
-    else if (latitude && longitude) {
+    } else if (latitude && longitude) {
       dispatch(
         getAllEvents({
           type: filter,
@@ -66,8 +65,8 @@ const AllEvents = () => {
           longitude: longitude,
         })
       );
-       } else {
-        dispatch(getAllEvents({ type: filter, page: page }));
+    } else {
+      dispatch(getAllEvents({ type: filter, page: page }));
     }
   }, [dispatch, filter, page, latitude, longitude, postalCode]);
 
@@ -100,12 +99,12 @@ const AllEvents = () => {
   const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
-  
+
       // Add the event ID to the user's events array in Firestore
       await updateDoc(userDocRef, {
         events: [...userEvents, eventId],
       });
-  
+
       // Update the local state
       setUserEvents([...userEvents, eventId]);
     } else {
@@ -169,7 +168,7 @@ const AllEvents = () => {
               {!userEvents.includes(event.id) && (
                 <button onClick={() => handleAddEvents(event.id)}>
                   Add Event
-                </Button>
+                </button>
               )}
             </Card>
           ))
@@ -178,14 +177,8 @@ const AllEvents = () => {
         )}
       </div>
       <div className="pageButtons">
-      <button
-          onClick={handlePreviousPage}
-        >
-          Previous
-        </button>
-        <button onClick={handleNextPage}>
-          Next
-        </button>
+        <button onClick={handlePreviousPage}>Previous</button>
+        <button onClick={handleNextPage}>Next</button>
       </div>
     </>
   );
