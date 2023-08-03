@@ -133,7 +133,7 @@ const AllEvents = () => {
             ))}
           </select>
         </div>
-        <button onClick={handleFilter}>Filter</button>
+        <Button onClick={handleFilter}>Filter</Button>
       </div>
 
       <div className="all-events-container">
@@ -160,9 +160,9 @@ const AllEvents = () => {
                 </Nav.Link>
               </LinkContainer>
               {!userEvents.includes(event.id) && (
-                <button onClick={() => handleAddToCollection(event.id)}>
+                <Button onClick={() => handleAddToCollection(event.id)}>
                   Add Event
-                </button>
+                </Button>
               )}
             </Card>
           ))
@@ -171,8 +171,8 @@ const AllEvents = () => {
         )}
       </div>
       <div className="pageButtons">
-        <button onClick={handlePreviousPage}>Previous</button>
-        <button onClick={handleNextPage}>Next</button>
+        <Button onClick={handlePreviousPage}>Previous</Button>
+        <Button onClick={handleNextPage}>Next</Button>
       </div>
     </>
   );
