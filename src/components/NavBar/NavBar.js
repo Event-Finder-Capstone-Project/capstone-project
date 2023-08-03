@@ -20,25 +20,25 @@ const NavBar = () => {
           <Navbar.Brand href="/">
             <Image src="favicon.ico" />
           </Navbar.Brand>
-          <Nav.Link to="/" className="navlink">
+          <Nav.Link href="/" className="navlink">
             Home
           </Nav.Link>
-          <Nav.Link to="/myevents" className="navlink">
+          <Nav.Link href="/myevents" className="navlink">
             Your Events
           </Nav.Link>
-          <Nav.Link to="/thisweekend" className="navlink">
+          <Nav.Link href="/thisweekend" className="navlink">
             This Weekend
           </Nav.Link>
-          <Nav.Link to="/today" className="navlink">
+          <Nav.Link href="/today" className="navlink">
             Today
           </Nav.Link>
-          <Nav.Link to="/free" className="navlink">
+          <Nav.Link href="/free" className="navlink">
             Free
           </Nav.Link>
-          <Nav.Link to="/login" className="navlink">
+          <Nav.Link href="/login" className="navlink">
             Login
           </Nav.Link>
-          <Nav.Link to="/signup" className="navlink">
+          <Nav.Link href="/signup" className="navlink">
             Sign Up
           </Nav.Link>
 
