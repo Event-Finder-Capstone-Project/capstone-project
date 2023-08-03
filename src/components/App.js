@@ -14,11 +14,11 @@ import Signout from "./Auth/Signout";
 import SingleEvent from "./Events/SingleEvent";
 import AllEvents from "./Events/AllEvents";
 import NavBar from "./NavBar";
-import CalendarEvents from "./Events/CalendarEvents";
 import Home from "./Home";
 import UserDetails from "./Users/UserDetails";
 import UserProfile from "./Users/UserProfile";
 import { setLocation } from "../store/locationSlice";
+import CalendarEvents from "./Events/CalendarEvents";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -60,6 +60,7 @@ function App() {
               <Route path="/events" element={<AllEvents userLocation={userLocation}/>} />
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />
+              <Route path="/myEvents" element={<CalendarEvents/>} />
               <Route
                 path="/user-details"
                 element={<UserDetails user={user} />}
@@ -79,6 +80,7 @@ function App() {
                 <Route path="/events" element={<AllEvents userLocation={userLocation}/>} />
                 <Route path="/events/:id" element={<SingleEvent userLocation={userLocation}/>} />
                 <Route path="/" element={<Home />} />
+                <Route path="/myEvents" element={<CalendarEvents/>} />
               </Routes>
             </div>
             <div className="front-bottom">

@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-<<<<<<< HEAD
-import { NavLink, Link } from "react-router-dom";
-import { useState } from "react";
-import CalendarEvents from "./CalendarEvents";
-=======
 import { NavLink } from "react-router-dom";
->>>>>>> main
+// import CalendarEvents from "./CalendarEvents";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -113,7 +108,6 @@ const AllEvents = () => {
         </button>
       </div>
       <div>
-        <CalendarEvents></CalendarEvents>
       </div>
     </>
   );
