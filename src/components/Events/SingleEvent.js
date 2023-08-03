@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getSingleEvent } from "../../store/singleEventSlice";
 import BackButton from "../BackButton";
-import { auth,db } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-
+import { Nav, Card, Button, Image, Container, Row, Col } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const SingleEvent = () => {
   const dispatch = useDispatch();
@@ -13,7 +15,7 @@ const SingleEvent = () => {
   const [isEventAdded, setIsEventAdded] = useState(false);
 
   useEffect(() => {
-      dispatch(getSingleEvent(id));
+    dispatch(getSingleEvent(id));
   }, [dispatch, id]);
 
   const event = useSelector((state) => state.singleEvent.singleEvent);
@@ -45,7 +47,11 @@ const SingleEvent = () => {
             // Check if the event ID is not already in the user's collection
             if (!userData.events.includes(event.id)) {
               // Add the event ID to the user's collection
-              await setDoc(userDocRef, { events: [...userData.events, event.id] }, { merge: true });
+              await setDoc(
+                userDocRef,
+                { events: [...userData.events, event.id] },
+                { merge: true }
+              );
               setIsEventAdded(true);
             }
           }
@@ -56,36 +62,69 @@ const SingleEvent = () => {
     }
   };
 
+  const handleLink = () => {
+    window.open(event.venue.url);
+  };
+
   return (
-    <div className="event-details">
+    <Container fluid="lg" className="event-details">
       {event ? (
-        <div className="single-event-container">
-          <h2>{event.title}</h2>
-          <h3>{formatDate(event.datetime_utc)}</h3>
-          <img src={event.performers[0].image} className="event-img" alt="" />
+        <Row xs={1} md={2} lg={2} className="single-event-container">
+          <Col>
+            <Image
+              src={event.performers[0].image}
+              className="event-img"
+              alt=""
+              fluid
+              width="90%"
+            />
+          </Col>
           {event.venue ? (
-            <div>
-              <h3>{event.venue.name_v2}</h3>
-              <p>{event.venue.address}</p>
-              <p>
-                {event.venue.city}, {event.venue.state}
-              </p>
-            </div>
+            <Col>
+              <div>
+                <h1>{event.title}</h1>
+                <h4>{formatDate(event.datetime_utc)}</h4>
+                <Row>
+                  <Col>
+                    <h5>{event.venue.name_v2}</h5>
+                  </Col>
+
+                  <Col>
+                    <h5>
+                      {event.venue.address}
+                      {event.venue.city}, {event.venue.state}
+                    </h5>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col>
+                    <h5>About this Event</h5>
+
+                    <p>
+                      This event, organized by {event.venue.name_v2} is a{" "}
+                      {event.type} featuring{" "}
+                      {event.performers.map((e) => `${e.name}, `)}.
+                    </p>
+                  </Col>
+                </Row>
+                {isEventAdded ? (
+                  <p>Successfully added to your events!</p>
+                ) : (
+                  <button onClick={handleAddEvent}>Add Event</button>
+                )}
+
+                <button onClick={handleLink}>Buy Tickets Here</button>
+                <BackButton />
+              </div>
+            </Col>
           ) : null}
-  
-          {isEventAdded ? (
-            <p>Successfully added to your events!</p>
-          ) : (
-            <button onClick={handleAddEvent}>Add Event</button>
-          )}
-          <BackButton />
-        </div>
+        </Row>
       ) : (
         <p className="loading-text">Loading event...</p>
       )}
-    </div>
+    </Container>
   );
-  
 };
 
 export default SingleEvent;
