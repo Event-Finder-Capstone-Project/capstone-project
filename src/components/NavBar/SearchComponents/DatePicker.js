@@ -1,20 +1,31 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { DateRange } from 'react-date-range'
+import { useDispatch } from 'react-redux'
+import { setDateRange } from '../../../store/searchSlice'
 import format from 'date-fns/format'
-import { addDays } from 'date-fns'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 
-const DatePicker = () => {
+const DatePicker = ({ onSelectDateRange }) => {
+  const dispatch = useDispatch();
   const [range, setRange] = useState([
     {
       startDate: new Date(),
-      endDate: addDays(new Date(), 7),
+      endDate: null,
       key: 'selection'
     }
   ])
 
   const [open, setOpen] = useState(false)
+
+  const handleSelectDateRange = (dateRange) => {
+    const formattedStartDate = dateRange.startDate ? format(dateRange.startDate, "yyyy-MM-dd") : null;
+    const formattedEndDate = dateRange.endDate ? format(dateRange.endDate, "yyyy-MM-dd") : null;
+
+    dispatch(setDateRange({ startDate: formattedStartDate, endDate: formattedEndDate }));
+
+    onSelectDateRange(dateRange);
+  };
 
   // toggles target element 
   const refOne = useRef(null)
@@ -22,6 +33,11 @@ const DatePicker = () => {
   useEffect(() => {
     document.addEventListener("keydown", hideOnEscape, true)
     document.addEventListener("click", hideOnClickOutside, true)
+
+    return () => {
+      document.removeEventListener('keydown', hideOnEscape, true);
+      document.removeEventListener('click', hideOnClickOutside, true);
+    };
   }, [])
 
   const hideOnClickOutside = (e) => {
@@ -39,8 +55,14 @@ const DatePicker = () => {
   return (
     <div className="calendar">
       <input
-        value={`${format(range[0].startDate, "MM/dd/yyyy")}${range[0].endDate === range[0].startDate ? "" : ` to ${format(range[0].endDate, "MM/dd/yyyy")}`}`}
-        readOnly
+        value={
+          range[0].endDate
+            ? `${
+                format(range[0].startDate, "MM/dd/yyyy")
+              }${range[0].startDate !== range[0].endDate ? ` to ${format(range[0].endDate, "MM/dd/yyyy")}` : ""}`
+            : `${format(range[0].startDate, "MM/dd/yyyy")}`
+        }
+         readOnly
         className="inputBox"
         onClick={ () => setOpen(open => !open) }
       />
@@ -48,7 +70,10 @@ const DatePicker = () => {
       <div ref={refOne}>
         {open && 
           <DateRange
-            onChange={item => setRange([item.selection])}
+          onChange={(item) => {
+            setRange([item.selection]);
+            handleSelectDateRange(item.selection);
+          }}
             editableDateInputs={true}
             moveRangeOnFirstSelection={false}
             ranges={range}
