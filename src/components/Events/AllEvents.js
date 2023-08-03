@@ -12,9 +12,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { NavLink } from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import { Nav } from "react-bootstrap";
+import { Nav, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
 import Maps from "../Maps/Maps";
