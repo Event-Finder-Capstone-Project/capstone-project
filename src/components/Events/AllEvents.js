@@ -12,6 +12,10 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { NavLink } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import { Nav } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
 
 const AllEvents = () => {
@@ -52,8 +56,7 @@ const AllEvents = () => {
           postalCode: postalCode,
         })
       );
-    }
-    else if (latitude && longitude) {
+    } else if (latitude && longitude) {
       dispatch(
         getAllEvents({
           type: filter,
@@ -62,8 +65,8 @@ const AllEvents = () => {
           longitude: longitude,
         })
       );
-       } else {
-        dispatch(getAllEvents({ type: filter, page: page }));
+    } else {
+      dispatch(getAllEvents({ type: filter, page: page }));
     }
   }, [dispatch, filter, page, latitude, longitude, postalCode]);
 
@@ -96,12 +99,12 @@ const AllEvents = () => {
   const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
-  
+
       // Add the event ID to the user's events array in Firestore
       await updateDoc(userDocRef, {
         events: [...userEvents, eventId],
       });
-  
+
       // Update the local state
       setUserEvents([...userEvents, eventId]);
     } else {
@@ -136,41 +139,46 @@ const AllEvents = () => {
             ))}
           </select>
         </div>
-        <button onClick={handleFilter}>Filter</button>
+        <Button onClick={handleFilter}>Filter</Button>
       </div>
 
       <div className="all-events-container">
         {events?.length ? (
           events.map((event) => (
-            <div className="event-container" key={event.id}>
-              <NavLink to={`/events/${event.id}`}>
-                <p id="event-name">{event.title}</p>
-                <img
-                  style={{ width: "200px" }}
-                  src={event.performers[0].image}
-                  alt={event.name}
-                />
-              </NavLink>
+            <Card
+              style={{ width: "18rem", textDecoration: "none" }}
+              class="card"
+              className="event-container"
+              key={event.id}
+            >
+              <LinkContainer to={`/events/${event.id}`}>
+                <Nav.Link>
+                  <Card.Img
+                    variant="top"
+                    src={event.performers[0].image}
+                    alt={event.name}
+                  />
+                  <Card.Body style={{ background: "grey" }}>
+                    <Card.Title style={{}} id="event-name">
+                      {event.title}
+                    </Card.Title>
+                  </Card.Body>
+                </Nav.Link>
+              </LinkContainer>
               {!userEvents.includes(event.id) && (
                 <button onClick={() => handleAddEvents(event.id)}>
                   Add Event
                 </button>
               )}
-            </div>
+            </Card>
           ))
         ) : (
           <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
         )}
       </div>
       <div className="pageButtons">
-      <button
-          onClick={handlePreviousPage}
-        >
-          Previous
-        </button>
-        <button onClick={handleNextPage}>
-          Next
-        </button>
+        <button onClick={handlePreviousPage}>Previous</button>
+        <button onClick={handleNextPage}>Next</button>
       </div>
     </>
   );
