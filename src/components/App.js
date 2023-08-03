@@ -13,7 +13,7 @@ import Login from "./Auth/Login";
 import Signout from "./Auth/Signout";
 import SingleEvent from "./Events/SingleEvent";
 import AllEvents from "./Events/AllEvents";
-import NavBar from "./NavBar";
+import NavBar from "./NavBar/NavBar.js"
 import Home from "./Home";
 import UserDetails from "./Users/UserDetails";
 import UserProfile from "./Users/UserProfile";
