@@ -4,6 +4,7 @@ import allEventsSlice from './store/allEventsSlice';
 import singleEventSlice from './store/singleEventSlice';
 import locationSlice from './store/locationSlice';
 import eventsSlice from './store/eventsSlice';
+import searchSlice from './store/searchSlice';
 
 const store = configureStore({
   reducer: { 
@@ -11,6 +12,7 @@ const store = configureStore({
     singleEvent: singleEventSlice,
     location: locationSlice,
     events: eventsSlice,
+    search: searchSlice
  },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });
