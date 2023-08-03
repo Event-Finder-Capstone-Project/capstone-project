@@ -9,6 +9,7 @@ export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page
     };
     const params = {
       page: page,
+
       type: type
     };
 

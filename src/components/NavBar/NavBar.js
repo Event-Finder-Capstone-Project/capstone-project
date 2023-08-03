@@ -1,9 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import "./style/navbar.css";
+import "../style/navbar.css";
+import Search from "./Search";
 
 const NavBar = () => {
+
   return (
+    <>
     <div id="navbar" className="navbar">
       <NavLink to="/" className="navlink">
         Home
@@ -26,7 +29,9 @@ const NavBar = () => {
       <NavLink to="/signup" className="navlink">
         Sign Up
       </NavLink>
-    </div>
+      </div>
+      <Search />
+      </>
   );
 };
 

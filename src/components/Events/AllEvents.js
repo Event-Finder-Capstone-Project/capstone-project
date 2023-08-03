@@ -1,14 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
+import { addEvents } from "../../store/eventsSlice";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { NavLink } from "react-router-dom";
-// import CalendarEvents from "./CalendarEvents";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import { Nav } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { useState } from "react";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
-  const [postalCode, setPostalCode] = useState("");
+  const [eventsData, setEventsData] = useState([]);
+  const [userEvents, setUserEvents] = useState([]);
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (filter === "") {
+      dispatch(getAllEvents({ type: filter }));
+    }
+  }, [dispatch, filter]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,10 +45,18 @@ const AllEvents = () => {
   const events = useSelector(selectEvents);
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
-  
+  const postalCode = useSelector((state) => state.location.postalCode);
 
   useEffect(() => {
-    if (latitude && longitude) {
+    if (postalCode) {
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          postalCode: postalCode,
+        })
+      );
+    } else if (latitude && longitude) {
       dispatch(
         getAllEvents({
           type: filter,
@@ -35,10 +65,53 @@ const AllEvents = () => {
           longitude: longitude,
         })
       );
+    } else {
+      dispatch(getAllEvents({ type: filter, page: page }));
     }
-  }, [dispatch, filter, page, latitude, longitude]);
+  }, [dispatch, filter, page, latitude, longitude, postalCode]);
 
+  useEffect(() => {
+    const fetchEventsData = async () => {
+      try {
+        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
+        const eventsData = eventsQuerySnapshot.docs.map(
+          (doc) => doc.data().type
+        );
+        setEventsData(eventsData);
+      } catch (error) {
+        console.error("Error fetching events data:", error);
+      }
+    };
+    const fetchUserEvents = async () => {
+      if (auth.currentUser) {
+        const userDocRef = doc(db, "users", auth.currentUser.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          setUserEvents(userData.events || []);
+        }
+      }
+    };
+    fetchEventsData();
+    fetchUserEvents();
+  }, []);
 
+  const handleAddEvents = async (eventId) => {
+    if (auth.currentUser) {
+      const userDocRef = doc(db, "users", auth.currentUser.uid);
+
+      // Add the event ID to the user's events array in Firestore
+      await updateDoc(userDocRef, {
+        events: [...userEvents, eventId],
+      });
+
+      // Update the local state
+      setUserEvents([...userEvents, eventId]);
+    } else {
+      // For guest users, add the event to local storage
+      dispatch(addEvents(eventId));
+    }
+  };
 
   const handleFilter = () => {
     setPage(1);
@@ -52,8 +125,6 @@ const AllEvents = () => {
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
-
-
   return (
     <>
       <div className="filter-container">
@@ -61,51 +132,53 @@ const AllEvents = () => {
           <label>Event Type</label>
           <select value={filter} onChange={(e) => setFilter(e.target.value)}>
             <option value="">None</option>
-            <option value="concert">Concerts</option>
-            <option value="sports">Sporting Events</option>
-            <option value="family">Family</option>
-            <option value="comedy">Comedy</option>
-            <option value="dance_performance_tour">Dance</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
           </select>
         </div>
-        <div>
-        <label>Enter Zip Code</label>
-        <input
-          type="text"
-          value={postalCode}
-          onChange={(e) => setPostalCode(e.target.value)}
-        />
-        <button onClick={handleFilter}>Filter</button>
-      </div>
+        <Button onClick={handleFilter}>Filter</Button>
       </div>
 
       <div className="all-events-container">
         {events?.length ? (
           events.map((event) => (
-            <div className="event-container" key={event.id}>
-              <NavLink to={`/events/${event.id}`}>
-                <p id="event-name">{event.title}</p>
-                <img
-                  style={{ width: "200px" }}
-                  src={event.performers[0].image}
-                  alt={event.name}
-                />
-              </NavLink>
-            </div>
+            <Card
+              style={{ width: "18rem", textDecoration: "none" }}
+              class="card"
+              className="event-container"
+              key={event.id}
+            >
+              <LinkContainer to={`/events/${event.id}`}>
+                <Nav.Link>
+                  <Card.Img
+                    variant="top"
+                    src={event.performers[0].image}
+                    alt={event.name}
+                  />
+                  <Card.Body style={{ background: "grey" }}>
+                    <Card.Title style={{}} id="event-name">
+                      {event.title}
+                    </Card.Title>
+                  </Card.Body>
+                </Nav.Link>
+              </LinkContainer>
+              {!userEvents.includes(event.id) && (
+                <button onClick={() => handleAddEvents(event.id)}>
+                  Add Event
+                </button>
+              )}
+            </Card>
           ))
         ) : (
           <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
         )}
       </div>
       <div className="pageButtons">
-        <button
-          onClick={handlePreviousPage}
-        >
-          Previous
-        </button>
-        <button onClick={handleNextPage}>
-          Next
-        </button>
+        <button onClick={handlePreviousPage}>Previous</button>
+        <button onClick={handleNextPage}>Next</button>
       </div>
       <div>
       </div>
