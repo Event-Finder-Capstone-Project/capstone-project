@@ -145,12 +145,15 @@ const AllEvents = () => {
         fluid="lg"
         class="text-center"
         className="all-events-container"
+        style={{ marginTop: "4rem" }}
       >
         <Row xs={1} md={2} lg={2}>
           {events?.length ? (
             events.map((event) => (
               <Card
                 style={{
+                  border: "none",
+                  paddingBottom: "1.5rem",
                   width: "18rem",
                   textDecoration: "none",
                 }}
