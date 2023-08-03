@@ -17,6 +17,7 @@ import Card from "react-bootstrap/Card";
 import { Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
+import Maps from "../Maps/Maps";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -181,6 +182,7 @@ const AllEvents = () => {
         <button onClick={handleNextPage}>Next</button>
       </div>
       <div>
+        <Maps/>
       </div>
     </>
   );

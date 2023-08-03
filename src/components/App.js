@@ -61,7 +61,7 @@ function App() {
               <Route path="/events" element={<AllEvents />} />
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />
-              <Route path="/myEvents" element={<CalendarEvents/>} />
+              {/* <Route path="/myEvents" element={<CalendarEvents/>} /> */}
               <Route path="/myevents" element={<UserEvents />} />
               <Route
                 path="/user-details"
@@ -83,7 +83,7 @@ function App() {
                 <Route path="/events/:id" element={<SingleEvent />} />
                 <Route path="/myevents" element={<UserEvents />} />
                 <Route path="/" element={<Home />} />
-                <Route path="/myEvents" element={<CalendarEvents/>} />
+                {/* <Route path="/myEvents" element={<CalendarEvents/>} /> */}
               </Routes>
             </div>
             <div className="front-bottom">
