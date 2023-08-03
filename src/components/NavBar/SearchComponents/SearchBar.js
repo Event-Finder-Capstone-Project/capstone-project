@@ -1,30 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 
 
-const SearchBar = () => {
-    const [q, setQ] = useState(""); 
-  
-    const handleSubmit = (event) => {
-      event.preventDefault();
-      const formData = new FormData(event.target);
-      const userInput = formData.get("searchInput");
-      setQ(userInput);
-    };
+const SearchBar = ({ onSubmit} ) => {
+ const handleQueryChange = (e) => {
+    onSubmit(e.target.value);
+  };
 
     return (
-        <>
-          <form onSubmit={handleSubmit}> 
-            <input
-              type="text"
-              name="searchInput"
-              value={q} 
-              onChange={(e) => setQ(e.target.value)} 
-              placeholder="Search events"
-            />
-            <button type="submit">Submit</button> 
-          </form>
-        </>
-      );
+      <input
+        type="text"
+        onChange={handleQueryChange}
+        placeholder="Search events"
+      />
+    );
     };
 
 export default SearchBar;
