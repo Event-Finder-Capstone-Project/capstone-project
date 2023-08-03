@@ -19,7 +19,6 @@ import UserDetails from "./Users/UserDetails";
 import UserProfile from "./Users/UserProfile";
 import { setLocation } from "../store/locationSlice";
 import UserEvents from "./Users/UserEvents";
-import CalendarEvents from "./Events/CalendarEvents";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
