@@ -13,7 +13,7 @@ import Login from "./Auth/Login";
 import Signout from "./Auth/Signout";
 import SingleEvent from "./Events/SingleEvent";
 import AllEvents from "./Events/AllEvents";
-import NavBar from "./NavBar/NavBar.js"
+import NavBar from "./NavBar/NavBar.js";
 import Home from "./Home";
 import UserDetails from "./Users/UserDetails";
 import UserProfile from "./Users/UserProfile";
@@ -56,7 +56,7 @@ function App() {
         {userLoggedIn ? (
           <div className="w-100 mb-3">
             <Routes>
-              <Route path="/events/:id" element={<SingleEvent/>} />
+              <Route path="/events/:id" element={<SingleEvent />} />
               <Route path="/events" element={<AllEvents />} />
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />
@@ -70,9 +70,9 @@ function App() {
           </div>
         ) : (
           <div>
-            <div>
+            {/* <div>
               <h1 className="title">Event Finder</h1>
-            </div>
+            </div> */}
             <div>
               <Routes>
                 <Route path="/signup" element={<Signup />} />
