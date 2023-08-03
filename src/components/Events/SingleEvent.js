@@ -74,7 +74,7 @@ const SingleEvent = () => {
           ) : null}
   
           {isEventAdded ? (
-            <p>Event added to your collection!</p>
+            <p>Successfully added to your events!</p>
           ) : (
             <button onClick={handleAddEvent}>Add Event</button>
           )}

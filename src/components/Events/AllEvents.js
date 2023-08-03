@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
+import { addEvents } from "../../store/eventsSlice";
 import {
   collection,
   getDocs,
@@ -11,6 +12,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -21,12 +23,12 @@ const AllEvents = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-
-    dispatch(getAllEvents({ type: filter, page: page }));
-  }, [dispatch, filter, page]);
+    if (filter === "") {
+      dispatch(getAllEvents({ type: filter }));
+    }
+  }, [dispatch, filter]);
 
   useEffect(() => {
-
     const handleScroll = () => {
       sessionStorage.setItem("scrollPosition", window.scrollY);
     };
@@ -35,6 +37,35 @@ const AllEvents = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const events = useSelector(selectEvents);
+  const latitude = useSelector((state) => state.location.latitude);
+  const longitude = useSelector((state) => state.location.longitude);
+  const postalCode = useSelector((state) => state.location.postalCode);
+
+  useEffect(() => {
+    if (postalCode) {
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          postalCode: postalCode,
+        })
+      );
+    }
+    else if (latitude && longitude) {
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          latitude: latitude,
+          longitude: longitude,
+        })
+      );
+       } else {
+        dispatch(getAllEvents({ type: filter, page: page }));
+    }
+  }, [dispatch, filter, page, latitude, longitude, postalCode]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -62,51 +93,22 @@ const AllEvents = () => {
     fetchUserEvents();
   }, []);
 
-  const handleAddToCollection = async (eventId) => {
+  const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
-
-      // Add the event ID to the user's events array
+  
+      // Add the event ID to the user's events array in Firestore
       await updateDoc(userDocRef, {
         events: [...userEvents, eventId],
       });
-
+  
       // Update the local state
       setUserEvents([...userEvents, eventId]);
+    } else {
+      // For guest users, add the event to local storage
+      dispatch(addEvents(eventId));
     }
   };
-
-  const events = useSelector(selectEvents);
-  const latitude = useSelector((state) => state.location.latitude);
-  const longitude = useSelector((state) => state.location.longitude);
-  const postalCode = useSelector((state) => state.location.postalCode);
-
-  
-
-  useEffect(() => {
-    if (postalCode) {
-      dispatch(
-        getAllEvents({
-          type: filter,
-          page: page,
-          postalCode: postalCode,
-        })
-      );
-    }
-    else if (latitude && longitude) {
-      dispatch(
-        getAllEvents({
-          type: filter,
-          page: page,
-          latitude: latitude,
-          longitude: longitude,
-        })
-      );
-       } else {
-        dispatch(getAllEvents({ type: filter, page: page }));
-    }
-  }, [dispatch, filter, page, latitude, longitude, postalCode]);
-
 
   const handleFilter = () => {
     setPage(1);
@@ -120,12 +122,10 @@ const AllEvents = () => {
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
-
-
   return (
     <>
       <div className="filter-container">
-       <div>
+        <div>
           <label>Event Type</label>
           <select value={filter} onChange={(e) => setFilter(e.target.value)}>
             <option value="">None</option>
@@ -152,7 +152,7 @@ const AllEvents = () => {
                 />
               </NavLink>
               {!userEvents.includes(event.id) && (
-                <button onClick={() => handleAddToCollection(event.id)}>
+                <button onClick={() => handleAddEvents(event.id)}>
                   Add Event
                 </button>
               )}
@@ -163,7 +163,7 @@ const AllEvents = () => {
         )}
       </div>
       <div className="pageButtons">
-        <button
+      <button
           onClick={handlePreviousPage}
         >
           Previous
