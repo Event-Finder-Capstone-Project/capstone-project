@@ -13,11 +13,12 @@ import Login from "./Auth/Login";
 import Signout from "./Auth/Signout";
 import SingleEvent from "./Events/SingleEvent";
 import AllEvents from "./Events/AllEvents";
-import NavBar from "./NavBar";
+import NavBar from "./NavBar/NavBar.js"
 import Home from "./Home";
 import UserDetails from "./Users/UserDetails";
 import UserProfile from "./Users/UserProfile";
 import { setLocation } from "../store/locationSlice";
+import UserEvents from "./Users/UserEvents";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -59,6 +60,7 @@ function App() {
               <Route path="/events" element={<AllEvents />} />
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />
+              <Route path="/myevents" element={<UserEvents />} />
               <Route
                 path="/user-details"
                 element={<UserDetails user={user} />}
@@ -77,6 +79,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/events" element={<AllEvents />} />
                 <Route path="/events/:id" element={<SingleEvent />} />
+                <Route path="/myevents" element={<UserEvents />} />
                 <Route path="/" element={<Home />} />
               </Routes>
             </div>

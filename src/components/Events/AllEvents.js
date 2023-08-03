@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
+import { addEvents } from "../../store/eventsSlice";
 import {
   collection,
   getDocs,
@@ -15,6 +16,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { useState } from "react";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -25,8 +27,10 @@ const AllEvents = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllEvents({ type: filter, page: page }));
-  }, [dispatch, filter, page]);
+    if (filter === "") {
+      dispatch(getAllEvents({ type: filter }));
+    }
+  }, [dispatch, filter]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,6 +41,35 @@ const AllEvents = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const events = useSelector(selectEvents);
+  const latitude = useSelector((state) => state.location.latitude);
+  const longitude = useSelector((state) => state.location.longitude);
+  const postalCode = useSelector((state) => state.location.postalCode);
+
+  useEffect(() => {
+    if (postalCode) {
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          postalCode: postalCode,
+        })
+      );
+    }
+    else if (latitude && longitude) {
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          latitude: latitude,
+          longitude: longitude,
+        })
+      );
+       } else {
+        dispatch(getAllEvents({ type: filter, page: page }));
+    }
+  }, [dispatch, filter, page, latitude, longitude, postalCode]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -64,47 +97,22 @@ const AllEvents = () => {
     fetchUserEvents();
   }, []);
 
-  const handleAddToCollection = async (eventId) => {
+  const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
-
-      // Add the event ID to the user's events array
+  
+      // Add the event ID to the user's events array in Firestore
       await updateDoc(userDocRef, {
         events: [...userEvents, eventId],
       });
-
+  
       // Update the local state
       setUserEvents([...userEvents, eventId]);
+    } else {
+      // For guest users, add the event to local storage
+      dispatch(addEvents(eventId));
     }
   };
-
-  const events = useSelector(selectEvents);
-  const latitude = useSelector((state) => state.location.latitude);
-  const longitude = useSelector((state) => state.location.longitude);
-  const postalCode = useSelector((state) => state.location.postalCode);
-
-  useEffect(() => {
-    if (postalCode) {
-      dispatch(
-        getAllEvents({
-          type: filter,
-          page: page,
-          postalCode: postalCode,
-        })
-      );
-    } else if (latitude && longitude) {
-      dispatch(
-        getAllEvents({
-          type: filter,
-          page: page,
-          latitude: latitude,
-          longitude: longitude,
-        })
-      );
-    } else {
-      dispatch(getAllEvents({ type: filter, page: page }));
-    }
-  }, [dispatch, filter, page, latitude, longitude, postalCode]);
 
   const handleFilter = () => {
     setPage(1);
@@ -118,7 +126,6 @@ const AllEvents = () => {
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
-
   return (
     <>
       <div className="filter-container">
@@ -160,7 +167,7 @@ const AllEvents = () => {
                 </Nav.Link>
               </LinkContainer>
               {!userEvents.includes(event.id) && (
-                <Button onClick={() => handleAddToCollection(event.id)}>
+                <button onClick={() => handleAddEvents(event.id)}>
                   Add Event
                 </Button>
               )}
@@ -171,8 +178,14 @@ const AllEvents = () => {
         )}
       </div>
       <div className="pageButtons">
-        <Button onClick={handlePreviousPage}>Previous</Button>
-        <Button onClick={handleNextPage}>Next</Button>
+      <button
+          onClick={handlePreviousPage}
+        >
+          Previous
+        </button>
+        <button onClick={handleNextPage}>
+          Next
+        </button>
       </div>
     </>
   );
