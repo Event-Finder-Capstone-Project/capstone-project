@@ -104,7 +104,7 @@ const SingleEvent = () => {
                     <p>
                       This event, organized by {event.venue.name_v2} is a{" "}
                       {event.type} featuring{" "}
-                      {event.performers.map((e) => e.name)}.
+                      {event.performers.map((e) => `${e.name}, `)}.
                     </p>
                   </Col>
                 </Row>
