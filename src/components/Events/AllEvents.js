@@ -12,7 +12,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { NavLink } from "react-router-dom";
-import { Nav, Button, Card } from "react-bootstrap";
+import { Nav, Row, Col, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
 
@@ -123,6 +123,7 @@ const AllEvents = () => {
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
+
   return (
     <>
       <div className="filter-container">
@@ -140,40 +141,49 @@ const AllEvents = () => {
         <Button onClick={handleFilter}>Filter</Button>
       </div>
 
-      <div className="all-events-container">
-        {events?.length ? (
-          events.map((event) => (
-            <Card
-              style={{ width: "18rem", textDecoration: "none" }}
-              class="card"
-              className="event-container"
-              key={event.id}
-            >
-              <LinkContainer to={`/events/${event.id}`}>
-                <Nav.Link>
-                  <Card.Img
-                    variant="top"
-                    src={event.performers[0].image}
-                    alt={event.name}
-                  />
-                  <Card.Body style={{ background: "grey" }}>
-                    <Card.Title style={{}} id="event-name">
-                      {event.title}
-                    </Card.Title>
-                  </Card.Body>
-                </Nav.Link>
-              </LinkContainer>
-              {!userEvents.includes(event.id) && (
-                <button onClick={() => handleAddEvents(event.id)}>
-                  Add Event
-                </button>
-              )}
-            </Card>
-          ))
-        ) : (
-          <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
-        )}
-      </div>
+      <Container
+        fluid="lg"
+        class="text-center"
+        className="all-events-container"
+      >
+        <Row xs={1} md={2} lg={2}>
+          {events?.length ? (
+            events.map((event) => (
+              <Card
+                style={{
+                  width: "18rem",
+                  textDecoration: "none",
+                }}
+                class="card classWithPad"
+                className="event-container"
+                key={event.id}
+              >
+                <LinkContainer to={`/events/${event.id}`}>
+                  <Nav.Link>
+                    <Card.Img
+                      variant="top"
+                      src={event.performers[0].image}
+                      alt={event.name}
+                    />
+                    <Card.Body style={{ background: "grey" }}>
+                      <Card.Title style={{}} id="event-name">
+                        {event.title}
+                      </Card.Title>
+                    </Card.Body>
+                  </Nav.Link>
+                </LinkContainer>
+                {!userEvents.includes(event.id) && (
+                  <Button onClick={() => handleAddEvents(event.id)}>
+                    Add Event
+                  </Button>
+                )}
+              </Card>
+            ))
+          ) : (
+            <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
+          )}
+        </Row>
+      </Container>
       <div className="pageButtons">
         <button onClick={handlePreviousPage}>Previous</button>
         <button onClick={handleNextPage}>Next</button>
