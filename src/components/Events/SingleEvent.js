@@ -5,7 +5,7 @@ import { getSingleEvent } from "../../store/singleEventSlice";
 import BackButton from "../BackButton";
 import { auth, db } from "../../firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { Nav, Card, Button, Image, Container, Row, Col } from "react-bootstrap";
+import { Nav, Button, Image, Container, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 
