@@ -7,6 +7,7 @@ import { auth, db } from "../../firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Nav, Card, Button, Image, Container, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const SingleEvent = () => {
   const dispatch = useDispatch();
@@ -61,10 +62,14 @@ const SingleEvent = () => {
     }
   };
 
+  const handleLink = () => {
+    window.open(event.venue.url);
+  };
+
   return (
     <Container fluid="lg" className="event-details">
       {event ? (
-        <Row className="single-event-container">
+        <Row xs={1} md={2} lg={2} className="single-event-container">
           <Col>
             <Image
               src={event.performers[0].image}
@@ -97,16 +102,9 @@ const SingleEvent = () => {
                     <h5>About this Event</h5>
 
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Sed vel aliquam mauris. Nullam et est nec nisi venenatis
-                      tempus. Integer vestibulum, dolor ut egestas laoreet,
-                      turpis metus eleifend lorem, id fermentum sapien justo a
-                      nulla. Ut euismod sapien eu justo convallis, nec
-                      pellentesque lectus varius. Fusce luctus erat vel justo
-                      porttitor, non aliquam turpis congue. Sed cursus mauris a
-                      augue mollis, vel scelerisque mi vehicula. Nam ut sagittis
-                      sapien. Suspendisse non mauris vitae massa ullamcorper
-                      eleifend ac eu mi. Nulla facilisi.
+                      This event, organized by {event.venue.name_v2} is a{" "}
+                      {event.type} featuring{" "}
+                      {event.performers.map((e) => e.name)}.
                     </p>
                   </Col>
                 </Row>
@@ -115,6 +113,8 @@ const SingleEvent = () => {
                 ) : (
                   <button onClick={handleAddEvent}>Add Event</button>
                 )}
+
+                <button onClick={handleLink}>Buy Tickets Here</button>
                 <BackButton />
               </div>
             </Col>
