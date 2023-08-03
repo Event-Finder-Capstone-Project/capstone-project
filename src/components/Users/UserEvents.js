@@ -121,4 +121,3 @@ const UserEvents = () => {
 };
 
 export default UserEvents;
-
