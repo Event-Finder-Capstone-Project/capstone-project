@@ -15,6 +15,7 @@ import {
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import Maps from "../Maps/Maps";
+import Carousel from "./Carousel";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -143,6 +144,8 @@ const AllEvents = () => {
         </div>
         <Button onClick={handleFilter}>Filter</Button>
       </div>
+<h1> Popular in your area </h1>
+      <Carousel />
 
       <Container
         fluid="lg"
