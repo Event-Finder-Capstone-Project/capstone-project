@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
@@ -14,7 +14,6 @@ import {
 
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { useState } from "react";
 import Maps from "../Maps/Maps";
 
 const AllEvents = () => {
@@ -46,6 +45,7 @@ const AllEvents = () => {
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
   const postalCode = useSelector((state) => state.location.postalCode);
+  console.log(events);
 
   useEffect(() => {
     if (postalCode) {

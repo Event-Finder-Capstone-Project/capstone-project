@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import { useSelector, useDispatch } from "react-redux";
+import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 
 const containerStyle = {
   width: "500px",
@@ -8,6 +9,15 @@ const containerStyle = {
 };
 
 function Maps() {
+  const [filter, setFilter] = useState("");
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (filter === "") {
+      dispatch(getAllEvents({ type: filter }));
+    }
+  }, [dispatch, filter]);
+  const events = useSelector(selectEvents);
+
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
@@ -59,10 +69,14 @@ function Maps() {
       onUnmount={onUnmount}
     >
       {/* Child components - need to put markers for Events */}
-      {markers.map((marker) => (
+
+      {events.map((marker) => (
         <Marker
-          key={marker.time.toISOString()}
-          position={{ lat: latitude, lng: longitude }}
+          key={marker.id}
+          position={{
+            lat: marker.venue.location.lat,
+            lng: marker.venue.location.lon,
+          }}
           onClick={() => {
             setSelectedDest(marker);
           }}
