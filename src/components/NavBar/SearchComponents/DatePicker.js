@@ -19,12 +19,8 @@ const DatePicker = ({ onSelectDateRange }) => {
   const [open, setOpen] = useState(false)
 
   const handleSelectDateRange = (dateRange) => {
-    const formattedStartDate = dateRange.startDate ? format(dateRange.startDate, "yyyy-MM-dd") : null;
-    const formattedEndDate = dateRange.endDate ? format(dateRange.endDate, "yyyy-MM-dd") : null;
-
-    dispatch(setDateRange({ startDate: formattedStartDate, endDate: formattedEndDate }));
-
-    onSelectDateRange(dateRange);
+    dispatch(setDateRange({ startDate: dateRange.startDate.toISOString(), endDate: dateRange.endDate.toISOString() }));
+    onSelectDateRange({ startDate: dateRange.startDate.toISOString(), endDate: dateRange.endDate.toISOString() });
   };
 
   // toggles target element 
@@ -57,11 +53,13 @@ const DatePicker = ({ onSelectDateRange }) => {
       <input
         value={
           range[0].endDate
-            ? `${
-                format(range[0].startDate, "MM/dd/yyyy")
-              }${range[0].startDate !== range[0].endDate ? ` to ${format(range[0].endDate, "MM/dd/yyyy")}` : ""}`
-            : `${format(range[0].startDate, "MM/dd/yyyy")}`
-        }
+          ? `${format(range[0].startDate, 'MM/dd/yyyy')} ${
+              range[0].startDate !== range[0].endDate
+                ? ` to ${format(range[0].endDate, 'MM/dd/yyyy')}`
+                : ''
+            }`
+          : `${format(range[0].startDate, 'MM/dd/yyyy')}`
+      }
          readOnly
         className="inputBox"
         onClick={ () => setOpen(open => !open) }
