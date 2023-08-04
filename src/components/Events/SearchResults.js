@@ -26,12 +26,31 @@ const SearchResults = () => {
   const [userEvents, setUserEvents] = useState([]);
   const searchState = useSelector((state) => state.search);
   const events = useSelector((state) => state.search.events);
+  const latitude = useSelector((state) => state.location.latitude);
+  const longitude = useSelector((state) => state.location.longitude);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getSearchResults({ query: searchState.query, postalCode: searchState.postalCode, dateRange: searchState.dateRange }));
-  }, [dispatch, searchState.query, searchState.postalCode, searchState.dateRange]);
-
+    if (searchState.postalCode) {
+      dispatch(
+        getSearchResults({
+          query: searchState.query,
+          postalCode: searchState.postalCode,
+          dateRange: searchState.dateRange,
+        })
+      );
+    } else {
+      dispatch(
+        getSearchResults({
+          query: searchState.query,
+          postalCode: null,
+          dateRange: searchState.dateRange,
+          latitude: latitude,
+          longitude: longitude,
+        })
+      );
+    }
+  }, [dispatch, searchState.query, searchState.postalCode, searchState.dateRange, latitude, longitude]);
 
 
   const handleAddEvents = async (eventId) => {
