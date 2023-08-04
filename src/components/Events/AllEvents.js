@@ -106,7 +106,6 @@ const AllEvents = () => {
 
       // Update the local state
       setUserEvents([...userEvents, eventId]);
-      
     } else {
       // For guest users, add the event to local storage
       dispatch(addEvents(eventId));
@@ -148,15 +147,14 @@ const AllEvents = () => {
         fluid="lg"
         class="text-center"
         className="all-events-container"
-        style={{ marginTop: "4rem" }}
+        style={{ marginTop: "3rem" }}
       >
-        <Row xs={1} md={2} lg={2}>
+        <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
             events.map((event) => (
               <Card
                 style={{
                   border: "none",
-                  paddingBottom: "1.5rem",
                   width: "18rem",
                   textDecoration: "none",
                 }}

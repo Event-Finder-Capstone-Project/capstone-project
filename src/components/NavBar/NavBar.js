@@ -32,9 +32,6 @@ const NavBar = () => {
           <Nav.Link href="/today" className="navlink">
             Today
           </Nav.Link>
-          <Nav.Link href="/free" className="navlink">
-            Free
-          </Nav.Link>
           <Nav.Link href="/login" className="navlink">
             Login
           </Nav.Link>
