@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
@@ -12,10 +12,10 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-import { Nav, Row, Col, Container, Button, Card } from "react-bootstrap";
+import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { useState } from "react";
 import Maps from "../Maps/Maps";
+import Carousel from "./Carousel";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -46,6 +46,7 @@ const AllEvents = () => {
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
   const postalCode = useSelector((state) => state.location.postalCode);
+  console.log(events);
 
   useEffect(() => {
     if (postalCode) {
@@ -107,7 +108,6 @@ const AllEvents = () => {
 
       // Update the local state
       setUserEvents([...userEvents, eventId]);
-      
     } else {
       // For guest users, add the event to local storage
       dispatch(addEvents(eventId));
@@ -144,20 +144,21 @@ const AllEvents = () => {
         </div>
         <Button onClick={handleFilter}>Filter</Button>
       </div>
+<h1> Popular in your area </h1>
+      <Carousel />
 
       <Container
         fluid="lg"
         class="text-center"
         className="all-events-container"
-        style={{ marginTop: "4rem" }}
+        style={{ marginTop: "3rem" }}
       >
-        <Row xs={1} md={2} lg={2}>
+        <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
             events.map((event) => (
               <Card
                 style={{
                   border: "none",
-                  paddingBottom: "1.5rem",
                   width: "18rem",
                   textDecoration: "none",
                 }}
@@ -196,7 +197,7 @@ const AllEvents = () => {
         <button onClick={handleNextPage}>Next</button>
       </div>
       <div>
-        <Maps/>
+        <Maps />
       </div>
     </>
   );

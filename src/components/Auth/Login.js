@@ -2,10 +2,10 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, googleProvider } from "../../firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { Form, Button, Card, Alert } from "react-bootstrap";
+import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 
 const Login = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
 
@@ -42,37 +42,46 @@ const Login = () => {
   };
 
   return (
-    <Card className="form-width">
-      <Card.Body>
-        <h2 className="form-name">Log In</h2>
-        {error && <Alert variant="danger">{error}</Alert>}
-        <Form>
-          <Form.Group id="email">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" ref={emailRef} required />
-          </Form.Group>
-          <Form.Group id="password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" ref={passwordRef} required />
-          </Form.Group>
-          <Button
-            onClick={handleEmailLogin}
-            disabled={loading}
-            className="w-100 mb-3"
-            type="submit"
-          >
-            Log In with Email
-          </Button>
-          <Button
-            onClick={handleGoogleLogin}
-            className="w-100 mb-3"
-            type="button"
-          >
-            Log In with Google
-          </Button>
-        </Form>
-      </Card.Body>
-    </Card>
+    <Container
+      fluid="lg"
+      style={{ paddingTop: "3rem" }}
+      className="d-flex justify-content-center"
+    >
+      <Card className="form-width" style={{ width: "30rem" }}>
+        <Card.Body>
+          <h2 className="form-name">Log In</h2>
+          {error && <Alert variant="danger">{error}</Alert>}
+          <Form>
+            <Form.Group id="email" style={{ paddingTop: ".25rem" }}>
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" ref={emailRef} required />
+            </Form.Group>
+            <Form.Group
+              id="password"
+              style={{ paddingBottom: "2rem", paddingTop: ".25rem" }}
+            >
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" ref={passwordRef} required />
+            </Form.Group>
+            <Button
+              onClick={handleEmailLogin}
+              disabled={loading}
+              className="w-100 mb-3"
+              type="submit"
+            >
+              Log In with Email
+            </Button>
+            <Button
+              onClick={handleGoogleLogin}
+              className="w-100 mb-3"
+              type="button"
+            >
+              Log In with Google
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 

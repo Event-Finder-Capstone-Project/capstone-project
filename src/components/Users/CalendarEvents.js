@@ -11,26 +11,32 @@ import {
 } from '@syncfusion/ej2-react-schedule';
 
 const CalendarEvents = ({ savedEvents }) => {
-  const storedEvents = JSON.parse(localStorage.getItem('calendar')) || [];
-
   const objectOfSavedEvents = savedEvents
     .map((event) => ({
       Id: event.id,
       Subject: event.title,
       StartTime: new Date(event.datetime_utc),
       EndTime: new Date(event.datetime_utc),
-      IsAllDay:true,
+      IsAllDay: true,
     }))
     .reduce((acc, obj) => {
       acc[obj.Id] = obj;
       return acc;
     }, {});
-    // console.log(objectOfSavedEvents);
-    const [allEvents, setAllEvents] = useState(storedEvents);
-    console.log(allEvents);
-    useEffect(() => {
-      console.log(allEvents); // This will log the updated allEvents state
-    }, [allEvents]);
+
+  // Save objectOfSavedEvents to local storage
+  localStorage.setItem('calendar', JSON.stringify(objectOfSavedEvents));
+
+  // Retrieve stored events from local storage
+  const storedEvents = JSON.parse(localStorage.getItem('calendar')) || {};
+
+  const [allEvents, setAllEvents] = useState([]);
+
+  useEffect(() => {
+    // Load stored events from local storage into the state
+    setAllEvents(storedEvents);
+  }, [allEvents]);
+
   const handleActionBegin = (args) => {
     const updatedEvents = { ...allEvents };
     if (args.requestType === 'eventCreate') {
@@ -43,12 +49,10 @@ const CalendarEvents = ({ savedEvents }) => {
       updatedEvents[updatedEvent.Id] = updatedEvent;
     }
     setAllEvents(updatedEvents);
+
+    // Update local storage with the modified events
     localStorage.setItem('calendar', JSON.stringify(updatedEvents));
   };
-
-  // useEffect(() => {
-  //   console.log(allEvents); // This will log the updated allEvents state
-  // }, [allEvents]);
 
   return (
     <div>
@@ -59,10 +63,11 @@ const CalendarEvents = ({ savedEvents }) => {
         actionBegin={handleActionBegin}
         eventSettings={{ dataSource: Object.values(allEvents) }}
       >
-        <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
+        <Inject services={[Day, Week, WorkWeek, Month, Agenda]}></Inject>
       </ScheduleComponent>
     </div>
   );
 };
 
 export default CalendarEvents;
+
