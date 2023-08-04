@@ -50,39 +50,53 @@ const DatePicker = ({ onSelectDateRange }) => {
 
   return (
     <div className="calendar">
+    <div className="input-container">
       <input
         value={
           range[0].endDate
-          ? `${format(range[0].startDate, 'MM/dd/yyyy')} ${
-              range[0].startDate !== range[0].endDate
-                ? ` to ${format(range[0].endDate, 'MM/dd/yyyy')}`
-                : ''
-            }`
-          : `${format(range[0].startDate, 'MM/dd/yyyy')}`
-      }
-         readOnly
+            ? `${format(range[0].startDate, 'MM/dd/yyyy')} ${
+                range[0].startDate !== range[0].endDate ? ` to ${format(range[0].endDate, 'MM/dd/yyyy')}` : ''
+              }`
+            : `${format(range[0].startDate, 'MM/dd/yyyy')}`
+        }
+        readOnly
         className="inputBox"
-        onClick={ () => setOpen(open => !open) }
+        onClick={() => setOpen((open) => !open)}
       />
-
-      <div ref={refOne}>
-        {open && 
-          <DateRange
+      <button
+        className="clearButton"
+        onClick={() => {
+          setRange([
+            {
+              startDate: new Date(),
+              endDate: null,
+              key: 'selection',
+            },
+          ]);
+          dispatch(setDateRange({ startDate: null, endDate: null }));
+        }}
+      >
+        x
+      </button>
+    </div>
+    <div ref={refOne}>
+      {open && (
+        <DateRange
           onChange={(item) => {
             setRange([item.selection]);
             handleSelectDateRange(item.selection);
           }}
-            editableDateInputs={true}
-            moveRangeOnFirstSelection={false}
-            ranges={range}
-            months={1}
-            direction="horizontal"
-            className="calendarElement"
-          />
-        }
-      </div>
+          editableDateInputs={true}
+          moveRangeOnFirstSelection={false}
+          ranges={range}
+          months={1}
+          direction="horizontal"
+          className="calendarElement"
+        />
+      )}
     </div>
-  )
-}
+  </div>
+);
+};
 
 export default DatePicker
