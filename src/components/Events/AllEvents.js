@@ -21,6 +21,7 @@ const AllEvents = () => {
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
+  const [clickedEvents, setClickedEvents] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -105,10 +106,12 @@ const AllEvents = () => {
 
       // Update the local state
       setUserEvents([...userEvents, eventId]);
+      
     } else {
       // For guest users, add the event to local storage
       dispatch(addEvents(eventId));
     }
+    setClickedEvents((prevClicked) => [...prevClicked, eventId]);
   };
 
   const handleFilter = () => {
@@ -172,7 +175,7 @@ const AllEvents = () => {
                     </Card.Body>
                   </Nav.Link>
                 </LinkContainer>
-                {!userEvents.includes(event.id) && (
+                {!clickedEvents.includes(event.id) && (
                   <Button onClick={() => handleAddEvents(event.id)}>
                     Add Event
                   </Button>
