@@ -14,9 +14,9 @@ export const getSearchResults = createAsyncThunk("getSearchResults", async ({ qu
     }
 
     if (dateRange) {
-      params["gte"] = dateRange.startDate;
+      params["datetime_utc.gte"] = dateRange.startDate;
       if (dateRange.endDate) {
-        params["lte"] = dateRange.endDate;
+        params["datetime_utc.lte"] = dateRange.endDate;
       }
     }
 
@@ -52,7 +52,10 @@ const searchSlice = createSlice({
       state.query = action.payload;
     },
     setDateRange: (state, action) => {
-      state.dateRange = action.payload;
+      state.dateRange = {
+        startDate: action.payload.startDate,
+        endDate: action.payload.endDate,
+      };
     },
   },
   extraReducers: (builder) => {
