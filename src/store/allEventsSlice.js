@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page, latitude, longitude, postalCode }) => {
+export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page, latitude, longitude, postalCode, dateRange }) => {
   try {
     const auth = {
       username: "MzUzMjU4MjV8MTY5MDgzNjc1MC41OTkwOTEz",
@@ -18,7 +18,14 @@ export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page
       params["lon"] = longitude;
     } else if (postalCode) {
       params["postal_code"] = postalCode.trim();
+    };
+    if (dateRange) {
+      params["datetime_utc.gte"] = dateRange.startDate;
+      if (dateRange.endDate) {
+        params["datetime_utc.lte"] = dateRange.endDate;
+      }
     }
+
 
     const response = await axios.get(`https://api.seatgeek.com/2/events?type=${type}`, {
       auth: auth,
