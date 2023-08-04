@@ -30,7 +30,7 @@ const SearchResults = () => {
 
   useEffect(() => {
     dispatch(getSearchResults({ query: searchState.query, postalCode: searchState.postalCode, dateRange: searchState.dateRange }));
-  }, []);
+  }, [dispatch, searchState.query, searchState.postalCode, searchState.dateRange]);
 
 
 
