@@ -10,6 +10,7 @@ import { Nav, Button, Image, Container, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 
+
 const SingleEvent = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
