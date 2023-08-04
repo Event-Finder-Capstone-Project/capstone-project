@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 
@@ -24,7 +29,6 @@ function Maps() {
   });
 
   const [map, setMap] = React.useState(null);
-  const [markers, setMarkers] = React.useState([]);
   const [selectedDest, setSelectedDest] = React.useState(null);
 
   const latitude = useSelector((state) => state.location.latitude);
@@ -64,7 +68,7 @@ function Maps() {
     <GoogleMap
       mapContainerStyle={containerStyle}
       defaultCenter={{ lat: latitude, lng: longitude }}
-      defaultZoom={2}
+      defaultZoom={1}
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
@@ -82,7 +86,18 @@ function Maps() {
           }}
         />
       ))}
-      <></>
+      <>
+        {/* {selectedDest && (
+          <InfoWindow
+            position={{
+              lat: selectedDest.venue.location.lat,
+              lng: selectedDest.venue.location.lon,
+            }}
+          >
+            <div>Details</div>
+          </InfoWindow>
+        )} */}
+      </>
     </GoogleMap>
   ) : (
     <></>
