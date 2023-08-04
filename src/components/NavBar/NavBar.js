@@ -1,6 +1,5 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-// import "../style/navbar.css";
 import Search from "./Search";
 import {
   Container,
@@ -31,9 +30,6 @@ const NavBar = () => {
           </Nav.Link>
           <Nav.Link href="/today" className="navlink">
             Today
-          </Nav.Link>
-          <Nav.Link href="/free" className="navlink">
-            Free
           </Nav.Link>
           <Nav.Link href="/login" className="navlink">
             Login

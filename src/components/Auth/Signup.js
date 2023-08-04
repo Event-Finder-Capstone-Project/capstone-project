@@ -8,7 +8,7 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
-import { Form, Button, Card, Alert } from "react-bootstrap";
+import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -69,12 +69,12 @@ export default function Signup() {
   const signInWithGoogle = async () => {
     try {
       const { user } = await signInWithPopup(auth, googleProvider);
-  
+
       const name = user.displayName || "No Name";
-  
+
       // Update the user's profile with their name (regardless of whether it's a new user)
       await updateProfile(user, { displayName: name });
-  
+
       // Add the user's data to the "users" collection in Firestore
       const userData = {
         id: user.uid,
@@ -82,52 +82,79 @@ export default function Signup() {
         email: user.email,
         // Add any additional user data you want to store in the collection
       };
-  
+
       // Use setDoc to explicitly specify the document ID (user's uid) in the "users" collection
       await setDoc(doc(db, "users", user.uid), userData);
-  
+
       navigate("/user-details");
-    }  catch (err) {
+    } catch (err) {
       setError("Failed to sign in with Google: " + err.message);
     }
   };
 
   return (
     <>
-      <Card className=" form-width">
-        <Card.Body>
-          <h2 className="form-name">Sign Up</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
-          <Form>
-            <Form.Group id="name" className="form-content">
-              <Form.Label>Name</Form.Label>
-              <Form.Control type="text" ref={nameRef} required />
-            </Form.Group>
-            <Form.Group id="email" className="form-content">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" ref={emailRef} required />
-            </Form.Group>
-            <Form.Group id="password" className="form-content">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" ref={passwordRef} required />
-            </Form.Group>
-            <Form.Group id="password-confirm" className="form-content">
-              <Form.Label>Password Confirmation</Form.Label>
-              <Form.Control type="password" ref={passwordConfirmRef} required />
-            </Form.Group>
-            <Button
-              onClick={handleSubmit}
-              disabled={loading}
-              className="w-100 mb-3"
-              type="submit">
-              Sign Up
+      <Container
+        fluid="lg"
+        style={{ paddingTop: "3rem" }}
+        className="d-flex justify-content-center"
+      >
+        <Card className=" form-width" style={{ width: "30rem" }}>
+          <Card.Body>
+            <h2 className="form-name">Sign Up</h2>
+            {error && <Alert variant="danger">{error}</Alert>}
+            <Form>
+              <Form.Group
+                id="name"
+                className="form-content"
+                style={{ paddingTop: ".25rem" }}
+              >
+                <Form.Label>Name</Form.Label>
+                <Form.Control type="text" ref={nameRef} required />
+              </Form.Group>
+              <Form.Group
+                id="email"
+                className="form-content"
+                style={{ paddingTop: ".25rem" }}
+              >
+                <Form.Label>Email</Form.Label>
+                <Form.Control type="email" ref={emailRef} required />
+              </Form.Group>
+              <Form.Group
+                id="password"
+                className="form-content"
+                style={{ paddingTop: ".25rem" }}
+              >
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" ref={passwordRef} required />
+              </Form.Group>
+              <Form.Group
+                id="password-confirm"
+                className="form-content"
+                style={{ paddingBottom: "2rem", paddingTop: ".25rem" }}
+              >
+                <Form.Label>Password Confirmation</Form.Label>
+                <Form.Control
+                  type="password"
+                  ref={passwordConfirmRef}
+                  required
+                />
+              </Form.Group>
+              <Button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-100 mb-3"
+                type="submit"
+              >
+                Sign Up
+              </Button>
+            </Form>
+            <Button onClick={signInWithGoogle} className="w-100 mb-3">
+              Sign In With Google
             </Button>
-          </Form>
-          <Button onClick={signInWithGoogle} className="w-100 mb-3">
-            Sign In With Google
-          </Button>
-        </Card.Body>
-      </Card>
+          </Card.Body>
+        </Card>
+      </Container>
     </>
   );
 }
