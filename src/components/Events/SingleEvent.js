@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getSingleEvent } from "../../store/singleEventSlice";
+import { addEvents } from "../../store/eventsSlice";
 import BackButton from "../BackButton";
 import { auth, db } from "../../firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -52,15 +53,18 @@ const SingleEvent = () => {
                 userDocRef,
                 { events: [...userData.events, event.id] },
                 { merge: true }
-              );
-              setIsEventAdded(true);
+              ); 
             }
           }
+        } else {
+          // For guest users, add the event to local storage
+          dispatch(addEvents(event.id));
         }
+        setIsEventAdded(true);
       } catch (error) {
         console.error("Error adding event to user collection:", error);
       }
-    }
+    } 
   };
 
   const handleLink = () => {

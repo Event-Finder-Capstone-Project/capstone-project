@@ -30,6 +30,7 @@ const Search = () => {
 
   const handleSearchSubmit = () => {
     dispatch(setQuery(localQuery));
+    if (localPostalCode) {
       const isValidZip = /(^\d{5}$)/;
       if (!isValidZip.test(localPostalCode)) {
         Toastify({
@@ -44,8 +45,9 @@ const Search = () => {
         }).showToast();
       } else {
         dispatch(setPostalCode(localPostalCode));
-        navigate("/searchresults");
       }
+    }
+        navigate("/searchresults");
     };
   
 
