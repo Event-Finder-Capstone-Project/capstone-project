@@ -12,7 +12,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-import { Nav, Row, Col, Container, Button, Card } from "react-bootstrap";
+import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
 import Maps from "../Maps/Maps";
@@ -194,7 +194,7 @@ const AllEvents = () => {
         <button onClick={handleNextPage}>Next</button>
       </div>
       <div>
-        <Maps/>
+        <Maps />
       </div>
     </>
   );
