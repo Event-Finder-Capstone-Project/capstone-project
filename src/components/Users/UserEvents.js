@@ -105,6 +105,7 @@ const UserEvents = () => {
               </li>
             ))}
       </ul>
+      <CalendarEvents/>
     </div>
   );
 };
