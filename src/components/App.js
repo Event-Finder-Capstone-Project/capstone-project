@@ -67,7 +67,7 @@ function App() {
                 path="/user-details"
                 element={<UserDetails user={user} />}
               />
-               <Route path="/searchresults" element={<SearchResults />} />
+              <Route path="/searchresults" element={<SearchResults />} />
             </Routes>
             <Signout />
           </div>

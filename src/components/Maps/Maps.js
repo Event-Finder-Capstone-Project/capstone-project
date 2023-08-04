@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Marker,
-  InfoWindow,
-} from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 
@@ -63,45 +58,35 @@ function Maps() {
   //     },
   //   ]);
   // }, []);
+  if (latitude !== 0 && longitude !== 0) {
+    return isLoaded ? (
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        defaultCenter={{ lat: latitude, lng: longitude }}
+        defaultZoom={1}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+      >
+        {/* Child components - need to put markers for Events */}
 
-  return isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      defaultCenter={{ lat: latitude, lng: longitude }}
-      defaultZoom={1}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-    >
-      {/* Child components - need to put markers for Events */}
-
-      {events.map((marker) => (
-        <Marker
-          key={marker.id}
-          position={{
-            lat: marker.venue.location.lat,
-            lng: marker.venue.location.lon,
-          }}
-          onClick={() => {
-            setSelectedDest(marker);
-          }}
-        />
-      ))}
-      <>
-        {/* {selectedDest && (
-          <InfoWindow
+        {events.map((marker) => (
+          <Marker
+            key={marker.id}
             position={{
-              lat: selectedDest.venue.location.lat,
-              lng: selectedDest.venue.location.lon,
+              lat: marker.venue.location.lat,
+              lng: marker.venue.location.lon,
             }}
-          >
-            <div>Details</div>
-          </InfoWindow>
-        )} */}
-      </>
-    </GoogleMap>
-  ) : (
-    <></>
-  );
+            onClick={() => {
+              setSelectedDest(marker);
+            }}
+          />
+        ))}
+        <></>
+      </GoogleMap>
+    ) : (
+      <></>
+    );
+  }
 }
 
 export default React.memo(Maps);
