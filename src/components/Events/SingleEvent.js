@@ -10,6 +10,7 @@ import { Nav, Button, Image, Container, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 
+
 const SingleEvent = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -52,7 +53,7 @@ const SingleEvent = () => {
                 userDocRef,
                 { events: [...userData.events, event.id] },
                 { merge: true }
-              ); 
+              );
             }
           }
         } else {
@@ -63,7 +64,7 @@ const SingleEvent = () => {
       } catch (error) {
         console.error("Error adding event to user collection:", error);
       }
-    } 
+    }
   };
 
   const handleLink = () => {
@@ -71,7 +72,11 @@ const SingleEvent = () => {
   };
 
   return (
-    <Container fluid="lg" className="event-details">
+    <Container
+      fluid="lg"
+      className="event-details"
+      style={{ paddingTop: "3rem" }}
+    >
       {event ? (
         <Row xs={1} md={2} lg={2} className="single-event-container">
           <Col>
