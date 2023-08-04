@@ -20,6 +20,7 @@ import UserProfile from "./Users/UserProfile";
 import { setLocation } from "../store/locationSlice";
 import UserEvents from "./Users/UserEvents";
 import SearchResults from "./Events/SearchResults";
+import Today from "./Events/Today";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -63,6 +64,7 @@ function App() {
               <Route path="/user-profile" element={<UserProfile />} />
               {/* <Route path="/myEvents" element={<CalendarEvents/>} /> */}
               <Route path="/myevents" element={<UserEvents />} />
+              <Route path="/today" element={<Today />} />
               <Route
                 path="/user-details"
                 element={<UserDetails user={user} />}
@@ -80,6 +82,7 @@ function App() {
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/today" element={<Today />} />
                 <Route path="/events" element={<AllEvents />} />
                 <Route path="/events/:id" element={<SingleEvent />} />
                 <Route path="/myevents" element={<UserEvents />} />
