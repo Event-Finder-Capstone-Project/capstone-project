@@ -5,7 +5,7 @@ import { signOut } from "firebase/auth";
 import { Button } from "react-bootstrap";
 
 const Signout = () => {
-    const navigate=useNavigate();
+  const navigate = useNavigate();
   const logOut = async () => {
     try {
       await signOut(auth);
@@ -17,14 +17,16 @@ const Signout = () => {
 
   return (
     <div className="form-container">
-        <div>
-        <Button onClick={logOut} style={{ fontSize: "15px", padding: "7px 180px" }}>
-      Log Out
-    </Button>
-        </div>
-     
+      <div>
+        <Button
+          variant="secondary"
+          onClick={logOut}
+          style={{ fontSize: "15px" }}
+        >
+          Log Out
+        </Button>
+      </div>
     </div>
-   
   );
 };
 

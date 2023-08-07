@@ -10,12 +10,13 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import Signout from "../Auth/Signout";
 
 const NavBar = () => {
   return (
     <>
-      <Navbar bg="dark" expand="xxl" className="bg-body-tertiary">
-        <Container fluid="sm">
+      <Navbar bg="dark" className="bg-body-tertiary">
+        <Container>
           <Navbar.Brand href="/">
             <Image src="favicon.ico" />
           </Navbar.Brand>
@@ -39,6 +40,7 @@ const NavBar = () => {
           </Nav.Link>
 
           <Search />
+          <Signout lgs={{ width: "3rem" }} />
         </Container>
       </Navbar>
     </>

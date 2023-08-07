@@ -10,7 +10,7 @@ import { Container } from "react-bootstrap";
 import { auth } from "../firebase";
 import Signup from "./Auth/Signup";
 import Login from "./Auth/Login";
-import Signout from "./Auth/Signout";
+
 import SingleEvent from "./Events/SingleEvent";
 import AllEvents from "./Events/AllEvents";
 import NavBar from "./NavBar/NavBar.js";
@@ -71,7 +71,6 @@ function App() {
               />
               <Route path="/searchresults" element={<SearchResults />} />
             </Routes>
-            <Signout />
           </div>
         ) : (
           <div>
