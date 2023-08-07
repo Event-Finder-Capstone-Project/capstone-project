@@ -132,9 +132,23 @@ const AllEvents = () => {
   return (
     <>
       <div className="filter-container">
-        <div>
-          <label>Event Type</label>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <Container
+          style={{ marginTop: ".5rem" }}
+          className="d-flex justify-content-center"
+        >
+          <h5
+            style={{
+              marginRight: "1rem",
+              paddingTop: ".3rem",
+            }}
+          >
+            Event Type
+          </h5>
+          <select
+            style={{ height: "35px" }}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
             <option value="">None</option>
             {eventsData.map((eventType) => (
               <option key={eventType} value={eventType}>
@@ -142,8 +156,15 @@ const AllEvents = () => {
               </option>
             ))}
           </select>
-        </div>
-        <Button onClick={handleFilter}>Filter</Button>
+
+          <Button
+            style={{ marginLeft: "1rem", height: "35px" }}
+            variant="secondary"
+            onClick={handleFilter}
+          >
+            Filter
+          </Button>
+        </Container>
       </div>
       <h1> Popular in your area </h1>
       <Carousel />
@@ -178,15 +199,23 @@ const AllEvents = () => {
                       src={event.performers[0].image}
                       alt={event.name}
                     />
-                    <Card.Body style={{ background: "grey" }}>
-                      <Card.Title style={{}} id="event-name">
+                    <Card.Body
+                      style={{
+                        backgroundColor: "black",
+                        opacity: "50%",
+                      }}
+                    >
+                      <Card.Title style={{ color: "white" }} id="event-name">
                         {event.title}
                       </Card.Title>
                     </Card.Body>
                   </Nav.Link>
                 </LinkContainer>
                 {!clickedEvents.includes(event.id) && (
-                  <Button onClick={() => handleAddEvents(event.id)}>
+                  <Button
+                    variant="secondary"
+                    onClick={() => handleAddEvents(event.id)}
+                  >
                     Add Event
                   </Button>
                 )}
@@ -201,10 +230,16 @@ const AllEvents = () => {
         className="d-flex justify-content-center"
         style={{ alignContent: "center", marginTop: "2rem" }}
       >
-        <Button style={{ marginRight: "1rem" }} onClick={handlePreviousPage}>
+        <Button
+          variant="secondary"
+          style={{ marginRight: "1rem" }}
+          onClick={handlePreviousPage}
+        >
           Previous
         </Button>
-        <Button onClick={handleNextPage}>Next</Button>
+        <Button variant="secondary" onClick={handleNextPage}>
+          Next
+        </Button>
       </Container>
     </>
   );
