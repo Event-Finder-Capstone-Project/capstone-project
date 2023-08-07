@@ -11,7 +11,6 @@ import { LinkContainer } from "react-router-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import ShareEvent from "./ShareEvent";
 
-
 const SingleEvent = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -54,7 +53,7 @@ const SingleEvent = () => {
                 userDocRef,
                 { events: [...userData.events, event.id] },
                 { merge: true }
-              ); 
+              );
             }
           }
         } else {
@@ -65,7 +64,7 @@ const SingleEvent = () => {
       } catch (error) {
         console.error("Error adding event to user collection:", error);
       }
-    } 
+    }
   };
 
   const handleLink = () => {
@@ -73,7 +72,11 @@ const SingleEvent = () => {
   };
 
   return (
-    <Container fluid="lg" className="event-details">
+    <Container
+      style={{ marginTop: "3rem" }}
+      fluid="lg"
+      className="event-details"
+    >
       {event ? (
         <Row xs={1} md={2} lg={2} className="single-event-container">
           <Col>
@@ -82,7 +85,7 @@ const SingleEvent = () => {
               className="event-img"
               alt=""
               fluid
-              width="90%"
+              width="100%"
             />
           </Col>
           {event.venue ? (
@@ -90,7 +93,7 @@ const SingleEvent = () => {
               <div>
                 <h1>{event.title}</h1>
                 <h4>{formatDate(event.datetime_utc)}</h4>
-                <Row>
+                <Row style={{ marginTop: "1rem" }}>
                   <Col>
                     <h5>{event.venue.name_v2}</h5>
                   </Col>
@@ -103,25 +106,43 @@ const SingleEvent = () => {
                   </Col>
                 </Row>
 
-                <Row>
+                <Row style={{ marginTop: "2rem" }}>
                   <Col>
                     <h5>About this Event</h5>
 
                     <p>
                       This event, organized by {event.venue.name_v2} is a{" "}
                       {event.type} featuring{" "}
-                      {event.performers.map((e) => `${e.name}, `)}.
+                      {event.performers.length <= 1
+                        ? `${event.performers.name}`
+                        : event.performers.map((e) => `${e.name}, `)}
+                      . Come enjoy this grand experience, bring your friends, or
+                      don't! Take yourself out on a date! It'll be a blast,
+                      we're sure. Tickets can be purchased through the link
+                      below.
                     </p>
                   </Col>
                 </Row>
                 {isEventAdded ? (
                   <p>Successfully added to your events!</p>
                 ) : (
-                  <button onClick={handleAddEvent}>Add Event</button>
+                  <Button
+                    style={{ marginRight: "1rem", marginBottom: "1rem" }}
+                    variant="secondary"
+                    onClick={handleAddEvent}
+                  >
+                    Add Event
+                  </Button>
                 )}
 
-                <button onClick={handleLink}>Buy Tickets Here</button>
-                <ShareEvent/>
+                <Button
+                  style={{ marginBottom: "1rem" }}
+                  variant="secondary"
+                  onClick={handleLink}
+                >
+                  Buy Tickets Here
+                </Button>
+                <ShareEvent />
                 <BackButton />
               </div>
             </Col>

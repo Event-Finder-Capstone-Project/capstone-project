@@ -132,8 +132,16 @@ const AllEvents = () => {
   return (
     <>
       <div className="filter-container">
-        <Container className="d-flex justify-content-center">
-          <h5 style={{ marginRight: "1rem", paddingTop: ".3rem" }}>
+        <Container
+          style={{ marginTop: ".5rem" }}
+          className="d-flex justify-content-center"
+        >
+          <h5
+            style={{
+              marginRight: "1rem",
+              paddingTop: ".3rem",
+            }}
+          >
             Event Type
           </h5>
           <select
