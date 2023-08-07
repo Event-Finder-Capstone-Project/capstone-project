@@ -35,21 +35,34 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  const { postalCode } = useSelector((state) => state.location);
-
   useEffect(() => {
-    if ("geolocation" in navigator && !postalCode) {
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          dispatch(setLocation({ latitude, longitude }));
-        },
-        (error) => {
-          console.error("Error getting user's location:", error.message);
-        }
-      );
-    }
-  }, [dispatch, postalCode]);
+          const apiUrl = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=64ee4bef6c804309ae4fb21e0e807bf9`;
+          fetch(apiUrl)
+          .then(response => response.json())
+          .then(data => {
+            if (data.results.length > 0) {
+              const firstResult = data.results[0];
+              const city = firstResult.components.city;
+              const state = firstResult.components.state_code;
+              const county = firstResult.components.county;
+
+              dispatch(setLocation({ latitude, longitude, city, state, county }));
+            }
+          })
+          .catch(error => {
+            console.error("Error fetching location:", error);
+          });
+      },
+      (error) => {
+        console.error("Error getting user's location:", error.message);
+      }
+    );
+  }
+}, [dispatch]);
 
   return (
     <Router>

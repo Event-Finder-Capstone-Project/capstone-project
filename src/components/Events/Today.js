@@ -15,6 +15,7 @@ import {
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import Maps from "../Maps/Maps";
+import CityFilter from "./EventFilter/CityFilter";
 
 
 const Today = () => {
@@ -136,6 +137,7 @@ const Today = () => {
         <Button onClick={handleFilter}>Filter</Button>
       </div>
 <h1> Happening Today </h1>
+<CityFilter />
 
       <Container
         fluid="lg"
