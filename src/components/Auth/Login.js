@@ -64,6 +64,7 @@ const Login = () => {
               <Form.Control type="password" ref={passwordRef} required />
             </Form.Group>
             <Button
+              variant="secondary"
               onClick={handleEmailLogin}
               disabled={loading}
               className="w-100 mb-3"
@@ -72,6 +73,7 @@ const Login = () => {
               Log In with Email
             </Button>
             <Button
+              variant="secondary"
               onClick={handleGoogleLogin}
               className="w-100 mb-3"
               type="button"

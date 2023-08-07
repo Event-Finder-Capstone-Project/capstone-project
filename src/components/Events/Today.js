@@ -14,8 +14,7 @@ import {
 
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import Maps from "../Maps/Maps";
-
+import TestMap from "../Maps/TestMap";
 
 const Today = () => {
   const [page, setPage] = useState(1);
@@ -26,7 +25,7 @@ const Today = () => {
 
   const dispatch = useDispatch();
 
-/*   useEffect(() => {
+  /*   useEffect(() => {
     if (filter === "") {
       dispatch(getAllEvents({ type: filter }));
     }
@@ -51,15 +50,18 @@ const Today = () => {
     const endDate = new Date();
     endDate.setDate(startDate.getDate() + 1);
 
-      dispatch(
-        getAllEvents({
-          type: filter,
-          page: page,
-          latitude: latitude,
-          longitude: longitude,
-          dateRange: { startDate: startDate.toISOString().split('T')[0], endDate: endDate.toISOString().split('T')[0]}
-        })
-      );
+    dispatch(
+      getAllEvents({
+        type: filter,
+        page: page,
+        latitude: latitude,
+        longitude: longitude,
+        dateRange: {
+          startDate: startDate.toISOString().split("T")[0],
+          endDate: endDate.toISOString().split("T")[0],
+        },
+      })
+    );
   }, [dispatch, filter, page, latitude, longitude]);
 
   useEffect(() => {
@@ -122,9 +124,23 @@ const Today = () => {
   return (
     <>
       <div className="filter-container">
-        <div>
-          <label>Event Type</label>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <Container
+          style={{ marginTop: ".5rem" }}
+          className="d-flex justify-content-center"
+        >
+          <h5
+            style={{
+              marginRight: "1rem",
+              paddingTop: ".3rem",
+            }}
+          >
+            Event Type
+          </h5>
+          <select
+            style={{ height: "35px" }}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
             <option value="">None</option>
             {eventsData.map((eventType) => (
               <option key={eventType} value={eventType}>
@@ -132,10 +148,17 @@ const Today = () => {
               </option>
             ))}
           </select>
-        </div>
-        <Button onClick={handleFilter}>Filter</Button>
+
+          <Button
+            style={{ marginLeft: "1rem", height: "35px" }}
+            variant="secondary"
+            onClick={handleFilter}
+          >
+            Filter
+          </Button>
+        </Container>
       </div>
-<h1> Happening Today </h1>
+      <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
 
       <Container
         fluid="lg"
@@ -143,18 +166,21 @@ const Today = () => {
         className="all-events-container"
         style={{ marginTop: "3rem" }}
       >
+        <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
+          <TestMap />
+        </Container>
         <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
             events.map((event) => (
               <Card
                 style={{
                   border: "none",
-                  width: "18rem",
                   textDecoration: "none",
                 }}
                 class="card classWithPad"
                 className="event-container"
                 key={event.id}
+                xs={{ width: "100%" }}
               >
                 <LinkContainer to={`/events/${event.id}`}>
                   <Nav.Link>
@@ -163,15 +189,23 @@ const Today = () => {
                       src={event.performers[0].image}
                       alt={event.name}
                     />
-                    <Card.Body style={{ background: "grey" }}>
-                      <Card.Title style={{}} id="event-name">
+                    <Card.Body
+                      style={{
+                        backgroundColor: "black",
+                        opacity: "50%",
+                      }}
+                    >
+                      <Card.Title style={{ color: "white" }} id="event-name">
                         {event.title}
                       </Card.Title>
                     </Card.Body>
                   </Nav.Link>
                 </LinkContainer>
                 {!clickedEvents.includes(event.id) && (
-                  <Button onClick={() => handleAddEvents(event.id)}>
+                  <Button
+                    variant="secondary"
+                    onClick={() => handleAddEvents(event.id)}
+                  >
                     Add Event
                   </Button>
                 )}
@@ -182,13 +216,21 @@ const Today = () => {
           )}
         </Row>
       </Container>
-      <div className="pageButtons">
-        <button onClick={handlePreviousPage}>Previous</button>
-        <button onClick={handleNextPage}>Next</button>
-      </div>
-      <div>
-        <Maps />
-      </div>
+      <Container
+        className="d-flex justify-content-center"
+        style={{ marginTop: "2rem" }}
+      >
+        <Button
+          variant="secondary"
+          style={{ marginRight: "1rem" }}
+          onClick={handlePreviousPage}
+        >
+          Previous
+        </Button>
+        <Button variant="secondary" onClick={handleNextPage}>
+          Next
+        </Button>
+      </Container>
     </>
   );
 };
