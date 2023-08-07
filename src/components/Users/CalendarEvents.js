@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import '../style/Calendar.css';
 import {
@@ -25,18 +24,7 @@ const CalendarEvents = ({ savedEvents }) => {
       return acc;
     }, {});
 
-  // Save objectOfSavedEvents to local storage
-  localStorage.setItem('calendar', JSON.stringify(objectOfSavedEvents));
-
-  // Retrieve stored events from local storage
-  const storedEvents = JSON.parse(localStorage.getItem('calendar')) || {};
-
-  const [allEvents, setAllEvents] = useState([]);
-
-  useEffect(() => {
-    // Load stored events from local storage into the state
-    setAllEvents(storedEvents);
-  }, [allEvents]);
+  const [allEvents, setAllEvents] = useState([objectOfSavedEvents]);
 
   const handleActionBegin = (args) => {
     const updatedEvents = { ...allEvents };
@@ -62,7 +50,7 @@ const CalendarEvents = ({ savedEvents }) => {
         height='450px'
         currentView='Month'
         actionBegin={handleActionBegin}
-        eventSettings={{ dataSource: Object.values(allEvents) }}
+        eventSettings={{ dataSource: Object.values(objectOfSavedEvents) }}
       >
         <Inject services={[Day, Week, WorkWeek, Month, Agenda]}></Inject>
       </ScheduleComponent>
@@ -71,4 +59,3 @@ const CalendarEvents = ({ savedEvents }) => {
 };
 
 export default CalendarEvents;
-
