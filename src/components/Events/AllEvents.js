@@ -148,10 +148,7 @@ const AllEvents = () => {
       <h1> Popular in your area </h1>
       <Carousel />
 
-      <div>
-        {/* <Maps /> */}
-        <TestMap />
-      </div>
+      <div>{/* <Maps /> */}</div>
 
       <Container
         fluid="lg"
@@ -159,18 +156,20 @@ const AllEvents = () => {
         className="all-events-container"
         style={{ marginTop: "3rem" }}
       >
-        <Row xs={1} md={2} lg={2} className="g-4">
+        <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
+          <TestMap />
+        </Container>
+        <Row xs={1} md={2} lg={4} className="g-4">
           {events?.length ? (
             events.map((event) => (
               <Card
                 style={{
                   border: "none",
-                  width: "18rem",
                   textDecoration: "none",
                 }}
-                class="card classWithPad"
                 className="event-container"
                 key={event.id}
+                xs={{ width: "100%" }}
               >
                 <LinkContainer to={`/events/${event.id}`}>
                   <Nav.Link>
@@ -198,10 +197,15 @@ const AllEvents = () => {
           )}
         </Row>
       </Container>
-      <div className="pageButtons">
-        <button onClick={handlePreviousPage}>Previous</button>
-        <button onClick={handleNextPage}>Next</button>
-      </div>
+      <Container
+        className="d-flex justify-content-center"
+        style={{ alignContent: "center", marginTop: "2rem" }}
+      >
+        <Button style={{ marginRight: "1rem" }} onClick={handlePreviousPage}>
+          Previous
+        </Button>
+        <Button onClick={handleNextPage}>Next</Button>
+      </Container>
     </>
   );
 };
