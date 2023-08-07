@@ -155,7 +155,7 @@ export default function Signup() {
               onClick={signInWithGoogle}
               className="w-100 mb-3"
             >
-              Sign In With Google
+              Sign Up With Google
             </Button>
           </Card.Body>
         </Card>
