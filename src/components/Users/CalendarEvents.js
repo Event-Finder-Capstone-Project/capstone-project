@@ -70,4 +70,3 @@ const CalendarEvents = ({ savedEvents }) => {
 };
 
 export default CalendarEvents;
-
