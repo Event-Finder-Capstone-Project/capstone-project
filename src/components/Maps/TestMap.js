@@ -21,11 +21,11 @@ export default function TestMap() {
       </Container>
     );
   return (
-    <Container>
+    <Container style={{ width: "120%", marginLeft: "-2.2rem" }}>
       <GoogleMap
         zoom={10}
         center={{ lat: latitude, lng: longitude }}
-        mapContainerStyle={{ width: 500, height: 500 }}
+        mapContainerStyle={{ width: "100%", height: 350 }}
       >
         {events.map((marker) => (
           <MarkerF
