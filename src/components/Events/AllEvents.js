@@ -15,6 +15,7 @@ import {
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import Maps from "../Maps/Maps";
+import TestMap from "../Maps/TestMap";
 import Carousel from "./Carousel";
 
 const AllEvents = () => {
@@ -46,7 +47,7 @@ const AllEvents = () => {
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
   const postalCode = useSelector((state) => state.location.postalCode);
-  console.log(events);
+  // console.log(events);
 
   useEffect(() => {
     if (postalCode) {
@@ -144,8 +145,13 @@ const AllEvents = () => {
         </div>
         <Button onClick={handleFilter}>Filter</Button>
       </div>
-<h1> Popular in your area </h1>
+      <h1> Popular in your area </h1>
       <Carousel />
+
+      <div>
+        {/* <Maps /> */}
+        <TestMap />
+      </div>
 
       <Container
         fluid="lg"
@@ -195,9 +201,6 @@ const AllEvents = () => {
       <div className="pageButtons">
         <button onClick={handlePreviousPage}>Previous</button>
         <button onClick={handleNextPage}>Next</button>
-      </div>
-      <div>
-        <Maps />
       </div>
     </>
   );
