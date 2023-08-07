@@ -106,7 +106,6 @@ const UserEvents = () => {
             ))}
       </ul>
       <CalendarEvents savedEvents={user ? loginUserEvents: savedEvents} />
-      {/* <CalendarEvents savedEvents={savedEvents} /> */}
     </div>
   );
 };
