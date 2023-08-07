@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../style/Calendar.css';
 import {
   ScheduleComponent,
@@ -59,4 +59,3 @@ const CalendarEvents = ({ savedEvents }) => {
 };
 
 export default CalendarEvents;
-

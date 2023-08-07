@@ -9,6 +9,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Nav, Button, Image, Container, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
+import ShareEvent from "./ShareEvent";
 
 
 const SingleEvent = () => {
@@ -53,7 +54,7 @@ const SingleEvent = () => {
                 userDocRef,
                 { events: [...userData.events, event.id] },
                 { merge: true }
-              );
+              ); 
             }
           }
         } else {
@@ -64,7 +65,7 @@ const SingleEvent = () => {
       } catch (error) {
         console.error("Error adding event to user collection:", error);
       }
-    }
+    } 
   };
 
   const handleLink = () => {
@@ -72,11 +73,7 @@ const SingleEvent = () => {
   };
 
   return (
-    <Container
-      fluid="lg"
-      className="event-details"
-      style={{ paddingTop: "3rem" }}
-    >
+    <Container fluid="lg" className="event-details">
       {event ? (
         <Row xs={1} md={2} lg={2} className="single-event-container">
           <Col>
@@ -124,6 +121,7 @@ const SingleEvent = () => {
                 )}
 
                 <button onClick={handleLink}>Buy Tickets Here</button>
+                <ShareEvent/>
                 <BackButton />
               </div>
             </Col>
