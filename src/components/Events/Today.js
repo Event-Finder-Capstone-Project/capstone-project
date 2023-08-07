@@ -47,13 +47,17 @@ const Today = () => {
   const longitude = useSelector((state) => state.location.longitude);
 
   useEffect(() => {
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(startDate.getDate() + 1);
+
       dispatch(
         getAllEvents({
           type: filter,
           page: page,
           latitude: latitude,
           longitude: longitude,
-          dateRange: { startDate: new Date().toISOString()}
+          dateRange: { startDate: startDate.toISOString().split('T')[0], endDate: endDate.toISOString().split('T')[0]}
         })
       );
   }, [dispatch, filter, page, latitude, longitude]);
