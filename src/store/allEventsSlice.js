@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page, latitude, longitude, postalCode, dateRange }) => {
+export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page, latitude, longitude, venue, dateRange }) => {
   try {
     const auth = {
       username: "MzUzMjU4MjV8MTY5MDgzNjc1MC41OTkwOTEz",
@@ -9,16 +9,17 @@ export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page
     };
     const params = {
       page: page,
-
-      type: type
+      type: type,
+      per_page: 8
     };
 
-    if (latitude !== undefined && longitude !== undefined) {
+    if (venue) {
+      params["venue.city"] = venue.city;
+      params["venue.state"] = venue.state;
+    }  else if (latitude !== undefined && longitude !== undefined) {
       params["lat"] = latitude;
       params["lon"] = longitude;
-    } else if (postalCode) {
-      params["postal_code"] = postalCode.trim();
-    };
+    } ;
     if (dateRange) {
       params["datetime_utc.gte"] = dateRange.startDate;
       if (dateRange.endDate) {
