@@ -74,7 +74,7 @@ const NavBar = () => {
               Sign Up
             </Nav.Link>
 
-            <Search />
+         {/*    <Search /> */}
           </Container>
         </Navbar>
       )}

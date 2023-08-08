@@ -18,6 +18,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import CityFilter from "./CityFilter";
 import Autocomplete from "react-google-autocomplete";
+import Search from "../NavBar/Search";
 
 const Today = () => {
   const [page, setPage] = useState(1);
@@ -151,44 +152,10 @@ const Today = () => {
 
   return (
     <>
-      <div className="filter-container">
-        <Container
-          style={{ marginTop: ".5rem" }}
-          className="d-flex justify-content-center"
-        >
-          <h5
-            style={{
-              marginRight: "1rem",
-              paddingTop: ".3rem",
-            }}
-          >
-            Event Type
-          </h5>
-          <select
-            style={{ height: "35px" }}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="">None</option>
-            {eventsData.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
-          </select>
-
-          <Button
-            style={{ marginLeft: "1rem", height: "35px" }}
-            variant="secondary"
-            onClick={handleFilter}
-          >
-            Filter
-          </Button>
-        </Container>
-      </div>
+     
       <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
 
-      {isLoaded && <CityFilter />}
+
 
       <Container
         fluid="lg"
@@ -199,6 +166,41 @@ const Today = () => {
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
          <TestMap /> 
         </Container>
+
+
+        {isLoaded && <CityFilter />}
+      <div className="filter-container">
+        <Container
+          style={{ marginTop: ".5rem" }}
+          className=""
+        >
+          <h5
+            style={{
+              marginRight: "1rem",
+              paddingTop: ".3rem",
+            }}
+          >
+      
+          </h5>
+          <select
+            style={{ height: "35px" }}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="">Choose Event Type</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
+          </select>
+
+        </Container>
+      </div>
+
+
+
+
         <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
             events.map((event) => (
