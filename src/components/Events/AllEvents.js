@@ -103,7 +103,7 @@ const AllEvents = () => {
       // For guest users, add the event to local storage
       dispatch(addEvents(eventId));
     }
-    setClickedEvents((prevClicked) => [...prevClicked, eventId]);
+    setClickedEvents([...clickedEvents, eventId]);
   };
 
   const handleFilter = () => {
@@ -201,12 +201,17 @@ const AllEvents = () => {
                     </Card.Body>
                   </Nav.Link>
                 </LinkContainer>
-                {!clickedEvents.includes(event.id) && (
+                {!clickedEvents.includes(event.id) &&
+                !userEvents.includes(event.id) ? (
                   <Button
                     variant="secondary"
                     onClick={() => handleAddEvents(event.id)}
                   >
                     Add Event
+                  </Button>
+                ) : (
+                  <Button variant="secondary" disabled>
+                    Event Added
                   </Button>
                 )}
               </Card>
