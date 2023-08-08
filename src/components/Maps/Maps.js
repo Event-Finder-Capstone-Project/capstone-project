@@ -22,6 +22,7 @@ function Maps() {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
+    libraries:['places'],
   });
 
   const [map, setMap] = React.useState(null);

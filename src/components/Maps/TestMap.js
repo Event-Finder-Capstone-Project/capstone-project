@@ -7,6 +7,7 @@ import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 export default function TestMap() {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
+    libraries:['places'],
   });
 
   const events = useSelector(selectEvents);

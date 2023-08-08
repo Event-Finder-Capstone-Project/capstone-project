@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { addEvents } from "../../store/eventsSlice";
+import { useLoadScript } from "@react-google-maps/api";
 import {
   collection,
   getDocs,
@@ -154,6 +155,8 @@ const Weekend = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
+  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
+
   return (
     <>
       <div className="filter-container">
@@ -193,7 +196,7 @@ const Weekend = () => {
       </div>
       <h1 style={{ marginTop: "1rem" }}> Happening This Weekend </h1>
 
-      <CityFilter />
+           {isLoaded && <CityFilter />} 
 
       <Container
         fluid="lg"
