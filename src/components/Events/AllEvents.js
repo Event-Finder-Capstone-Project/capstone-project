@@ -46,19 +46,9 @@ const AllEvents = () => {
   const events = useSelector(selectEvents);
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
-  const postalCode = useSelector((state) => state.location.postalCode);
-  // console.log(events);
 
   useEffect(() => {
-    if (postalCode) {
-      dispatch(
-        getAllEvents({
-          type: filter,
-          page: page,
-          postalCode: postalCode,
-        })
-      );
-    } else if (latitude && longitude) {
+ if (latitude && longitude) {
       dispatch(
         getAllEvents({
           type: filter,
@@ -70,7 +60,7 @@ const AllEvents = () => {
     } else {
       dispatch(getAllEvents({ type: filter, page: page }));
     }
-  }, [dispatch, filter, page, latitude, longitude, postalCode]);
+  }, [dispatch, filter, page, latitude, longitude]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -222,7 +212,7 @@ const AllEvents = () => {
               </Card>
             ))
           ) : (
-            <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
+            <p>{!events?.length ? "No events found!" : ""}</p>
           )}
         </Row>
       </Container>

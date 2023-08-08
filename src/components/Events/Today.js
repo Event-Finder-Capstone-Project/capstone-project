@@ -15,6 +15,8 @@ import {
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
+import CityFilter from "./CityFilter";
+import Autocomplete from "react-google-autocomplete";
 
 const Today = () => {
   const [page, setPage] = useState(1);
@@ -45,24 +47,47 @@ const Today = () => {
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
 
+  const city = useSelector((state) => state.search.city);
+  const state = useSelector((state) => state.search.state);
+
   useEffect(() => {
+    if ((city !== null && state !== null) || (latitude && longitude)) {
     const startDate = new Date();
     const endDate = new Date();
     endDate.setDate(startDate.getDate() + 1);
 
-    dispatch(
-      getAllEvents({
+    const fetchEventData = async () => {
+      let eventDataParams = {
         type: filter,
         page: page,
-        latitude: latitude,
-        longitude: longitude,
         dateRange: {
-          startDate: startDate.toISOString().split("T")[0],
-          endDate: endDate.toISOString().split("T")[0],
-        },
-      })
-    );
-  }, [dispatch, filter, page, latitude, longitude]);
+          startDate: startDate.toISOString().split('T')[0],
+          endDate: endDate.toISOString().split('T')[0]
+        }
+      };
+  
+      if (city && state) {
+        eventDataParams = {
+          ...eventDataParams,
+          venue: {
+            city: city,
+            state: state
+          }
+        };
+      } else if (latitude && longitude) {
+        eventDataParams = {
+          ...eventDataParams,
+          latitude: latitude,
+          longitude: longitude
+        };
+      }
+  console.log('event data: ', eventDataParams)
+      dispatch(getAllEvents(eventDataParams));
+    };
+  
+    fetchEventData();
+  }
+  }, [dispatch, filter, page, city, state, latitude, longitude]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -160,6 +185,8 @@ const Today = () => {
       </div>
       <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
 
+      <CityFilter />
+
       <Container
         fluid="lg"
         class="text-center"
@@ -167,7 +194,7 @@ const Today = () => {
         style={{ marginTop: "3rem" }}
       >
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
-          <TestMap />
+         <TestMap /> 
         </Container>
         <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
@@ -212,7 +239,7 @@ const Today = () => {
               </Card>
             ))
           ) : (
-            <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
+              <p>{!events?.length ? "No events found... try checking a different location!" : ""}</p>
           )}
         </Row>
       </Container>
