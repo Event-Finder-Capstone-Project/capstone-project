@@ -4,6 +4,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const getSearchResults = createAsyncThunk("getSearchResults", async ({ query, postalCode, dateRange }) => {
   try {
     const auth = {
+      // if you're using these keys in more than one place, it's all the more reason to put them in your .env file :)
       username: "MzUzMjU4MjV8MTY5MDgzNjc1MC41OTkwOTEz",
       password: "5204ee3ff5c3c6a060a1e4f6f50552c8e6afa2ba5d638fac32cf2cf5509c9aea",
     };
@@ -68,7 +69,7 @@ const searchSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getSearchResults.fulfilled, (state, action) => {
-      state.events = action.payload; 
+      state.events = action.payload;
     });
   },
 });

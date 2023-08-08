@@ -7,6 +7,7 @@ import {getStorage} from 'firebase/storage'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
+  // some (or all) of these values should go in the process.env as well
   apiKey: "AIzaSyDeIUoycMggQumCdlJN24Xp-IbYYA6YAe0",
   authDomain: "event-finder-test-56e2e.firebaseapp.com",
   databaseURL: "https://event-finder-test-56e2e-default-rtdb.firebaseio.com",

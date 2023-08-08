@@ -36,6 +36,8 @@ function Maps() {
     lng: longitude,
   };
 
+  // are these going to be used for something in the future, or can they be deleted?
+
   const onLoad = React.useCallback(
     function callback(map) {
       const bounds = new window.google.maps.LatLngBounds(center);

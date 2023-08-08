@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { setCity } from "../../store/searchSlice";
 
 const CityFilter = () => {
-    const [selectedPlace, setSelectedPlace] = useState(null); 
+    const [selectedPlace, setSelectedPlace] = useState(null);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -46,6 +46,7 @@ const CityFilter = () => {
     return (
 
         <Autocomplete
+        // I'd recommend moving this to your .env
   apiKey="AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU"
   onPlaceSelected={(place) => {
     setSelectedPlace(place);
@@ -54,7 +55,7 @@ const CityFilter = () => {
 
     );
   };
-  
+
   export default CityFilter
 
 

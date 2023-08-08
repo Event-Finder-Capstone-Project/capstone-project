@@ -201,6 +201,9 @@ const AllEvents = () => {
                     </Card.Body>
                   </Nav.Link>
                 </LinkContainer>
+                {/* it can be helpful to get in the habit of defining a complex true/false statement like this as a variable that you (or someone else) can use to get context about what it means. So you could define
+                const showAddEventButton = !clickedEvents.includes(event.id) && !userEvents.includes(event.id)
+                before the return... and then in your code below, say showAddEventButton ? <Button... */}
                 {!clickedEvents.includes(event.id) &&
                 !userEvents.includes(event.id) ? (
                   <Button

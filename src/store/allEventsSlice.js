@@ -4,6 +4,7 @@ import axios from "axios";
 export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page, latitude, longitude, venue, dateRange }) => {
   try {
     const auth = {
+      // I recommend putting these in your .env file so they aren't exposed
       username: "MzUzMjU4MjV8MTY5MDgzNjc1MC41OTkwOTEz",
       password: "5204ee3ff5c3c6a060a1e4f6f50552c8e6afa2ba5d638fac32cf2cf5509c9aea",
     };

@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { auth } from "../firebase";
+// consider creating a /cmponents/index.js file that imports all of these components and then exports them again, so you can group all of the react components together into one import statement per file
 import Signup from "./Auth/Signup";
 import Login from "./Auth/Login";
 import SingleEvent from "./Events/SingleEvent";

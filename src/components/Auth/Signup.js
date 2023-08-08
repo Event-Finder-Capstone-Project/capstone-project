@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { auth, googleProvider, db } from "../../firebase";
+// I recommend removing unused imports when you notice them, if you're working in that file.
 import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 
 import { useNavigate } from "react-router-dom";
@@ -102,6 +103,7 @@ export default function Signup() {
         <Card className=" form-width" style={{ width: "30rem" }}>
           <Card.Body>
             <h2 className="form-name">Sign Up</h2>
+            {/* nice informative error messages :) */}
             {error && <Alert variant="danger">{error}</Alert>}
             <Form>
               <Form.Group

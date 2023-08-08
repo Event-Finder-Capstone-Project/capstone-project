@@ -67,7 +67,7 @@ const Today = () => {
           endDate: endDate.toISOString().split('T')[0]
         }
       };
-  
+
       if (city && state) {
         eventDataParams = {
           ...eventDataParams,
@@ -86,7 +86,7 @@ const Today = () => {
   console.log('event data: ', eventDataParams)
       dispatch(getAllEvents(eventDataParams));
     };
-  
+
     fetchEventData();
   }
   }, [dispatch, filter, page, city, state, latitude, longitude]);
@@ -148,11 +148,12 @@ const Today = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
+  // I think this is the same as the other API key, right? In which case I DEFINITELY recommend the .env if you haven't already
   const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
 
   return (
     <>
-     
+
       <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
 
 
@@ -164,7 +165,7 @@ const Today = () => {
         style={{ marginTop: "3rem" }}
       >
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
-         <TestMap /> 
+         <TestMap />
         </Container>
 
 
@@ -180,7 +181,7 @@ const Today = () => {
               paddingTop: ".3rem",
             }}
           >
-      
+
           </h5>
           <select
             style={{ height: "35px" }}
