@@ -18,9 +18,8 @@ import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import CityFilter from "./CityFilter";
 import Autocomplete from "react-google-autocomplete";
-import Search from "../NavBar/Search";
 
-const Today = () => {
+const Weekend = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
@@ -54,17 +53,25 @@ const Today = () => {
 
   useEffect(() => {
     if ((city !== null && state !== null) || (latitude && longitude)) {
-    const startDate = new Date();
-    const endDate = new Date();
-    endDate.setDate(startDate.getDate() + 1);
+        const today = new Date();
+        const startOfWeek = new Date(today);
+        const endOfWeek = new Date(today);
+
+        const dayOfWeek = today.getDay();
+
+        const daysUntilFriday = 5 - dayOfWeek; 
+        const daysUntilSunday = 7 - dayOfWeek + 1;
+
+        startOfWeek.setDate(today.getDate() + daysUntilFriday);
+    endOfWeek.setDate(today.getDate() + daysUntilSunday);
 
     const fetchEventData = async () => {
       let eventDataParams = {
         type: filter,
         page: page,
         dateRange: {
-          startDate: startDate.toISOString().split('T')[0],
-          endDate: endDate.toISOString().split('T')[0]
+            startDate: startOfWeek.toISOString().split("T")[0],
+            endDate: endOfWeek.toISOString().split("T")[0],
         }
       };
   
@@ -152,9 +159,44 @@ const Today = () => {
 
   return (
     <>
-     
-      <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
+      <div className="filter-container">
+        <Container
+          style={{ marginTop: ".5rem" }}
+          className="d-flex justify-content-center"
+        >
+          <h5
+            style={{
+              marginRight: "1rem",
+              paddingTop: ".3rem",
+            }}
+          >
+            Event Type
+          </h5>
+          <select
+            style={{ height: "35px" }}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="">None</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
+          </select>
 
+          <Button
+            style={{ marginLeft: "1rem", height: "35px" }}
+            variant="secondary"
+            onClick={handleFilter}
+          >
+            Filter
+          </Button>
+        </Container>
+      </div>
+      <h1 style={{ marginTop: "1rem" }}> Happening This Weekend </h1>
+
+           {isLoaded && <CityFilter />} 
 
 
       <Container
@@ -166,41 +208,6 @@ const Today = () => {
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
          <TestMap /> 
         </Container>
-
-
-        {isLoaded && <CityFilter />}
-      <div className="filter-container">
-        <Container
-          style={{ marginTop: ".5rem" }}
-          className=""
-        >
-          <h5
-            style={{
-              marginRight: "1rem",
-              paddingTop: ".3rem",
-            }}
-          >
-      
-          </h5>
-          <select
-            style={{ height: "35px" }}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="">Choose Event Type</option>
-            {eventsData.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
-          </select>
-
-        </Container>
-      </div>
-
-
-
-
         <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
             events.map((event) => (
@@ -267,4 +274,4 @@ const Today = () => {
   );
 };
 
-export default Today;
+export default Weekend;
