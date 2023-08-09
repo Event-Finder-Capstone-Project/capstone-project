@@ -149,8 +149,6 @@ const AllEvents = () => {
       <h1> Popular in your area </h1>
       <Carousel />
 
-      <div>{/* <Maps /> */}</div>
-
       <Container
         fluid="lg"
         class="text-center"
@@ -190,7 +188,7 @@ const AllEvents = () => {
 
         </Container>
       </div>
-      
+
         <Row xs={1} md={2} lg={4} className="g-4">
           {events?.length ? (
             events.map((event) => (
