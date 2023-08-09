@@ -3,17 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setCity, setCoords } from "../../store/searchSlice";
 import { setCityState } from "../../store/locationSlice";
+import { eventEmitter } from "../App";
 
-const CityFilter = ({ onRerender }) => {
-  const [selectedPlace, setSelectedPlace] = useState(null);
-  const dispatch = useDispatch();
+const CityFilter = () => {
+    const [selectedPlace, setSelectedPlace] = useState(null); 
+    const dispatch = useDispatch();
 
-  useEffect(() => {
-    onRerender();
-  }, [dispatch, onRerender]);
-
-  useEffect(() => {
-    if (selectedPlace) {
+    useEffect(() => {
+        if (selectedPlace) {
       const placeId = selectedPlace.place_id;
 
       const service = new window.google.maps.places.PlacesService(
@@ -55,22 +52,26 @@ const CityFilter = ({ onRerender }) => {
 
           localStorage.setItem("userCity", city || "");
           localStorage.setItem("userState", state || "");
+          eventEmitter.emit('cityChanged', { city, state });
         }
       });
     }
   }, [dispatch, selectedPlace]);
 
-  return (
-    <>
+    return (
+      <>
+      <div>
       📍
-      <Autocomplete
-        apiKey="AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU"
-        onPlaceSelected={(place) => {
-          setSelectedPlace(place);
-        }}
-      />
-    </>
-  );
-};
+        <Autocomplete
+  apiKey="AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU"
+  onPlaceSelected={(place) => {
+    setSelectedPlace(place);
+  }}
+/>
+</div>
+</>
+    );
+  };
+
 
 export default CityFilter;

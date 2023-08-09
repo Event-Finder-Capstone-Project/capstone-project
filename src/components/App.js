@@ -21,6 +21,9 @@ import UserEvents from "./Users/UserEvents";
 import SearchResults from "./Events/SearchResults";
 import Today from "./Events/Today";
 import Weekend from "./Events/Weekend";
+import mitt from 'mitt';
+
+export const eventEmitter = mitt();
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);

@@ -18,6 +18,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import CityFilter from "./CityFilter";
 import Autocomplete from "react-google-autocomplete";
+import { eventEmitter } from "../App";
 
 const Weekend = () => {
   const [page, setPage] = useState(1);
@@ -30,6 +31,18 @@ const Weekend = () => {
   const storedState = localStorage.getItem("userState");
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const cityChangedListener = (data) => {
+      setRerender(!rerender); 
+    };
+
+    eventEmitter.on('cityChanged', cityChangedListener);
+
+    return () => {
+      eventEmitter.off('cityChanged', cityChangedListener);
+    };
+  }, [rerender]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -149,11 +162,6 @@ const Weekend = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
-    libraries: ["places"],
-  });
-
   return (
     <>
       <h1 style={{ marginTop: "1rem" }}> Happening This Weekend </h1>
@@ -167,30 +175,34 @@ const Weekend = () => {
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
           <TestMap />
         </Container>
+      <div className="filter-container">
+        <Container
+          style={{ marginTop: ".5rem" }}
+          className=""
+        >
+          <h5
+            style={{
+              marginRight: "1rem",
+              paddingTop: ".3rem",
+            }}
+          >
+      
+          </h5>
+          <select
+            style={{ height: "35px" }}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="">Choose Event Type</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
+          </select>
 
-        {isLoaded && <CityFilter onRerender={() => setRerender(!rerender)} />}
-        <div className="filter-container">
-          <Container style={{ marginTop: ".5rem" }} className="">
-            <h5
-              style={{
-                marginRight: "1rem",
-                paddingTop: ".3rem",
-              }}
-            ></h5>
-            <select
-              style={{ height: "35px" }}
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            >
-              <option value="">Choose Event Type</option>
-              {eventsData.map((eventType) => (
-                <option key={eventType} value={eventType}>
-                  {eventType}
-                </option>
-              ))}
-            </select>
-          </Container>
-        </div>
+        </Container>
+      </div>
 
         <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (

@@ -18,6 +18,8 @@ import TestMap from "../Maps/TestMap";
 import CityFilter from "./CityFilter";
 import Autocomplete from "react-google-autocomplete";
 import Search from "../NavBar/Search";
+import { eventEmitter } from "../App";
+
 const Today = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
@@ -27,14 +29,17 @@ const Today = () => {
   const [rerender, setRerender] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
-    const handleScroll = () => {
-      sessionStorage.setItem("scrollPosition", window.scrollY);
+    const cityChangedListener = (data) => {
+      setRerender(!rerender); 
     };
-    window.addEventListener("scroll", handleScroll);
+
+    eventEmitter.on('cityChanged', cityChangedListener);
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      eventEmitter.off('cityChanged', cityChangedListener);
     };
-  }, []);
+  }, [rerender]);
+
   const events = useSelector(selectEvents);
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
@@ -125,13 +130,11 @@ const Today = () => {
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
-    libraries: ["places"],
-  });
+
   return (
     <>
       <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
+
       <Container
         fluid="lg"
         class="text-center"
@@ -139,29 +142,35 @@ const Today = () => {
         style={{ marginTop: "3rem" }}
       >
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
-          <TestMap />
+          
+         <TestMap /> 
         </Container>
-        {isLoaded && <CityFilter onRerender={() => setRerender(!rerender)} />}
-        <div className="filter-container">
-          <Container style={{ marginTop: ".5rem" }} className="">
-            <h5
-              style={{
-                marginRight: "1rem",
-                paddingTop: ".3rem",
-              }}
-            ></h5>
-            <select
-              style={{ height: "35px" }}
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            >
-              <option value="">Choose Event Type</option>
-              {eventsData.map((eventType) => (
-                <option key={eventType} value={eventType}>
-                  {eventType}
-                </option>
-              ))}
-            </select>
+
+      <div className="filter-container">
+        <Container
+          style={{ marginTop: ".5rem" }}
+          className=""
+        >
+          <h5
+            style={{
+              marginRight: "1rem",
+              paddingTop: ".3rem",
+            }}
+          >
+      
+          </h5>
+          <select
+            style={{ height: "35px" }}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="">Choose Event Type</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
+          </select>
           </Container>
         </div>
         <Row xs={1} md={2} lg={2} className="g-4">
