@@ -136,14 +136,14 @@ const SingleEvent = () => {
                 )}
 
                 <Button
-                  style={{ marginBottom: "1rem" }}
+                  style={{ marginRight: "1rem", marginBottom: "1rem" }}
                   variant="secondary"
                   onClick={handleLink}
                 >
                   Buy Tickets Here
                 </Button>
-                <ShareEvent />
                 <BackButton />
+                <ShareEvent />
               </div>
             </Col>
           ) : null}

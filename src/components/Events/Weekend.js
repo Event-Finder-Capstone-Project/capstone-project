@@ -46,50 +46,50 @@ const Weekend = () => {
   const longitude = useSelector((state) => state.location.longitude);
 
   useEffect(() => {
-    if ((storedCity && storedState ) || (latitude && longitude)) {
-        const today = new Date();
-        const startOfWeek = new Date(today);
-        const endOfWeek = new Date(today);
+    if ((storedCity && storedState) || (latitude && longitude)) {
+      const today = new Date();
+      const startOfWeek = new Date(today);
+      const endOfWeek = new Date(today);
 
-        const dayOfWeek = today.getDay();
+      const dayOfWeek = today.getDay();
 
-        const daysUntilFriday = 5 - dayOfWeek; 
-        const daysUntilSunday = 7 - dayOfWeek + 1;
+      const daysUntilFriday = 5 - dayOfWeek;
+      const daysUntilSunday = 7 - dayOfWeek + 1;
 
-        startOfWeek.setDate(today.getDate() + daysUntilFriday);
-    endOfWeek.setDate(today.getDate() + daysUntilSunday);
+      startOfWeek.setDate(today.getDate() + daysUntilFriday);
+      endOfWeek.setDate(today.getDate() + daysUntilSunday);
 
-    const fetchEventData = async () => {
-      let eventDataParams = {
-        type: filter,
-        page: page,
-        dateRange: {
+      const fetchEventData = async () => {
+        let eventDataParams = {
+          type: filter,
+          page: page,
+          dateRange: {
             startDate: startOfWeek.toISOString().split("T")[0],
             endDate: endOfWeek.toISOString().split("T")[0],
+          },
+        };
+
+        if (storedCity && storedState) {
+          eventDataParams = {
+            ...eventDataParams,
+            venue: {
+              city: storedCity,
+              state: storedState,
+            },
+          };
+        } else if (latitude && longitude) {
+          eventDataParams = {
+            ...eventDataParams,
+            latitude: latitude,
+            longitude: longitude,
+          };
         }
+        console.log("event data: ", eventDataParams);
+        dispatch(getAllEvents(eventDataParams));
       };
-  
-      if (storedCity && storedState) {
-        eventDataParams = {
-          ...eventDataParams,
-          venue: {
-            city: storedCity,
-            state: storedState
-          }
-        };
-      } else if (latitude && longitude) {
-        eventDataParams = {
-          ...eventDataParams,
-          latitude: latitude,
-          longitude: longitude
-        };
-      }
-  console.log('event data: ', eventDataParams)
-      dispatch(getAllEvents(eventDataParams));
-    };
-  
-    fetchEventData();
-  }
+
+      fetchEventData();
+    }
   }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
 
   useEffect(() => {
@@ -149,11 +149,13 @@ const Weekend = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
+    libraries: ["places"],
+  });
 
   return (
     <>
-    
       <h1 style={{ marginTop: "1rem" }}> Happening This Weekend </h1>
 
       <Container
@@ -163,41 +165,32 @@ const Weekend = () => {
         style={{ marginTop: "3rem" }}
       >
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
-         <TestMap /> 
+          <TestMap />
         </Container>
 
-
-        {isLoaded && <CityFilter onRerender={() => setRerender(!rerender)}/>}
-      <div className="filter-container">
-        <Container
-          style={{ marginTop: ".5rem" }}
-          className=""
-        >
-          <h5
-            style={{
-              marginRight: "1rem",
-              paddingTop: ".3rem",
-            }}
-          >
-      
-          </h5>
-          <select
-            style={{ height: "35px" }}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="">Choose Event Type</option>
-            {eventsData.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
-          </select>
-
-        </Container>
-      </div>
-
-
+        {isLoaded && <CityFilter onRerender={() => setRerender(!rerender)} />}
+        <div className="filter-container">
+          <Container style={{ marginTop: ".5rem" }} className="">
+            <h5
+              style={{
+                marginRight: "1rem",
+                paddingTop: ".3rem",
+              }}
+            ></h5>
+            <select
+              style={{ height: "35px" }}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="">Choose Event Type</option>
+              {eventsData.map((eventType) => (
+                <option key={eventType} value={eventType}>
+                  {eventType}
+                </option>
+              ))}
+            </select>
+          </Container>
+        </div>
 
         <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
@@ -242,7 +235,11 @@ const Weekend = () => {
               </Card>
             ))
           ) : (
-              <p>{!events?.length ? "No events found... try checking a different location!" : ""}</p>
+            <p>
+              {!events?.length
+                ? "No events found... try checking a different location!"
+                : ""}
+            </p>
           )}
         </Row>
       </Container>
