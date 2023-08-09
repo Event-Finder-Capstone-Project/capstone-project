@@ -28,6 +28,7 @@ const SearchResults = () => {
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
+  const [rerender, setRerender] = useState(false);
   const searchState = useSelector((state) => state.search);
   const events = useSelector((state) => state.search.events);
   const dispatch = useDispatch();
@@ -72,12 +73,9 @@ const SearchResults = () => {
     dispatch(setDateRange(dateRange));
   };
 
-  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
-
 
   return (
     <>
- {isLoaded && <CityFilter />}
 <DatePicker onSelectDateRange={handleSelectDateRange} />
 
       <div className="filter-container">

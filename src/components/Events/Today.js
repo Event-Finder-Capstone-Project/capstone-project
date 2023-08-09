@@ -19,6 +19,7 @@ import TestMap from "../Maps/TestMap";
 import CityFilter from "./CityFilter";
 import Autocomplete from "react-google-autocomplete";
 import Search from "../NavBar/Search";
+import { eventEmitter } from "../App";
 
 const Today = () => {
   const [page, setPage] = useState(1);
@@ -31,14 +32,16 @@ const Today = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const handleScroll = () => {
-      sessionStorage.setItem("scrollPosition", window.scrollY);
+    const cityChangedListener = (data) => {
+      setRerender(!rerender); 
     };
-    window.addEventListener("scroll", handleScroll);
+
+    eventEmitter.on('cityChanged', cityChangedListener);
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      eventEmitter.off('cityChanged', cityChangedListener);
     };
-  }, []);
+  }, [rerender]);
 
   const events = useSelector(selectEvents);
   const latitude = useSelector((state) => state.location.latitude);
@@ -161,8 +164,6 @@ const Today = () => {
          <TestMap /> 
         </Container>
 
-
-        {isLoaded && <CityFilter onRerender={() => setRerender(!rerender)}/>}
       <div className="filter-container">
         <Container
           style={{ marginTop: ".5rem" }}

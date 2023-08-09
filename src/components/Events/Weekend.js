@@ -167,7 +167,7 @@ const Weekend = () => {
         </Container>
 
 
-        {isLoaded && <CityFilter onRerender={() => setRerender(!rerender)}/>}
+        {isLoaded && <CityFilter/>}
       <div className="filter-container">
         <Container
           style={{ marginTop: ".5rem" }}

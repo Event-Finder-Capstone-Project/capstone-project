@@ -3,15 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setCity } from "../../store/searchSlice";
 import { setCityState } from "../../store/locationSlice";
+import { eventEmitter } from "../App";
 
-const CityFilter = ({ onRerender }) => {
+const CityFilter = () => {
     const [selectedPlace, setSelectedPlace] = useState(null); 
     const dispatch = useDispatch();
-    
-    useEffect(() => {
-      onRerender();
-    }, [dispatch, onRerender]);
-  
+
     useEffect(() => {
         if (selectedPlace) {
       const placeId = selectedPlace.place_id;
@@ -34,6 +31,7 @@ const CityFilter = ({ onRerender }) => {
 
           localStorage.setItem("userCity", city || "");
           localStorage.setItem("userState", state || "");
+          eventEmitter.emit('cityChanged', { city, state });
         }
       });
     }
@@ -41,6 +39,7 @@ const CityFilter = ({ onRerender }) => {
 
     return (
       <>
+      <div>
       📍
         <Autocomplete
   apiKey="AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU"
@@ -48,6 +47,7 @@ const CityFilter = ({ onRerender }) => {
     setSelectedPlace(place);
   }}
 />
+</div>
 </>
     );
   };
