@@ -16,7 +16,7 @@ import NavBar from "./NavBar/NavBar.js";
 import Home from "./Home";
 import UserDetails from "./Users/UserDetails";
 import UserProfile from "./Users/UserProfile";
-import { setLocation } from "../store/locationSlice";
+import { setCityState, setLocation } from "../store/locationSlice";
 import UserEvents from "./Users/UserEvents";
 import SearchResults from "./Events/SearchResults";
 import Today from "./Events/Today";
@@ -35,10 +35,11 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  const { postalCode } = useSelector((state) => state.location);
+  const { city } = useSelector((state) => state.location.city);
+  const { state } = useSelector((state) => state.location.state);
 
   useEffect(() => {
-    if ("geolocation" in navigator && !postalCode) {
+    if ("geolocation" in navigator && !city) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -48,8 +49,10 @@ function App() {
           console.error("Error getting user's location:", error.message);
         }
       );
+    } else if (city) {
+      dispatch(setCityState({ city, state }));
     }
-  }, [dispatch, postalCode]);
+  }, [dispatch, city]);
 
   return (
     <Router>
