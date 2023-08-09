@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
-import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
+import { getAllEvents } from "../../store/allEventsSlice";
 import { addEvents } from "../../store/eventsSlice";
 import {
   collection,
@@ -17,7 +17,11 @@ import Card from "react-bootstrap/Card";
 import { Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
-import { getSearchResults } from "../../store/searchSlice";
+import { getSearchResults, setDateRange } from "../../store/searchSlice";
+import DatePicker from "../NavBar/SearchComponents/DatePicker";
+import { useLoadScript } from "@react-google-maps/api";
+import Autocomplete from "react-google-autocomplete";
+import CityFilter from "./CityFilter";
 
 const SearchResults = () => {
   const [page, setPage] = useState(1);
@@ -63,8 +67,19 @@ const SearchResults = () => {
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
+
+  const handleSelectDateRange = (dateRange) => {
+    dispatch(setDateRange(dateRange));
+  };
+
+  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
+
+
   return (
     <>
+ {isLoaded && <CityFilter />}
+<DatePicker onSelectDateRange={handleSelectDateRange} />
+
       <div className="filter-container">
         <div>
           <label>Event Type</label>
@@ -79,6 +94,7 @@ const SearchResults = () => {
         </div>
         <Button onClick={handleFilter}>Filter</Button>
       </div>
+
 
       <div className="all-events-container">
         {events?.length ? (
