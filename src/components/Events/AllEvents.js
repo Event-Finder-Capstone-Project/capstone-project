@@ -23,6 +23,8 @@ const AllEvents = () => {
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [clickedEvents, setClickedEvents] = useState([]);
+  const storedCity = localStorage.getItem("userCity");
+  const storedState = localStorage.getItem("userState");
 
   const dispatch = useDispatch();
 
@@ -47,7 +49,19 @@ const AllEvents = () => {
   const longitude = useSelector((state) => state.location.longitude);
 
   useEffect(() => {
- if (latitude && longitude) {
+    if (storedCity && storedState) {
+      const venue = {
+        city: storedCity,
+        state: storedState
+      };
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          venue: venue
+        })
+      );
+    } else {
       dispatch(
         getAllEvents({
           type: filter,
@@ -56,10 +70,8 @@ const AllEvents = () => {
           longitude: longitude,
         })
       );
-    } else {
-      dispatch(getAllEvents({ type: filter, page: page }));
     }
-  }, [dispatch, filter, page, latitude, longitude]);
+  }, [dispatch, filter, page, latitude, longitude, storedCity, storedState]);
 
   useEffect(() => {
     const fetchEventsData = async () => {

@@ -26,14 +26,9 @@ const Today = () => {
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [clickedEvents, setClickedEvents] = useState([]);
+  const [rerender, setRerender] = useState(false);
 
   const dispatch = useDispatch();
-
-  /*   useEffect(() => {
-    if (filter === "") {
-      dispatch(getAllEvents({ type: filter }));
-    }
-  }, [dispatch, filter]); */
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,12 +43,11 @@ const Today = () => {
   const events = useSelector(selectEvents);
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
-
-  const city = useSelector((state) => state.search.city);
-  const state = useSelector((state) => state.search.state);
+  const storedCity = localStorage.getItem("userCity");
+  const storedState = localStorage.getItem("userState");
 
   useEffect(() => {
-    if ((city !== null && state !== null) || (latitude && longitude)) {
+    if ((storedCity && storedState ) || (latitude && longitude)) {
     const startDate = new Date();
     const endDate = new Date();
     endDate.setDate(startDate.getDate() + 1);
@@ -68,12 +62,12 @@ const Today = () => {
         }
       };
   
-      if (city && state) {
+      if (storedCity && storedState) {
         eventDataParams = {
           ...eventDataParams,
           venue: {
-            city: city,
-            state: state
+            city: storedCity,
+            state: storedState
           }
         };
       } else if (latitude && longitude) {
@@ -89,7 +83,7 @@ const Today = () => {
   
     fetchEventData();
   }
-  }, [dispatch, filter, page, city, state, latitude, longitude]);
+  }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -168,7 +162,7 @@ const Today = () => {
         </Container>
 
 
-        {isLoaded && <CityFilter />}
+        {isLoaded && <CityFilter onRerender={() => setRerender(!rerender)}/>}
       <div className="filter-container">
         <Container
           style={{ marginTop: ".5rem" }}

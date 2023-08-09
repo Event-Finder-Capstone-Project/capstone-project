@@ -25,6 +25,9 @@ const Weekend = () => {
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [clickedEvents, setClickedEvents] = useState([]);
+  const [rerender, setRerender] = useState(false);
+  const storedCity = localStorage.getItem("userCity");
+  const storedState = localStorage.getItem("userState");
 
   const dispatch = useDispatch();
 
@@ -42,11 +45,8 @@ const Weekend = () => {
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
 
-  const city = useSelector((state) => state.search.city);
-  const state = useSelector((state) => state.search.state);
-
   useEffect(() => {
-    if ((city !== null && state !== null) || (latitude && longitude)) {
+    if ((storedCity && storedState ) || (latitude && longitude)) {
         const today = new Date();
         const startOfWeek = new Date(today);
         const endOfWeek = new Date(today);
@@ -69,12 +69,12 @@ const Weekend = () => {
         }
       };
   
-      if (city && state) {
+      if (storedCity && storedState) {
         eventDataParams = {
           ...eventDataParams,
           venue: {
-            city: city,
-            state: state
+            city: storedCity,
+            state: storedState
           }
         };
       } else if (latitude && longitude) {
@@ -90,7 +90,7 @@ const Weekend = () => {
   
     fetchEventData();
   }
-  }, [dispatch, filter, page, city, state, latitude, longitude]);
+  }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -167,7 +167,7 @@ const Weekend = () => {
         </Container>
 
 
-        {isLoaded && <CityFilter />}
+        {isLoaded && <CityFilter onRerender={() => setRerender(!rerender)}/>}
       <div className="filter-container">
         <Container
           style={{ marginTop: ".5rem" }}
