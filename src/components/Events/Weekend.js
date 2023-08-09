@@ -18,6 +18,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import CityFilter from "./CityFilter";
 import Autocomplete from "react-google-autocomplete";
+import { eventEmitter } from "../App";
 
 const Weekend = () => {
   const [page, setPage] = useState(1);
@@ -30,6 +31,18 @@ const Weekend = () => {
   const storedState = localStorage.getItem("userState");
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const cityChangedListener = (data) => {
+      setRerender(!rerender); 
+    };
+
+    eventEmitter.on('cityChanged', cityChangedListener);
+
+    return () => {
+      eventEmitter.off('cityChanged', cityChangedListener);
+    };
+  }, [rerender]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -149,7 +162,6 @@ const Weekend = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
 
   return (
     <>
@@ -166,8 +178,6 @@ const Weekend = () => {
          <TestMap /> 
         </Container>
 
-
-        {isLoaded && <CityFilter/>}
       <div className="filter-container">
         <Container
           style={{ marginTop: ".5rem" }}

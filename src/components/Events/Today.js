@@ -145,14 +145,11 @@ const Today = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
 
   return (
     <>
      
       <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
-
-
 
       <Container
         fluid="lg"
