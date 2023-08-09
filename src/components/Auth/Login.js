@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, googleProvider } from "../../firebase";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider,db } from "../../firebase";
+import { signInWithEmailAndPassword, signInWithPopup ,updateProfile} from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 
 const Login = () => {
@@ -34,7 +35,24 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const { user } = await signInWithPopup(auth, googleProvider);
+
+      const name = user.displayName || "No Name";
+
+      // Update the user's profile with their name (regardless of whether it's a new user)
+      await updateProfile(user, { displayName: name });
+
+      // Add the user's data to the "users" collection in Firestore
+      const userData = {
+        id: user.uid,
+        name: name,
+        email: user.email,
+        // Add any additional user data you want to store in the collection
+      };
+
+      // Use setDoc to explicitly specify the document ID (user's uid) in the "users" collection
+      await setDoc(doc(db, "users", user.uid), userData);
+
       navigate("/");
     } catch (err) {
       setError("Failed to sign in with Google: " + err.message);
@@ -64,6 +82,7 @@ const Login = () => {
               <Form.Control type="password" ref={passwordRef} required />
             </Form.Group>
             <Button
+              variant="secondary"
               onClick={handleEmailLogin}
               disabled={loading}
               className="w-100 mb-3"
@@ -72,6 +91,7 @@ const Login = () => {
               Log In with Email
             </Button>
             <Button
+              variant="secondary"
               onClick={handleGoogleLogin}
               className="w-100 mb-3"
               type="button"

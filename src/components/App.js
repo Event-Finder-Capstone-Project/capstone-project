@@ -10,7 +10,6 @@ import { Container } from "react-bootstrap";
 import { auth } from "../firebase";
 import Signup from "./Auth/Signup";
 import Login from "./Auth/Login";
-import Signout from "./Auth/Signout";
 import SingleEvent from "./Events/SingleEvent";
 import AllEvents from "./Events/AllEvents";
 import NavBar from "./NavBar/NavBar.js";
@@ -21,6 +20,8 @@ import { setLocation } from "../store/locationSlice";
 import UserEvents from "./Users/UserEvents";
 import SearchResults from "./Events/SearchResults";
 import Today from "./Events/Today";
+import CalendarEvents from "./Users/CalendarEvents";
+import Weekend from "./Events/Weekend";
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -63,6 +64,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />
               {/* <Route path="/myEvents" element={<CalendarEvents/>} /> */}
+              <Route path="/thisweekend" element={< Weekend />} />
               <Route path="/myevents" element={<UserEvents />} />
               <Route path="/today" element={<Today />} />
               <Route
@@ -71,7 +73,6 @@ function App() {
               />
               <Route path="/searchresults" element={<SearchResults />} />
             </Routes>
-            <Signout />
           </div>
         ) : (
           <div>
@@ -86,6 +87,7 @@ function App() {
                 <Route path="/events" element={<AllEvents />} />
                 <Route path="/events/:id" element={<SingleEvent />} />
                 <Route path="/myevents" element={<UserEvents />} />
+                <Route path="/thisweekend" element={< Weekend />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/searchresults" element={<SearchResults />} />
               </Routes>

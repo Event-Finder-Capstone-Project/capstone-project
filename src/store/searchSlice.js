@@ -36,6 +36,9 @@ export const getSearchResults = createAsyncThunk("getSearchResults", async ({ qu
 
 const initialState = {
   postalCode: "",
+  city: "",
+  state: "",
+  zip : "",
   query: "",
   dateRange: null,
   events: []
@@ -51,6 +54,11 @@ const searchSlice = createSlice({
     setQuery: (state, action) => {
       state.query = action.payload;
     },
+    setCity: (state, action) => {
+      state.city = action.payload.city;
+      state.state = action.payload.state;
+      state.zip = action.payload.zip
+    },
     setDateRange: (state, action) => {
       state.dateRange = {
         startDate: action.payload.startDate,
@@ -65,5 +73,5 @@ const searchSlice = createSlice({
   },
 });
 
-export const { setPostalCode, setQuery, setDateRange } = searchSlice.actions;
+export const { setPostalCode, setQuery, setCity, setDateRange } = searchSlice.actions;
 export default searchSlice.reducer;

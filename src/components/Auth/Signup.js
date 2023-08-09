@@ -141,6 +141,7 @@ export default function Signup() {
                 />
               </Form.Group>
               <Button
+                variant="secondary"
                 onClick={handleSubmit}
                 disabled={loading}
                 className="w-100 mb-3"
@@ -149,8 +150,12 @@ export default function Signup() {
                 Sign Up
               </Button>
             </Form>
-            <Button onClick={signInWithGoogle} className="w-100 mb-3">
-              Sign In With Google
+            <Button
+              variant="secondary"
+              onClick={signInWithGoogle}
+              className="w-100 mb-3"
+            >
+              Sign Up With Google
             </Button>
           </Card.Body>
         </Card>

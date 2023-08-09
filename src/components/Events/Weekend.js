@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { addEvents } from "../../store/eventsSlice";
+import { useLoadScript } from "@react-google-maps/api";
 import {
   collection,
   getDocs,
@@ -14,11 +15,11 @@ import {
 
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import Maps from "../Maps/Maps";
 import TestMap from "../Maps/TestMap";
-import Carousel from "./Carousel";
+import CityFilter from "./CityFilter";
+import Autocomplete from "react-google-autocomplete";
 
-const AllEvents = () => {
+const Weekend = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
@@ -27,11 +28,11 @@ const AllEvents = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (filter === "") {
       dispatch(getAllEvents({ type: filter }));
     }
-  }, [dispatch, filter]);
+  }, [dispatch, filter]); */
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,20 +48,55 @@ const AllEvents = () => {
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
 
+  const city = useSelector((state) => state.search.city);
+  const state = useSelector((state) => state.search.state);
+
   useEffect(() => {
- if (latitude && longitude) {
-      dispatch(
-        getAllEvents({
-          type: filter,
-          page: page,
+    if ((city !== null && state !== null) || (latitude && longitude)) {
+        const today = new Date();
+        const startOfWeek = new Date(today);
+        const endOfWeek = new Date(today);
+
+        const dayOfWeek = today.getDay();
+
+        const daysUntilFriday = 5 - dayOfWeek; 
+        const daysUntilSunday = 7 - dayOfWeek + 1;
+
+        startOfWeek.setDate(today.getDate() + daysUntilFriday);
+    endOfWeek.setDate(today.getDate() + daysUntilSunday);
+
+    const fetchEventData = async () => {
+      let eventDataParams = {
+        type: filter,
+        page: page,
+        dateRange: {
+            startDate: startOfWeek.toISOString().split("T")[0],
+            endDate: endOfWeek.toISOString().split("T")[0],
+        }
+      };
+  
+      if (city && state) {
+        eventDataParams = {
+          ...eventDataParams,
+          venue: {
+            city: city,
+            state: state
+          }
+        };
+      } else if (latitude && longitude) {
+        eventDataParams = {
+          ...eventDataParams,
           latitude: latitude,
-          longitude: longitude,
-        })
-      );
-    } else {
-      dispatch(getAllEvents({ type: filter, page: page }));
-    }
-  }, [dispatch, filter, page, latitude, longitude]);
+          longitude: longitude
+        };
+      }
+  console.log('event data: ', eventDataParams)
+      dispatch(getAllEvents(eventDataParams));
+    };
+  
+    fetchEventData();
+  }
+  }, [dispatch, filter, page, city, state, latitude, longitude]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -103,7 +139,7 @@ const AllEvents = () => {
       // For guest users, add the event to local storage
       dispatch(addEvents(eventId));
     }
-    setClickedEvents([...clickedEvents, eventId]);
+    setClickedEvents((prevClicked) => [...prevClicked, eventId]);
   };
 
   const handleFilter = () => {
@@ -118,6 +154,8 @@ const AllEvents = () => {
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
+
+  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
 
   return (
     <>
@@ -156,10 +194,10 @@ const AllEvents = () => {
           </Button>
         </Container>
       </div>
-      <h1> Popular in your area </h1>
-      <Carousel />
+      <h1 style={{ marginTop: "1rem" }}> Happening This Weekend </h1>
 
-      <div>{/* <Maps /> */}</div>
+           {isLoaded && <CityFilter />} 
+
 
       <Container
         fluid="lg"
@@ -168,9 +206,9 @@ const AllEvents = () => {
         style={{ marginTop: "3rem" }}
       >
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
-          <TestMap />
+         <TestMap /> 
         </Container>
-        <Row xs={1} md={2} lg={4} className="g-4">
+        <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
             events.map((event) => (
               <Card
@@ -178,6 +216,7 @@ const AllEvents = () => {
                   border: "none",
                   textDecoration: "none",
                 }}
+                class="card classWithPad"
                 className="event-container"
                 key={event.id}
                 xs={{ width: "100%" }}
@@ -201,29 +240,24 @@ const AllEvents = () => {
                     </Card.Body>
                   </Nav.Link>
                 </LinkContainer>
-                {!clickedEvents.includes(event.id) &&
-                !userEvents.includes(event.id) ? (
+                {!clickedEvents.includes(event.id) && (
                   <Button
                     variant="secondary"
                     onClick={() => handleAddEvents(event.id)}
                   >
                     Add Event
                   </Button>
-                ) : (
-                  <Button variant="secondary" disabled>
-                    Event Added
-                  </Button>
                 )}
               </Card>
             ))
           ) : (
-            <p>{!events?.length ? "No events found!" : ""}</p>
+              <p>{!events?.length ? "No events found... try checking a different location!" : ""}</p>
           )}
         </Row>
       </Container>
       <Container
         className="d-flex justify-content-center"
-        style={{ alignContent: "center", marginTop: "2rem" }}
+        style={{ marginTop: "2rem" }}
       >
         <Button
           variant="secondary"
@@ -240,4 +274,4 @@ const AllEvents = () => {
   );
 };
 
-export default AllEvents;
+export default Weekend;

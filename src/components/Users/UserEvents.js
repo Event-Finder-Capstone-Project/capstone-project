@@ -52,6 +52,7 @@ const UserEvents = () => {
           })
         );
         setSavedEvents(eventsData);
+        console.log(savedEvents);
       };
 
       fetchSavedEvents();
@@ -84,7 +85,7 @@ const UserEvents = () => {
       <h2>Your Saved Events</h2>
       <ul>
         {user
-          ? loginUserEvents.map((event) => (
+          ? loginUserEvents.filter((event) => event !== undefined && event.status !==400).map((event) => (
               <li key={event.id}>
                 <h3>{event.title}</h3>
                 <p>Date: {event.datetime_utc}</p>
@@ -94,7 +95,7 @@ const UserEvents = () => {
                 </button>
               </li>
             ))
-          : savedEvents.map((event) => (
+          : savedEvents.filter((event) => event !== undefined && event.status !==400).map((event) => (
               <li key={event.id}>
                 <h3>{event.title}</h3>
                 <p>Date: {event.datetime_utc}</p>
@@ -106,7 +107,6 @@ const UserEvents = () => {
             ))}
       </ul>
       <CalendarEvents savedEvents={user ? loginUserEvents: savedEvents} />
-      {/* <CalendarEvents savedEvents={savedEvents} /> */}
     </div>
   );
 };
