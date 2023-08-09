@@ -44,14 +44,15 @@ const CityFilter = () => {
   }, [dispatch, selectedPlace]);
 
     return (
-
+      <>
+      📍
         <Autocomplete
   apiKey="AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU"
   onPlaceSelected={(place) => {
     setSelectedPlace(place);
   }}
 />
-
+</>
     );
   };
   
