@@ -12,7 +12,6 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
@@ -28,9 +27,7 @@ const Today = () => {
   const [userEvents, setUserEvents] = useState([]);
   const [clickedEvents, setClickedEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
-
   const dispatch = useDispatch();
-
   useEffect(() => {
     const cityChangedListener = (data) => {
       setRerender(!rerender); 
@@ -48,46 +45,41 @@ const Today = () => {
   const longitude = useSelector((state) => state.location.longitude);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
-
   useEffect(() => {
-    if ((storedCity && storedState ) || (latitude && longitude)) {
-    const startDate = new Date();
-    const endDate = new Date();
-    endDate.setDate(startDate.getDate() + 1);
-
-    const fetchEventData = async () => {
-      let eventDataParams = {
-        type: filter,
-        page: page,
-        dateRange: {
-          startDate: startDate.toISOString().split('T')[0],
-          endDate: endDate.toISOString().split('T')[0]
+    if ((storedCity && storedState) || (latitude && longitude)) {
+      const startDate = new Date();
+      const endDate = new Date();
+      endDate.setDate(startDate.getDate() + 1);
+      const fetchEventData = async () => {
+        let eventDataParams = {
+          type: filter,
+          page: page,
+          dateRange: {
+            startDate: startDate.toISOString().split("T")[0],
+            endDate: endDate.toISOString().split("T")[0],
+          },
+        };
+        if (storedCity && storedState) {
+          eventDataParams = {
+            ...eventDataParams,
+            venue: {
+              city: storedCity,
+              state: storedState,
+            },
+          };
+        } else if (latitude && longitude) {
+          eventDataParams = {
+            ...eventDataParams,
+            latitude: latitude,
+            longitude: longitude,
+          };
         }
+        console.log("event data: ", eventDataParams);
+        dispatch(getAllEvents(eventDataParams));
       };
-  
-      if (storedCity && storedState) {
-        eventDataParams = {
-          ...eventDataParams,
-          venue: {
-            city: storedCity,
-            state: storedState
-          }
-        };
-      } else if (latitude && longitude) {
-        eventDataParams = {
-          ...eventDataParams,
-          latitude: latitude,
-          longitude: longitude
-        };
-      }
-  console.log('event data: ', eventDataParams)
-      dispatch(getAllEvents(eventDataParams));
-    };
-  
-    fetchEventData();
-  }
+      fetchEventData();
+    }
   }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
-
   useEffect(() => {
     const fetchEventsData = async () => {
       try {
@@ -113,16 +105,13 @@ const Today = () => {
     fetchEventsData();
     fetchUserEvents();
   }, []);
-
   const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
-
       // Add the event ID to the user's events array in Firestore
       await updateDoc(userDocRef, {
         events: [...userEvents, eventId],
       });
-
       // Update the local state
       setUserEvents([...userEvents, eventId]);
     } else {
@@ -131,24 +120,19 @@ const Today = () => {
     }
     setClickedEvents((prevClicked) => [...prevClicked, eventId]);
   };
-
   const handleFilter = () => {
     setPage(1);
     dispatch(getAllEvents({ type: filter, page: 1 }));
   };
-
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
   };
-
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-
   return (
     <>
-     
       <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
 
       <Container
@@ -158,6 +142,7 @@ const Today = () => {
         style={{ marginTop: "3rem" }}
       >
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
+          
          <TestMap /> 
         </Container>
 
@@ -186,13 +171,8 @@ const Today = () => {
               </option>
             ))}
           </select>
-
-        </Container>
-      </div>
-
-
-
-
+          </Container>
+        </div>
         <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
             events.map((event) => (
@@ -236,7 +216,11 @@ const Today = () => {
               </Card>
             ))
           ) : (
-              <p>{!events?.length ? "No events found... try checking a different location!" : ""}</p>
+            <p>
+              {!events?.length
+                ? "No events found... try checking a different location!"
+                : ""}
+            </p>
           )}
         </Row>
       </Container>
@@ -258,5 +242,4 @@ const Today = () => {
     </>
   );
 };
-
 export default Today;

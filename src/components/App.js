@@ -20,7 +20,6 @@ import { setCityState, setLocation } from "../store/locationSlice";
 import UserEvents from "./Users/UserEvents";
 import SearchResults from "./Events/SearchResults";
 import Today from "./Events/Today";
-import CalendarEvents from "./Users/CalendarEvents";
 import Weekend from "./Events/Weekend";
 import mitt from 'mitt';
 
