@@ -1,0 +1,6 @@
+.custom-infowindow-content {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
