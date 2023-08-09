@@ -14,7 +14,6 @@ import {
 
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import Maps from "../Maps/Maps";
 import TestMap from "../Maps/TestMap";
 import Carousel from "./Carousel";
 

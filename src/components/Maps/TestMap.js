@@ -9,6 +9,8 @@ import { Container } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import '../style/index.css'
+
+
 export default function TestMap() {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
@@ -52,7 +54,7 @@ export default function TestMap() {
     onCloseClick={() => setSelectedEvent(null)}
   >
     <div className="custom-infowindow-content">
-      <h4>{selectedEvent.title}</h4>
+      <h6>{selectedEvent.title}</h6>
       <p>{selectedEvent.venue.name}</p>
       <p>{selectedEvent.venue.city}</p>
     </div>
