@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 
 const BackButton = () => {
   const handleBack = () => {
@@ -10,7 +11,14 @@ const BackButton = () => {
   };
 
   return (
-    <button id="back-button" onClick={handleBack}>Back</button>
+    <Button
+      style={{ marginBottom: "1rem" }}
+      variant="secondary"
+      id="back-button"
+      onClick={handleBack}
+    >
+      Back
+    </Button>
   );
 };
 

@@ -1,7 +1,7 @@
 import Autocomplete from "react-google-autocomplete";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setCity } from "../../store/searchSlice";
+import { setCity, setCoords } from "../../store/searchSlice";
 
 const CityFilter = () => {
   const [selectedPlace, setSelectedPlace] = useState(null);
@@ -31,11 +31,20 @@ const CityFilter = () => {
             component.types.includes("postal_code")
           )?.long_name;
 
+          const latitude = place.geometry.location.lat(city);
+          const longitude = place.geometry.location.lng(city);
+
           dispatch(
             setCity({
               city: city || "",
               state: state || "",
               zip: postalCode || "",
+            })
+          );
+          dispatch(
+            setCoords({
+              lat: latitude,
+              lng: longitude,
             })
           );
         }

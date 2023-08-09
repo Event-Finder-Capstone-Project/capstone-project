@@ -125,18 +125,15 @@ const Today = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
+    libraries: ["places"],
+  });
 
   return (
     <>
-     
       <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 6fd67bcbfe64b2e8e732584200900a8ab1010776
       <Container
         fluid="lg"
         class="text-center"
@@ -146,46 +143,32 @@ const Today = () => {
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
           <TestMap />
         </Container>
-<<<<<<< HEAD
-        <Row xs={1} md={2} lg={4} className="g-4">
-=======
-
 
         {isLoaded && <CityFilter />}
-      <div className="filter-container">
-        <Container
-          style={{ marginTop: ".5rem" }}
-          className=""
-        >
-          <h5
-            style={{
-              marginRight: "1rem",
-              paddingTop: ".3rem",
-            }}
-          >
-      
-          </h5>
-          <select
-            style={{ height: "35px" }}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="">Choose Event Type</option>
-            {eventsData.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
-          </select>
+        <div className="filter-container">
+          <Container style={{ marginTop: ".5rem" }} className="">
+            <h5
+              style={{
+                marginRight: "1rem",
+                paddingTop: ".3rem",
+              }}
+            ></h5>
+            <select
+              style={{ height: "35px" }}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="">Choose Event Type</option>
+              {eventsData.map((eventType) => (
+                <option key={eventType} value={eventType}>
+                  {eventType}
+                </option>
+              ))}
+            </select>
+          </Container>
+        </div>
 
-        </Container>
-      </div>
-
-
-
-
-        <Row xs={1} md={2} lg={2} className="g-4">
->>>>>>> 6fd67bcbfe64b2e8e732584200900a8ab1010776
+        <Row xs={1} md={2} lg={4} className="g-4">
           {events?.length ? (
             events.map((event) => (
               <Card

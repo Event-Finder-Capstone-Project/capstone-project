@@ -42,7 +42,7 @@ const initialState = {
   postalCode: "",
   city: "",
   state: "",
-  zip : "",
+  zip: "",
   query: "",
   lat: "",
   lng: "",
@@ -63,7 +63,7 @@ const searchSlice = createSlice({
     setCity: (state, action) => {
       state.city = action.payload.city;
       state.state = action.payload.state;
-      state.zip = action.payload.zip
+      state.zip = action.payload.zip;
     },
     setDateRange: (state, action) => {
       state.dateRange = {
@@ -83,6 +83,6 @@ const searchSlice = createSlice({
   },
 });
 
-export const { setPostalCode, setQuery, setCity, setDateRange } =
+export const { setPostalCode, setQuery, setCity, setDateRange, setCoords } =
   searchSlice.actions;
 export default searchSlice.reducer;

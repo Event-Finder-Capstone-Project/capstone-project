@@ -53,49 +53,49 @@ const Weekend = () => {
 
   useEffect(() => {
     if ((city !== null && state !== null) || (latitude && longitude)) {
-        const today = new Date();
-        const startOfWeek = new Date(today);
-        const endOfWeek = new Date(today);
+      const today = new Date();
+      const startOfWeek = new Date(today);
+      const endOfWeek = new Date(today);
 
-        const dayOfWeek = today.getDay();
+      const dayOfWeek = today.getDay();
 
-        const daysUntilFriday = 5 - dayOfWeek; 
-        const daysUntilSunday = 7 - dayOfWeek + 1;
+      const daysUntilFriday = 5 - dayOfWeek;
+      const daysUntilSunday = 7 - dayOfWeek + 1;
 
-        startOfWeek.setDate(today.getDate() + daysUntilFriday);
-    endOfWeek.setDate(today.getDate() + daysUntilSunday);
+      startOfWeek.setDate(today.getDate() + daysUntilFriday);
+      endOfWeek.setDate(today.getDate() + daysUntilSunday);
 
-    const fetchEventData = async () => {
-      let eventDataParams = {
-        type: filter,
-        page: page,
-        dateRange: {
+      const fetchEventData = async () => {
+        let eventDataParams = {
+          type: filter,
+          page: page,
+          dateRange: {
             startDate: startOfWeek.toISOString().split("T")[0],
             endDate: endOfWeek.toISOString().split("T")[0],
+          },
+        };
+
+        if (city && state) {
+          eventDataParams = {
+            ...eventDataParams,
+            venue: {
+              city: city,
+              state: state,
+            },
+          };
+        } else if (latitude && longitude) {
+          eventDataParams = {
+            ...eventDataParams,
+            latitude: latitude,
+            longitude: longitude,
+          };
         }
+        console.log("event data: ", eventDataParams);
+        dispatch(getAllEvents(eventDataParams));
       };
-  
-      if (city && state) {
-        eventDataParams = {
-          ...eventDataParams,
-          venue: {
-            city: city,
-            state: state
-          }
-        };
-      } else if (latitude && longitude) {
-        eventDataParams = {
-          ...eventDataParams,
-          latitude: latitude,
-          longitude: longitude
-        };
-      }
-  console.log('event data: ', eventDataParams)
-      dispatch(getAllEvents(eventDataParams));
-    };
-  
-    fetchEventData();
-  }
+
+      fetchEventData();
+    }
   }, [dispatch, filter, page, city, state, latitude, longitude]);
 
   useEffect(() => {
@@ -155,7 +155,10 @@ const Weekend = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
+    libraries: ["places"],
+  });
 
   return (
     <>
@@ -196,8 +199,7 @@ const Weekend = () => {
       </div>
       <h1 style={{ marginTop: "1rem" }}> Happening This Weekend </h1>
 
-           {isLoaded && <CityFilter />} 
-
+      {isLoaded && <CityFilter />}
 
       <Container
         fluid="lg"
@@ -206,9 +208,9 @@ const Weekend = () => {
         style={{ marginTop: "3rem" }}
       >
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
-         <TestMap /> 
+          <TestMap />
         </Container>
-        <Row xs={1} md={2} lg={2} className="g-4">
+        <Row xs={1} md={2} lg={4} className="g-4">
           {events?.length ? (
             events.map((event) => (
               <Card
@@ -251,7 +253,11 @@ const Weekend = () => {
               </Card>
             ))
           ) : (
-              <p>{!events?.length ? "No events found... try checking a different location!" : ""}</p>
+            <p>
+              {!events?.length
+                ? "No events found... try checking a different location!"
+                : ""}
+            </p>
           )}
         </Row>
       </Container>

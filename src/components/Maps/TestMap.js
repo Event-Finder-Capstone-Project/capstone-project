@@ -18,8 +18,17 @@ export default function TestMap() {
 
   const events = useSelector(selectEvents);
   const [selectedEvent, setSelectedEvent] = useState(null);
+
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
+
+  const searchLAT = useSelector((state) => state.search.lat);
+  const searchLNG = useSelector((state) => state.search.lng);
+
+  const lat = searchLAT === "" ? latitude : searchLAT;
+  const lng = searchLNG === "" ? longitude : searchLNG;
+
+  console.log("mapLocation", lat, lng);
 
   if (!isLoaded)
     return (
@@ -30,8 +39,8 @@ export default function TestMap() {
   return (
     <Container style={{ width: "120%", marginLeft: "-2.2rem" }}>
       <GoogleMap
-        zoom={10}
-        center={{ lat: latitude, lng: longitude }}
+        zoom={11}
+        center={{ lat: lat, lng: lng }}
         mapContainerStyle={{ width: "100%", height: 350 }}
       >
         {events.map((marker) => (
