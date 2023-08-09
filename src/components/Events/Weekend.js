@@ -25,14 +25,11 @@ const Weekend = () => {
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [clickedEvents, setClickedEvents] = useState([]);
+  const [rerender, setRerender] = useState(false);
+  const storedCity = localStorage.getItem("userCity");
+  const storedState = localStorage.getItem("userState");
 
   const dispatch = useDispatch();
-
-  /*   useEffect(() => {
-    if (filter === "") {
-      dispatch(getAllEvents({ type: filter }));
-    }
-  }, [dispatch, filter]); */
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,11 +45,8 @@ const Weekend = () => {
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
 
-  const city = useSelector((state) => state.search.city);
-  const state = useSelector((state) => state.search.state);
-
   useEffect(() => {
-    if ((city !== null && state !== null) || (latitude && longitude)) {
+    if ((storedCity && storedState) || (latitude && longitude)) {
       const today = new Date();
       const startOfWeek = new Date(today);
       const endOfWeek = new Date(today);
@@ -75,12 +69,12 @@ const Weekend = () => {
           },
         };
 
-        if (city && state) {
+        if (storedCity && storedState) {
           eventDataParams = {
             ...eventDataParams,
             venue: {
-              city: city,
-              state: state,
+              city: storedCity,
+              state: storedState,
             },
           };
         } else if (latitude && longitude) {
@@ -96,7 +90,7 @@ const Weekend = () => {
 
       fetchEventData();
     }
-  }, [dispatch, filter, page, city, state, latitude, longitude]);
+  }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -162,44 +156,7 @@ const Weekend = () => {
 
   return (
     <>
-      <div className="filter-container">
-        <Container
-          style={{ marginTop: ".5rem" }}
-          className="d-flex justify-content-center"
-        >
-          <h5
-            style={{
-              marginRight: "1rem",
-              paddingTop: ".3rem",
-            }}
-          >
-            Event Type
-          </h5>
-          <select
-            style={{ height: "35px" }}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="">None</option>
-            {eventsData.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
-          </select>
-
-          <Button
-            style={{ marginLeft: "1rem", height: "35px" }}
-            variant="secondary"
-            onClick={handleFilter}
-          >
-            Filter
-          </Button>
-        </Container>
-      </div>
       <h1 style={{ marginTop: "1rem" }}> Happening This Weekend </h1>
-
-      {isLoaded && <CityFilter />}
 
       <Container
         fluid="lg"
@@ -210,7 +167,32 @@ const Weekend = () => {
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
           <TestMap />
         </Container>
-        <Row xs={1} md={2} lg={4} className="g-4">
+
+        {isLoaded && <CityFilter onRerender={() => setRerender(!rerender)} />}
+        <div className="filter-container">
+          <Container style={{ marginTop: ".5rem" }} className="">
+            <h5
+              style={{
+                marginRight: "1rem",
+                paddingTop: ".3rem",
+              }}
+            ></h5>
+            <select
+              style={{ height: "35px" }}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="">Choose Event Type</option>
+              {eventsData.map((eventType) => (
+                <option key={eventType} value={eventType}>
+                  {eventType}
+                </option>
+              ))}
+            </select>
+          </Container>
+        </div>
+
+        <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
             events.map((event) => (
               <Card

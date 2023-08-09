@@ -2,10 +2,15 @@ import Autocomplete from "react-google-autocomplete";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setCity, setCoords } from "../../store/searchSlice";
+import { setCityState } from "../../store/locationSlice";
 
-const CityFilter = () => {
+const CityFilter = ({ onRerender }) => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    onRerender();
+  }, [dispatch, onRerender]);
 
   useEffect(() => {
     if (selectedPlace) {
@@ -47,18 +52,24 @@ const CityFilter = () => {
               lng: longitude,
             })
           );
+
+          localStorage.setItem("userCity", city || "");
+          localStorage.setItem("userState", state || "");
         }
       });
     }
   }, [dispatch, selectedPlace]);
 
   return (
-    <Autocomplete
-      apiKey="AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU"
-      onPlaceSelected={(place) => {
-        setSelectedPlace(place);
-      }}
-    />
+    <>
+      📍
+      <Autocomplete
+        apiKey="AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU"
+        onPlaceSelected={(place) => {
+          setSelectedPlace(place);
+        }}
+      />
+    </>
   );
 };
 

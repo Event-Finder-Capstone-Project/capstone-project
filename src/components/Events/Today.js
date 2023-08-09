@@ -12,29 +12,20 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import CityFilter from "./CityFilter";
 import Autocomplete from "react-google-autocomplete";
 import Search from "../NavBar/Search";
-
 const Today = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [clickedEvents, setClickedEvents] = useState([]);
-
+  const [rerender, setRerender] = useState(false);
   const dispatch = useDispatch();
-
-  /*   useEffect(() => {
-    if (filter === "") {
-      dispatch(getAllEvents({ type: filter }));
-    }
-  }, [dispatch, filter]); */
-
   useEffect(() => {
     const handleScroll = () => {
       sessionStorage.setItem("scrollPosition", window.scrollY);
@@ -44,30 +35,46 @@ const Today = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
   const events = useSelector(selectEvents);
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
-
+  const storedCity = localStorage.getItem("userCity");
+  const storedState = localStorage.getItem("userState");
   useEffect(() => {
-    const startDate = new Date();
-    const endDate = new Date();
-    endDate.setDate(startDate.getDate() + 1);
-
-    dispatch(
-      getAllEvents({
-        type: filter,
-        page: page,
-        latitude: latitude,
-        longitude: longitude,
-        dateRange: {
-          startDate: startDate.toISOString().split("T")[0],
-          endDate: endDate.toISOString().split("T")[0],
-        },
-      })
-    );
-  }, [dispatch, filter, page, latitude, longitude]);
-
+    if ((storedCity && storedState) || (latitude && longitude)) {
+      const startDate = new Date();
+      const endDate = new Date();
+      endDate.setDate(startDate.getDate() + 1);
+      const fetchEventData = async () => {
+        let eventDataParams = {
+          type: filter,
+          page: page,
+          dateRange: {
+            startDate: startDate.toISOString().split("T")[0],
+            endDate: endDate.toISOString().split("T")[0],
+          },
+        };
+        if (storedCity && storedState) {
+          eventDataParams = {
+            ...eventDataParams,
+            venue: {
+              city: storedCity,
+              state: storedState,
+            },
+          };
+        } else if (latitude && longitude) {
+          eventDataParams = {
+            ...eventDataParams,
+            latitude: latitude,
+            longitude: longitude,
+          };
+        }
+        console.log("event data: ", eventDataParams);
+        dispatch(getAllEvents(eventDataParams));
+      };
+      fetchEventData();
+    }
+  }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
   useEffect(() => {
     const fetchEventsData = async () => {
       try {
@@ -93,16 +100,13 @@ const Today = () => {
     fetchEventsData();
     fetchUserEvents();
   }, []);
-
   const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
-
       // Add the event ID to the user's events array in Firestore
       await updateDoc(userDocRef, {
         events: [...userEvents, eventId],
       });
-
       // Update the local state
       setUserEvents([...userEvents, eventId]);
     } else {
@@ -111,29 +115,23 @@ const Today = () => {
     }
     setClickedEvents((prevClicked) => [...prevClicked, eventId]);
   };
-
   const handleFilter = () => {
     setPage(1);
     dispatch(getAllEvents({ type: filter, page: 1 }));
   };
-
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
   };
-
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
-
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
     libraries: ["places"],
   });
-
   return (
     <>
       <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
-
       <Container
         fluid="lg"
         class="text-center"
@@ -143,8 +141,7 @@ const Today = () => {
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
           <TestMap />
         </Container>
-
-        {isLoaded && <CityFilter />}
+        {isLoaded && <CityFilter onRerender={() => setRerender(!rerender)} />}
         <div className="filter-container">
           <Container style={{ marginTop: ".5rem" }} className="">
             <h5
@@ -167,8 +164,7 @@ const Today = () => {
             </select>
           </Container>
         </div>
-
-        <Row xs={1} md={2} lg={4} className="g-4">
+        <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
             events.map((event) => (
               <Card
@@ -211,7 +207,11 @@ const Today = () => {
               </Card>
             ))
           ) : (
-            <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
+            <p>
+              {!events?.length
+                ? "No events found... try checking a different location!"
+                : ""}
+            </p>
           )}
         </Row>
       </Container>
@@ -233,5 +233,4 @@ const Today = () => {
     </>
   );
 };
-
 export default Today;
