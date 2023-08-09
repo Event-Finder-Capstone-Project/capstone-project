@@ -47,47 +47,24 @@ const Today = () => {
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
 
-  const city = useSelector((state) => state.search.city);
-  const state = useSelector((state) => state.search.state);
-
   useEffect(() => {
-    if ((city !== null && state !== null) || (latitude && longitude)) {
     const startDate = new Date();
     const endDate = new Date();
     endDate.setDate(startDate.getDate() + 1);
 
-    const fetchEventData = async () => {
-      let eventDataParams = {
+    dispatch(
+      getAllEvents({
         type: filter,
         page: page,
+        latitude: latitude,
+        longitude: longitude,
         dateRange: {
-          startDate: startDate.toISOString().split('T')[0],
-          endDate: endDate.toISOString().split('T')[0]
-        }
-      };
-  
-      if (city && state) {
-        eventDataParams = {
-          ...eventDataParams,
-          venue: {
-            city: city,
-            state: state
-          }
-        };
-      } else if (latitude && longitude) {
-        eventDataParams = {
-          ...eventDataParams,
-          latitude: latitude,
-          longitude: longitude
-        };
-      }
-  console.log('event data: ', eventDataParams)
-      dispatch(getAllEvents(eventDataParams));
-    };
-  
-    fetchEventData();
-  }
-  }, [dispatch, filter, page, city, state, latitude, longitude]);
+          startDate: startDate.toISOString().split("T")[0],
+          endDate: endDate.toISOString().split("T")[0],
+        },
+      })
+    );
+  }, [dispatch, filter, page, latitude, longitude]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -185,8 +162,6 @@ const Today = () => {
       </div>
       <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
 
-      <CityFilter />
-
       <Container
         fluid="lg"
         class="text-center"
@@ -194,9 +169,9 @@ const Today = () => {
         style={{ marginTop: "3rem" }}
       >
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
-         <TestMap /> 
+          <TestMap />
         </Container>
-        <Row xs={1} md={2} lg={2} className="g-4">
+        <Row xs={1} md={2} lg={4} className="g-4">
           {events?.length ? (
             events.map((event) => (
               <Card
@@ -239,7 +214,7 @@ const Today = () => {
               </Card>
             ))
           ) : (
-              <p>{!events?.length ? "No events found... try checking a different location!" : ""}</p>
+            <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
           )}
         </Row>
       </Container>

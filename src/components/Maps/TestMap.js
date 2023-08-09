@@ -21,7 +21,7 @@ export default function TestMap() {
       </Container>
     );
   return (
-    <Container style={{ width: "120%", marginLeft: "-2.2rem" }}>
+    <Container style={{ width: "119%", marginLeft: "-2.2rem" }}>
       <GoogleMap
         zoom={10}
         center={{ lat: latitude, lng: longitude }}
