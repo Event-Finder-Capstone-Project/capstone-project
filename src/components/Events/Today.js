@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { addEvents } from "../../store/eventsSlice";
+import { useLoadScript } from "@react-google-maps/api";
 import {
   collection,
   getDocs,
@@ -17,6 +18,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import CityFilter from "./CityFilter";
 import Autocomplete from "react-google-autocomplete";
+import Search from "../NavBar/Search";
 
 const Today = () => {
   const [page, setPage] = useState(1);
@@ -123,45 +125,18 @@ const Today = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
+  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
+
   return (
     <>
-      <div className="filter-container">
-        <Container
-          style={{ marginTop: ".5rem" }}
-          className="d-flex justify-content-center"
-        >
-          <h5
-            style={{
-              marginRight: "1rem",
-              paddingTop: ".3rem",
-            }}
-          >
-            Event Type
-          </h5>
-          <select
-            style={{ height: "35px" }}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="">None</option>
-            {eventsData.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
-          </select>
-
-          <Button
-            style={{ marginLeft: "1rem", height: "35px" }}
-            variant="secondary"
-            onClick={handleFilter}
-          >
-            Filter
-          </Button>
-        </Container>
-      </div>
+     
       <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 6fd67bcbfe64b2e8e732584200900a8ab1010776
       <Container
         fluid="lg"
         class="text-center"
@@ -171,7 +146,46 @@ const Today = () => {
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
           <TestMap />
         </Container>
+<<<<<<< HEAD
         <Row xs={1} md={2} lg={4} className="g-4">
+=======
+
+
+        {isLoaded && <CityFilter />}
+      <div className="filter-container">
+        <Container
+          style={{ marginTop: ".5rem" }}
+          className=""
+        >
+          <h5
+            style={{
+              marginRight: "1rem",
+              paddingTop: ".3rem",
+            }}
+          >
+      
+          </h5>
+          <select
+            style={{ height: "35px" }}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="">Choose Event Type</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
+          </select>
+
+        </Container>
+      </div>
+
+
+
+
+        <Row xs={1} md={2} lg={2} className="g-4">
+>>>>>>> 6fd67bcbfe64b2e8e732584200900a8ab1010776
           {events?.length ? (
             events.map((event) => (
               <Card

@@ -73,7 +73,6 @@ const NavBar = () => {
             <Nav.Link href="/signup" className="navlink">
               Sign Up
             </Nav.Link>
-
             <Search />
           </Container>
         </Navbar>
