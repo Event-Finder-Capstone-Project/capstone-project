@@ -84,7 +84,7 @@ const CityFilter = () => {
       <>
       <div>
         <Autocomplete
-  apiKey="AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU"
+  apiKey={process.env.REACT_APP_FIREBASE_API_KEY}
   onPlaceSelected={(place) => {
     setSelectedPlace(place);
   }}
