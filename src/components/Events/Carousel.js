@@ -31,6 +31,7 @@ const Carousel = () => {
         infiniteLoop={true}
         interval={3000}
         selectedItem={startSlide}
+        showThumbs={false}
       >
         {sortedEvents.map((event, index) => (
           <div key={index}>

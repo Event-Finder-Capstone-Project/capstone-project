@@ -28,6 +28,7 @@ const Today = () => {
   const [clickedEvents, setClickedEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
   const dispatch = useDispatch();
+  
   useEffect(() => {
     const cityChangedListener = (data) => {
       setRerender(!rerender); 
