@@ -142,7 +142,7 @@ const Today = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
+  const {isLoaded} = useLoadScript({ googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY, libraries: ['places'], })
 
   return (
     <>
