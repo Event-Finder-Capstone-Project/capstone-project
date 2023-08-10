@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { addEvents } from "../../store/eventsSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar, faStarHalf } from "@fortawesome/free-solid-svg-icons"; 
 import {
   collection,
   getDocs,
@@ -215,20 +217,19 @@ const AllEvents = () => {
                     </Card.Body>
                   </Nav.Link>
                 </LinkContainer>
+                <div className="star-button-container">
                 {!clickedEvents.includes(event.id) &&
-                !userEvents.includes(event.id) ? (
-                  <Button
-                    variant="secondary"
-                    onClick={() => handleAddEvents(event.id)}
-                  >
-                    Add Event
-                  </Button>
-                ) : (
-                  <Button variant="secondary" disabled>
-                    Event Added
-                  </Button>
-                )}
-              </Card>
+        !userEvents.includes(event.id) ? (
+          <Button onClick={() => handleAddEvents(event.id)}>
+          <FontAwesomeIcon icon={faStar} />
+          </Button>
+        ) : (
+          <Button variant="secondary" disabled>
+           <FontAwesomeIcon icon={faStar} />
+          </Button>
+        )}
+        </div>
+      </Card>
             ))
           ) : (
             <p>{!events?.length ? "No events found!" : ""}</p>
