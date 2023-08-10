@@ -84,20 +84,11 @@ const CityFilter = () => {
     <>
       <div>
         <Autocomplete
-  apiKey={process.env.REACT_APP_FIREBASE_API_KEY}
-  onPlaceSelected={(place) => {
-    setSelectedPlace(place);
-  }}
-/>
-
-<button onClick={askForLocation}>
-  <FontAwesomeIcon icon={faLocationDot} /> Use Current Location
-</button>
-
-</div>
-</>
-    );
-  };
+          apiKey={process.env.REACT_APP_FIREBASE_API_KEY}
+          onPlaceSelected={(place) => {
+            setSelectedPlace(place);
+          }}
+        />
 
         <button onClick={askForLocation}>
           <FontAwesomeIcon icon={faLocationDot} /> Use Current Location
