@@ -9,15 +9,11 @@ import {
   getDocs,
   doc,
   getDoc,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
-import CityFilter from "./CityFilter";
-import Autocomplete from "react-google-autocomplete";
-import Search from "../NavBar/Search";
 import { eventEmitter } from "../App";
 
 const Today = () => {

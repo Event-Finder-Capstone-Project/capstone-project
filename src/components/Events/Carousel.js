@@ -1,8 +1,7 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel as ResponsiveCarousel } from "react-responsive-carousel";
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { getAllEvents } from "../../store/allEventsSlice";
+import { useSelector} from "react-redux";
 import { selectEvents } from "../../store/allEventsSlice";
 
 const Carousel = () => {

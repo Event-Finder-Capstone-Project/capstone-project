@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { auth, db } from "../firebase";
+import React from "react";
 import AllEvents from "./Events/AllEvents";
 
 const Home = () => {

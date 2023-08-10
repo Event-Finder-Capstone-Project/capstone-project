@@ -8,14 +8,11 @@ import {
   getDocs,
   doc,
   getDoc,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
-
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import TestMap from "../Maps/TestMap";
-import Carousel from "./Carousel";
+import { TestMap, Carousel} from '../'
 import { eventEmitter } from "../App";
 
 const AllEvents = () => {
