@@ -11,7 +11,7 @@ const NewCarousel = () => {
     .slice(0, 4);
 
   return (
-    <Container>
+    <Container style={{ width: "100%", height: "40%" }}>
       <Carousel data-bs-theme="dark">
         {sortedEvents.map((event, index) => (
           <Carousel.Item key={index}>
@@ -26,9 +26,11 @@ const NewCarousel = () => {
                   alt={`${index + 1}`}
                 />
                 <Carousel.Caption
-                  style={{ paddingLeft: "11%", color: "white", width: "59%" }}
+                  style={{ paddingLeft: "15%", color: "white", width: "55%" }}
                 >
-                  <h4 className="legend">{event.title}</h4>
+                  <h4 style={{ maxHeight: "50%" }} className="legend">
+                    {event.title}
+                  </h4>
                 </Carousel.Caption>
               </Nav.Link>
             </LinkContainer>
