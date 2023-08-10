@@ -101,7 +101,7 @@ export default function Signup() {
       >
         <Card className=" form-width" style={{ width: "30rem" }}>
           <Card.Body>
-            <h2 className="form-name">Sign Up</h2>
+            <h2 className="form-name title mb-4 text-center">Sign Up</h2>
             {error && <Alert variant="danger">{error}</Alert>}
             <Form>
               <Form.Group

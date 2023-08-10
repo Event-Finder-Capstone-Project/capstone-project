@@ -8,13 +8,13 @@ import { getMessaging, getToken } from "firebase/messaging";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDeIUoycMggQumCdlJN24Xp-IbYYA6YAe0",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "event-finder-test-56e2e.firebaseapp.com",
-  databaseURL: "https://event-finder-test-56e2e-default-rtdb.firebaseio.com",
-  projectId: "event-finder-test-56e2e",
-  storageBucket: "event-finder-test-56e2e.appspot.com",
-  messagingSenderId: "142795023154",
-  appId: "1:142795023154:web:9d711d5b48d8a48b39ad2b"
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase

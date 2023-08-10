@@ -16,12 +16,14 @@ import NavBar from "./NavBar/NavBar.js";
 import Home from "./Home";
 import UserDetails from "./Users/UserDetails";
 import UserProfile from "./Users/UserProfile";
-import { setLocation } from "../store/locationSlice";
+import { setCityState, setLocation } from "../store/locationSlice";
 import UserEvents from "./Users/UserEvents";
 import SearchResults from "./Events/SearchResults";
 import Today from "./Events/Today";
-import CalendarEvents from "./Users/CalendarEvents";
 import Weekend from "./Events/Weekend";
+import mitt from 'mitt';
+
+export const eventEmitter = mitt();
 
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -36,10 +38,11 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  const { postalCode } = useSelector((state) => state.location);
+  const { city } = useSelector((state) => state.location.city);
+  const { state } = useSelector((state) => state.location.state);
 
   useEffect(() => {
-    if ("geolocation" in navigator && !postalCode) {
+    if ("geolocation" in navigator && !city) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -49,8 +52,10 @@ function App() {
           console.error("Error getting user's location:", error.message);
         }
       );
+    } else if (city) {
+      dispatch(setCityState({ city, state }));
     }
-  }, [dispatch, postalCode]);
+  }, [dispatch, city]);
 
   return (
     <Router>
@@ -91,18 +96,6 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/searchresults" element={<SearchResults />} />
               </Routes>
-            </div>
-            <div className="front-bottom">
-              <div className="front-bottom-item">
-                <p>
-                  New User? <NavLink to="/signup">Sign Up</NavLink>
-                </p>
-              </div>
-              <div className="front-bottom-item">
-                <p>
-                  Already have an account? <NavLink to="/login">Log In</NavLink>
-                </p>
-              </div>
             </div>
           </div>
         )}

@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   latitude: 40.7128,
   longitude: -74.006,
-  postalCode: "",
+  city: "",
+  state: ""
 };
 
 const locationSlice = createSlice({
@@ -14,12 +15,13 @@ const locationSlice = createSlice({
       state.latitude = action.payload.latitude;
       state.longitude = action.payload.longitude;
     },
-    setPostalCode: (state, action) => {
-      state.postalCode = action.payload;
+    setCityState: (state, action) => {
+      state.city = action.payload.city;
+      state.state = action.payload.state;
     },
   },
 });
 
-export const { setLocation, setPostalCode } = locationSlice.actions;
+export const { setLocation, setCityState } = locationSlice.actions;
 
 export default locationSlice.reducer;

@@ -16,6 +16,7 @@ import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import Carousel from "./Carousel";
+import { eventEmitter } from "../App";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -23,6 +24,9 @@ const AllEvents = () => {
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [clickedEvents, setClickedEvents] = useState([]);
+  const [rerender, setRerender] = useState(false);
+  const storedCity = localStorage.getItem("userCity");
+  const storedState = localStorage.getItem("userState");
 
   const dispatch = useDispatch();
 
@@ -31,6 +35,18 @@ const AllEvents = () => {
       dispatch(getAllEvents({ type: filter }));
     }
   }, [dispatch, filter]);
+
+  useEffect(() => {
+    const cityChangedListener = (data) => {
+      setRerender(!rerender); 
+    };
+
+    eventEmitter.on('cityChanged', cityChangedListener);
+
+    return () => {
+      eventEmitter.off('cityChanged', cityChangedListener);
+    };
+  }, [rerender]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,7 +63,19 @@ const AllEvents = () => {
   const longitude = useSelector((state) => state.location.longitude);
 
   useEffect(() => {
- if (latitude && longitude) {
+    if (storedCity && storedState) {
+      const venue = {
+        city: storedCity,
+        state: storedState
+      };
+      dispatch(
+        getAllEvents({
+          type: filter,
+          page: page,
+          venue: venue
+        })
+      );
+    } else {
       dispatch(
         getAllEvents({
           type: filter,
@@ -56,10 +84,8 @@ const AllEvents = () => {
           longitude: longitude,
         })
       );
-    } else {
-      dispatch(getAllEvents({ type: filter, page: page }));
     }
-  }, [dispatch, filter, page, latitude, longitude]);
+  }, [dispatch, filter, page, latitude, longitude, storedCity, storedState]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -120,7 +146,20 @@ const AllEvents = () => {
 
   return (
     <>
-      <div className="filter-container">
+      <h1> Popular in your area </h1>
+      <Carousel />
+
+      <Container
+        fluid="lg"
+        class="text-center"
+        className="all-events-container"
+        style={{ marginTop: "3rem" }}
+      >
+        <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
+          <TestMap />
+        </Container>
+
+        <div className="filter-container">
         <Container
           style={{ marginTop: ".5rem" }}
           className="d-flex justify-content-center"
@@ -146,29 +185,10 @@ const AllEvents = () => {
             ))}
           </select>
 
-          <Button
-            style={{ marginLeft: "1rem", height: "35px" }}
-            variant="secondary"
-            onClick={handleFilter}
-          >
-            Filter
-          </Button>
+
         </Container>
       </div>
-      <h1> Popular in your area </h1>
-      <Carousel />
 
-      <div>{/* <Maps /> */}</div>
-
-      <Container
-        fluid="lg"
-        class="text-center"
-        className="all-events-container"
-        style={{ marginTop: "3rem" }}
-      >
-        <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
-          <TestMap />
-        </Container>
         <Row xs={1} md={2} lg={4} className="g-4">
           {events?.length ? (
             events.map((event) => (

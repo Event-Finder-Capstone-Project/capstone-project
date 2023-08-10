@@ -12,6 +12,8 @@ import {
   Col,
 } from "react-bootstrap";
 import Signout from "../Auth/Signout";
+import { useLoadScript } from "@react-google-maps/api";
+import CityFilter from "../Events/CityFilter";
 
 const NavBar = () => {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -24,6 +26,8 @@ const NavBar = () => {
     });
     return () => unsubscribe();
   }, []);
+
+  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
 
   return (
     <>
@@ -46,6 +50,7 @@ const NavBar = () => {
               Today
             </Nav.Link>
             <Search />
+            {isLoaded && <CityFilter/>}
             <Signout lgs={{ width: "3rem" }} />
           </Container>
         </Navbar>
@@ -73,8 +78,8 @@ const NavBar = () => {
             <Nav.Link href="/signup" className="navlink">
               Sign Up
             </Nav.Link>
-
-         {/*    <Search /> */}
+            <Search />
+  {isLoaded && <CityFilter/>}
           </Container>
         </Navbar>
       )}

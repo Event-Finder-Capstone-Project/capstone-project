@@ -1,11 +1,35 @@
 import Autocomplete from "react-google-autocomplete";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setCity } from "../../store/searchSlice";
+import { setCity, setCoords } from "../../store/searchSlice";
+import { eventEmitter } from "../App";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 const CityFilter = () => {
     const [selectedPlace, setSelectedPlace] = useState(null); 
     const dispatch = useDispatch();
+
+    const askForLocation = () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+    
+            localStorage.setItem("userCity", "");
+            localStorage.setItem("userState", "");
+    
+            eventEmitter.emit("cityChanged", { latitude, longitude });
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+          }
+        );
+      } else {
+        console.error("Geolocation is not available in this browser.");
+      }
+    };
 
     useEffect(() => {
         if (selectedPlace) {
@@ -31,6 +55,9 @@ const CityFilter = () => {
             component.types.includes("postal_code")
           )?.long_name;
 
+          const latitude = place.geometry.location.lat(city);
+          const longitude = place.geometry.location.lng(city);
+
           dispatch(
             setCity({
               city: city || "",
@@ -38,13 +65,24 @@ const CityFilter = () => {
               zip: postalCode || "",
             })
           );
+          dispatch(
+            setCoords({
+              lat: latitude,
+              lng: longitude,
+            })
+          );
+
+          localStorage.setItem("userCity", city || "");
+          localStorage.setItem("userState", state || "");
+          eventEmitter.emit('cityChanged', { city, state });
         }
       });
     }
   }, [dispatch, selectedPlace]);
 
     return (
-
+      <>
+      <div>
         <Autocomplete
   apiKey="AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU"
   onPlaceSelected={(place) => {
@@ -52,9 +90,14 @@ const CityFilter = () => {
   }}
 />
 
+<button onClick={askForLocation}>
+  <FontAwesomeIcon icon={faLocationDot} /> Use Current Location
+</button>
+
+</div>
+</>
     );
   };
-  
-  export default CityFilter
 
 
+export default CityFilter;

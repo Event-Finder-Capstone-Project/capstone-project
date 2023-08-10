@@ -18,6 +18,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import CityFilter from "./CityFilter";
 import Autocomplete from "react-google-autocomplete";
+import { eventEmitter } from "../App";
 
 const Weekend = () => {
   const [page, setPage] = useState(1);
@@ -25,14 +26,23 @@ const Weekend = () => {
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [clickedEvents, setClickedEvents] = useState([]);
+  const [rerender, setRerender] = useState(false);
+  const storedCity = localStorage.getItem("userCity");
+  const storedState = localStorage.getItem("userState");
 
   const dispatch = useDispatch();
 
-  /*   useEffect(() => {
-    if (filter === "") {
-      dispatch(getAllEvents({ type: filter }));
-    }
-  }, [dispatch, filter]); */
+  useEffect(() => {
+    const cityChangedListener = (data) => {
+      setRerender(!rerender); 
+    };
+
+    eventEmitter.on('cityChanged', cityChangedListener);
+
+    return () => {
+      eventEmitter.off('cityChanged', cityChangedListener);
+    };
+  }, [rerender]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,55 +58,52 @@ const Weekend = () => {
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
 
-  const city = useSelector((state) => state.search.city);
-  const state = useSelector((state) => state.search.state);
-
   useEffect(() => {
-    if ((city !== null && state !== null) || (latitude && longitude)) {
-        const today = new Date();
-        const startOfWeek = new Date(today);
-        const endOfWeek = new Date(today);
+    if ((storedCity && storedState) || (latitude && longitude)) {
+      const today = new Date();
+      const startOfWeek = new Date(today);
+      const endOfWeek = new Date(today);
 
-        const dayOfWeek = today.getDay();
+      const dayOfWeek = today.getDay();
 
-        const daysUntilFriday = 5 - dayOfWeek; 
-        const daysUntilSunday = 7 - dayOfWeek + 1;
+      const daysUntilFriday = 5 - dayOfWeek;
+      const daysUntilSunday = 7 - dayOfWeek + 1;
 
-        startOfWeek.setDate(today.getDate() + daysUntilFriday);
-    endOfWeek.setDate(today.getDate() + daysUntilSunday);
+      startOfWeek.setDate(today.getDate() + daysUntilFriday);
+      endOfWeek.setDate(today.getDate() + daysUntilSunday);
 
-    const fetchEventData = async () => {
-      let eventDataParams = {
-        type: filter,
-        page: page,
-        dateRange: {
+      const fetchEventData = async () => {
+        let eventDataParams = {
+          type: filter,
+          page: page,
+          dateRange: {
             startDate: startOfWeek.toISOString().split("T")[0],
             endDate: endOfWeek.toISOString().split("T")[0],
+          },
+        };
+
+        if (storedCity && storedState) {
+          eventDataParams = {
+            ...eventDataParams,
+            venue: {
+              city: storedCity,
+              state: storedState,
+            },
+          };
+        } else if (latitude && longitude) {
+          eventDataParams = {
+            ...eventDataParams,
+            latitude: latitude,
+            longitude: longitude,
+          };
         }
+        console.log("event data: ", eventDataParams);
+        dispatch(getAllEvents(eventDataParams));
       };
-  
-      if (city && state) {
-        eventDataParams = {
-          ...eventDataParams,
-          venue: {
-            city: city,
-            state: state
-          }
-        };
-      } else if (latitude && longitude) {
-        eventDataParams = {
-          ...eventDataParams,
-          latitude: latitude,
-          longitude: longitude
-        };
-      }
-  console.log('event data: ', eventDataParams)
-      dispatch(getAllEvents(eventDataParams));
-    };
-  
-    fetchEventData();
-  }
-  }, [dispatch, filter, page, city, state, latitude, longitude]);
+
+      fetchEventData();
+    }
+  }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -155,49 +162,9 @@ const Weekend = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
-
   return (
     <>
-      <div className="filter-container">
-        <Container
-          style={{ marginTop: ".5rem" }}
-          className="d-flex justify-content-center"
-        >
-          <h5
-            style={{
-              marginRight: "1rem",
-              paddingTop: ".3rem",
-            }}
-          >
-            Event Type
-          </h5>
-          <select
-            style={{ height: "35px" }}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="">None</option>
-            {eventsData.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
-          </select>
-
-          <Button
-            style={{ marginLeft: "1rem", height: "35px" }}
-            variant="secondary"
-            onClick={handleFilter}
-          >
-            Filter
-          </Button>
-        </Container>
-      </div>
       <h1 style={{ marginTop: "1rem" }}> Happening This Weekend </h1>
-
-           {isLoaded && <CityFilter />} 
-
 
       <Container
         fluid="lg"
@@ -206,8 +173,37 @@ const Weekend = () => {
         style={{ marginTop: "3rem" }}
       >
         <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
-         <TestMap /> 
+          <TestMap />
         </Container>
+      <div className="filter-container">
+        <Container
+          style={{ marginTop: ".5rem" }}
+          className=""
+        >
+          <h5
+            style={{
+              marginRight: "1rem",
+              paddingTop: ".3rem",
+            }}
+          >
+      
+          </h5>
+          <select
+            style={{ height: "35px" }}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="">Choose Event Type</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
+          </select>
+
+        </Container>
+      </div>
+
         <Row xs={1} md={2} lg={2} className="g-4">
           {events?.length ? (
             events.map((event) => (
@@ -251,7 +247,11 @@ const Weekend = () => {
               </Card>
             ))
           ) : (
-              <p>{!events?.length ? "No events found... try checking a different location!" : ""}</p>
+            <p>
+              {!events?.length
+                ? "No events found... try checking a different location!"
+                : ""}
+            </p>
           )}
         </Row>
       </Container>
