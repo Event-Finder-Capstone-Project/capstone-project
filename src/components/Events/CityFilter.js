@@ -89,16 +89,6 @@ const CityFilter = () => {
     setSelectedPlace(place);
   }}
 />
-
-<button onClick={askForLocation}>
-  <FontAwesomeIcon icon={faLocationDot} /> Use Current Location
-</button>
-
-</div>
-</>
-    );
-  };
-
         <button onClick={askForLocation}>
           <FontAwesomeIcon icon={faLocationDot} /> Use Current Location
         </button>
