@@ -4,3 +4,11 @@
     flex-direction: column;
     align-items: center;
 }
+
+.star-button-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5rem;
+    z-index: 1; 
+  }

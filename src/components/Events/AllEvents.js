@@ -3,6 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { addEvents } from "../../store/eventsSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as solidStar} from "@fortawesome/free-solid-svg-icons";
+import { faStar as outlineStar} from "@fortawesome/free-regular-svg-icons";
+
+import Toastify from 'toastify-js'
 import {
   collection,
   getDocs,
@@ -113,16 +118,21 @@ const AllEvents = () => {
   const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
+      if (userEvents.includes(eventId)) {
+        const updatedEvents = userEvents.filter(id => id !== eventId);
+        await updateDoc(userDocRef, {
+          events: updatedEvents,
+        });
+  
+        setUserEvents(updatedEvents);
+      } else {
 
-      // Add the event ID to the user's events array in Firestore
-      await updateDoc(userDocRef, {
-        events: [...userEvents, eventId],
-      });
-
-      // Update the local state
-      setUserEvents([...userEvents, eventId]);
+        await updateDoc(userDocRef, {
+          events: [...userEvents, eventId],
+        });
+        setUserEvents([...userEvents, eventId]);
+      }
     } else {
-      // For guest users, add the event to local storage
       dispatch(addEvents(eventId));
     }
     setClickedEvents([...clickedEvents, eventId]);
@@ -215,20 +225,17 @@ const AllEvents = () => {
                     </Card.Body>
                   </Nav.Link>
                 </LinkContainer>
-                {!clickedEvents.includes(event.id) &&
-                !userEvents.includes(event.id) ? (
-                  <Button
-                    variant="secondary"
-                    onClick={() => handleAddEvents(event.id)}
-                  >
-                    Add Event
-                  </Button>
-                ) : (
-                  <Button variant="secondary" disabled>
-                    Event Added
-                  </Button>
-                )}
-              </Card>
+                <div className="star-button-container">
+          <Button onClick={() => handleAddEvents(event.id)}>
+          {!clickedEvents.includes(event.id) &&
+        !userEvents.includes(event.id) ? (
+          <FontAwesomeIcon icon={outlineStar} />
+          ) : (
+            <FontAwesomeIcon icon={solidStar} />
+        )}
+          </Button>
+        </div>
+      </Card>
             ))
           ) : (
             <p>{!events?.length ? "No events found!" : ""}</p>
