@@ -97,18 +97,6 @@ function App() {
                 <Route path="/searchresults" element={<SearchResults />} />
               </Routes>
             </div>
-            <div className="front-bottom">
-              <div className="front-bottom-item">
-                <p>
-                  New User? <NavLink to="/signup">Sign Up</NavLink>
-                </p>
-              </div>
-              <div className="front-bottom-item">
-                <p>
-                  Already have an account? <NavLink to="/login">Log In</NavLink>
-                </p>
-              </div>
-            </div>
           </div>
         )}
       </Container>
