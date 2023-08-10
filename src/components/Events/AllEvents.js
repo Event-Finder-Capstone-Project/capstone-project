@@ -4,10 +4,10 @@ import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { addEvents } from "../../store/eventsSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar as solidStar} from "@fortawesome/free-solid-svg-icons";
-import { faStar as outlineStar} from "@fortawesome/free-regular-svg-icons";
+import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 
-import Toastify from 'toastify-js'
+import Toastify from "toastify-js";
 import {
   collection,
   getDocs,
@@ -119,14 +119,13 @@ const AllEvents = () => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
       if (userEvents.includes(eventId)) {
-        const updatedEvents = userEvents.filter(id => id !== eventId);
+        const updatedEvents = userEvents.filter((id) => id !== eventId);
         await updateDoc(userDocRef, {
           events: updatedEvents,
         });
-  
+
         setUserEvents(updatedEvents);
       } else {
-
         await updateDoc(userDocRef, {
           events: [...userEvents, eventId],
         });
@@ -226,16 +225,24 @@ const AllEvents = () => {
                   </Nav.Link>
                 </LinkContainer>
                 <div className="star-button-container">
-          <Button onClick={() => handleAddEvents(event.id)}>
-          {!clickedEvents.includes(event.id) &&
-        !userEvents.includes(event.id) ? (
-          <FontAwesomeIcon icon={outlineStar} />
-          ) : (
-            <FontAwesomeIcon icon={solidStar} />
-        )}
-          </Button>
-        </div>
-      </Card>
+                  <Button
+                    variant="outline"
+                    style={{
+                      border: "none",
+                      fontSize: "32px",
+                      marginTop: "-15px",
+                    }}
+                    onClick={() => handleAddEvents(event.id)}
+                  >
+                    {!clickedEvents.includes(event.id) &&
+                    !userEvents.includes(event.id) ? (
+                      <FontAwesomeIcon icon={outlineStar} />
+                    ) : (
+                      <FontAwesomeIcon icon={solidStar} />
+                    )}
+                  </Button>
+                </div>
+              </Card>
             ))
           ) : (
             <p>{!events?.length ? "No events found!" : ""}</p>
