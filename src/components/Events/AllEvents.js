@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { addEvents } from "../../store/eventsSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar, faStarHalf } from "@fortawesome/free-solid-svg-icons"; 
 import {
   collection,
   getDocs,
@@ -12,7 +14,7 @@ import {
 } from "firebase/firestore";
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { TestMap, Carousel} from '../'
+import { TestMap, NewCarousel } from "../";
 import { eventEmitter } from "../App";
 
 const AllEvents = () => {
@@ -35,13 +37,13 @@ const AllEvents = () => {
 
   useEffect(() => {
     const cityChangedListener = (data) => {
-      setRerender(!rerender); 
+      setRerender(!rerender);
     };
 
-    eventEmitter.on('cityChanged', cityChangedListener);
+    eventEmitter.on("cityChanged", cityChangedListener);
 
     return () => {
-      eventEmitter.off('cityChanged', cityChangedListener);
+      eventEmitter.off("cityChanged", cityChangedListener);
     };
   }, [rerender]);
 
@@ -63,13 +65,13 @@ const AllEvents = () => {
     if (storedCity && storedState) {
       const venue = {
         city: storedCity,
-        state: storedState
+        state: storedState,
       };
       dispatch(
         getAllEvents({
           type: filter,
           page: page,
-          venue: venue
+          venue: venue,
         })
       );
     } else {
@@ -144,7 +146,7 @@ const AllEvents = () => {
   return (
     <>
       <h1> Popular in your area </h1>
-      <Carousel />
+      <NewCarousel />
 
       <Container
         fluid="lg"
@@ -157,34 +159,32 @@ const AllEvents = () => {
         </Container>
 
         <div className="filter-container">
-        <Container
-          style={{ marginTop: ".5rem" }}
-          className="d-flex justify-content-center"
-        >
-          <h5
-            style={{
-              marginRight: "1rem",
-              paddingTop: ".3rem",
-            }}
+          <Container
+            style={{ marginTop: ".5rem" }}
+            className="d-flex justify-content-center"
           >
-            Event Type
-          </h5>
-          <select
-            style={{ height: "35px" }}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="">None</option>
-            {eventsData.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
-          </select>
-
-
-        </Container>
-      </div>
+            <h5
+              style={{
+                marginRight: "1rem",
+                paddingTop: ".3rem",
+              }}
+            >
+              Event Type
+            </h5>
+            <select
+              style={{ height: "35px" }}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="">None</option>
+              {eventsData.map((eventType) => (
+                <option key={eventType} value={eventType}>
+                  {eventType}
+                </option>
+              ))}
+            </select>
+          </Container>
+        </div>
 
         <Row xs={1} md={2} lg={4} className="g-4">
           {events?.length ? (
@@ -217,20 +217,19 @@ const AllEvents = () => {
                     </Card.Body>
                   </Nav.Link>
                 </LinkContainer>
+                <div className="star-button-container">
                 {!clickedEvents.includes(event.id) &&
-                !userEvents.includes(event.id) ? (
-                  <Button
-                    variant="secondary"
-                    onClick={() => handleAddEvents(event.id)}
-                  >
-                    Add Event
-                  </Button>
-                ) : (
-                  <Button variant="secondary" disabled>
-                    Event Added
-                  </Button>
-                )}
-              </Card>
+        !userEvents.includes(event.id) ? (
+          <Button onClick={() => handleAddEvents(event.id)}>
+          <FontAwesomeIcon icon={faStar} />
+          </Button>
+        ) : (
+          <Button variant="secondary" disabled>
+           <FontAwesomeIcon icon={faStar} />
+          </Button>
+        )}
+        </div>
+      </Card>
             ))
           ) : (
             <p>{!events?.length ? "No events found!" : ""}</p>
