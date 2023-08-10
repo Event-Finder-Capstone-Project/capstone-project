@@ -52,7 +52,6 @@ const UserEvents = () => {
           })
         );
         setSavedEvents(eventsData);
-        console.log(savedEvents);
       };
 
       fetchSavedEvents();
