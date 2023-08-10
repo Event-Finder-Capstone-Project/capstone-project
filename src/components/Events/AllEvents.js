@@ -4,7 +4,10 @@ import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { addEvents } from "../../store/eventsSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faStarHalf } from "@fortawesome/free-solid-svg-icons"; 
+import { faStar as solidStar} from "@fortawesome/free-solid-svg-icons";
+import { faStar as outlineStar} from "@fortawesome/free-regular-svg-icons";
+
+import Toastify from 'toastify-js'
 import {
   collection,
   getDocs,
@@ -115,16 +118,21 @@ const AllEvents = () => {
   const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
+      if (userEvents.includes(eventId)) {
+        const updatedEvents = userEvents.filter(id => id !== eventId);
+        await updateDoc(userDocRef, {
+          events: updatedEvents,
+        });
+  
+        setUserEvents(updatedEvents);
+      } else {
 
-      // Add the event ID to the user's events array in Firestore
-      await updateDoc(userDocRef, {
-        events: [...userEvents, eventId],
-      });
-
-      // Update the local state
-      setUserEvents([...userEvents, eventId]);
+        await updateDoc(userDocRef, {
+          events: [...userEvents, eventId],
+        });
+        setUserEvents([...userEvents, eventId]);
+      }
     } else {
-      // For guest users, add the event to local storage
       dispatch(addEvents(eventId));
     }
     setClickedEvents([...clickedEvents, eventId]);
@@ -218,16 +226,14 @@ const AllEvents = () => {
                   </Nav.Link>
                 </LinkContainer>
                 <div className="star-button-container">
-                {!clickedEvents.includes(event.id) &&
-        !userEvents.includes(event.id) ? (
           <Button onClick={() => handleAddEvents(event.id)}>
-          <FontAwesomeIcon icon={faStar} />
-          </Button>
-        ) : (
-          <Button variant="secondary" disabled>
-           <FontAwesomeIcon icon={faStar} />
-          </Button>
+          {!clickedEvents.includes(event.id) &&
+        !userEvents.includes(event.id) ? (
+          <FontAwesomeIcon icon={outlineStar} />
+          ) : (
+            <FontAwesomeIcon icon={solidStar} />
         )}
+          </Button>
         </div>
       </Card>
             ))
