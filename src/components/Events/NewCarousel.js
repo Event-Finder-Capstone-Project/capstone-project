@@ -26,7 +26,7 @@ const NewCarousel = () => {
                   alt={`${index + 1}`}
                 />
                 <Carousel.Caption
-                  style={{ paddingLeft: "11%", color: "white", width: "59%" }}
+                  style={{ paddingLeft: "15%", color: "white", width: "55%" }}
                 >
                   <h4 className="legend">{event.title}</h4>
                 </Carousel.Caption>
