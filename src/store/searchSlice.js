@@ -1,7 +1,6 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-
 export const getSearchResults = createAsyncThunk(
   "getSearchResults",
   async ({ query, postalCode, dateRange }) => {

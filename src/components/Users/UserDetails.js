@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Button,Container } from "react-bootstrap";
+import { Form, Button, Container } from "react-bootstrap";
 import { auth, db } from "../../firebase";
-import {
-  collection,
-  getDocs,
-  setDoc,
-  addDoc,
-  doc,
-  updateDoc,
-  getDoc,
-  onSnapshot,
-} from "firebase/firestore";
+import { setDoc, doc, updateDoc, getDoc } from "firebase/firestore";
 
 const UserDetails = ({ user }) => {
   const navigate = useNavigate();
@@ -98,8 +89,7 @@ const UserDetails = ({ user }) => {
               as="select"
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              required
-            >
+              required>
               <option value="">Select</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
@@ -131,7 +121,9 @@ const UserDetails = ({ user }) => {
               onChange={(e) => setInterests(e.target.value)}
             />
           </Form.Group>
-          <Button type="submit" variant="secondary" className="mt-3 w-100">Save</Button>
+          <Button type="submit" variant="secondary" className="mt-3 w-100">
+            Save
+          </Button>
         </Form>
       </div>
     </Container>

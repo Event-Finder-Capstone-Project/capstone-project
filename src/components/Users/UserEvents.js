@@ -68,7 +68,9 @@ const UserEvents = () => {
       const userId = auth.currentUser.uid;
       const userDocRef = doc(db, "users", userId);
 
-      const updatedEvents = loginUserEvents.filter((event) => event.id !== eventId);
+      const updatedEvents = loginUserEvents.filter(
+        (event) => event.id !== eventId
+      );
 
       await updateDoc(userDocRef, {
         events: updatedEvents.map((event) => event.id),
@@ -85,32 +87,34 @@ const UserEvents = () => {
       <h2>Your Saved Events</h2>
       <ul>
         {user
-          ? loginUserEvents.filter((event) => event !== undefined && event.status !==400).map((event) => (
-              <li key={event.id}>
-                <h3>{event.title}</h3>
-                <p>Date: {event.datetime_utc}</p>
-                <p>Venue: {event.venue?.name_v2}</p>
-                <button onClick={() => handleDeleteLoginUserEvent(event.id)}>
-                  Remove
-                </button>
-              </li>
-            ))
-          : savedEvents.filter((event) => event !== undefined && event.status !==400).map((event) => (
-              <li key={event.id}>
-                <h3>{event.title}</h3>
-                <p>Date: {event.datetime_utc}</p>
-                <p>Venue: {event.venue?.name_v2}</p>
-                <button onClick={() => handleDeleteEvent(event.id)}>
-                  Remove
-                </button>
-              </li>
-            ))}
+          ? loginUserEvents
+              .filter((event) => event !== undefined && event.status !== 400)
+              .map((event) => (
+                <li key={event.id}>
+                  <h3>{event.title}</h3>
+                  <p>Date: {event.datetime_utc}</p>
+                  <p>Venue: {event.venue?.name_v2}</p>
+                  <button onClick={() => handleDeleteLoginUserEvent(event.id)}>
+                    Remove
+                  </button>
+                </li>
+              ))
+          : savedEvents
+              .filter((event) => event !== undefined && event.status !== 400)
+              .map((event) => (
+                <li key={event.id}>
+                  <h3>{event.title}</h3>
+                  <p>Date: {event.datetime_utc}</p>
+                  <p>Venue: {event.venue?.name_v2}</p>
+                  <button onClick={() => handleDeleteEvent(event.id)}>
+                    Remove
+                  </button>
+                </li>
+              ))}
       </ul>
-      <CalendarEvents savedEvents={user ? loginUserEvents: savedEvents} />
+      <CalendarEvents savedEvents={user ? loginUserEvents : savedEvents} />
     </div>
   );
 };
 
 export default UserEvents;
-
-

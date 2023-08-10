@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { auth, db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Col,} from "react-bootstrap";
 
 const UserProfile = () => {
   const [userProfile, setUserProfile] = useState(null);

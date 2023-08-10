@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
 import { auth } from "../../firebase";
 import Search from "./Search";
-import {
-  Container,
-  Nav,
-  Navbar,
-  NavDropdown,
-  Image,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Container, Nav, Navbar, Image } from "react-bootstrap";
 import Signout from "../Auth/Signout";
 import { useLoadScript } from "@react-google-maps/api";
 import CityFilter from "../Events/CityFilter";
@@ -27,7 +18,10 @@ const NavBar = () => {
     return () => unsubscribe();
   }, []);
 
-  const {isLoaded} = useLoadScript({ googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU", libraries: ['places'], })
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
+    libraries: ["places"],
+  });
 
   return (
     <>
@@ -50,7 +44,7 @@ const NavBar = () => {
               Today
             </Nav.Link>
             <Search />
-            {isLoaded && <CityFilter/>}
+            {isLoaded && <CityFilter />}
             <Signout lgs={{ width: "3rem" }} />
           </Container>
         </Navbar>
@@ -79,7 +73,7 @@ const NavBar = () => {
               Sign Up
             </Nav.Link>
             <Search />
-  {isLoaded && <CityFilter/>}
+            {isLoaded && <CityFilter />}
           </Container>
         </Navbar>
       )}
