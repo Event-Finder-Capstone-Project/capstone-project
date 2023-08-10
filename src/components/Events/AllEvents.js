@@ -146,7 +146,20 @@ const AllEvents = () => {
 
   return (
     <>
-      <div className="filter-container">
+      <h1> Popular in your area </h1>
+      <Carousel />
+
+      <Container
+        fluid="lg"
+        class="text-center"
+        className="all-events-container"
+        style={{ marginTop: "3rem" }}
+      >
+        <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
+          <TestMap />
+        </Container>
+
+        <div className="filter-container">
         <Container
           style={{ marginTop: ".5rem" }}
           className="d-flex justify-content-center"
@@ -172,29 +185,10 @@ const AllEvents = () => {
             ))}
           </select>
 
-          <Button
-            style={{ marginLeft: "1rem", height: "35px" }}
-            variant="secondary"
-            onClick={handleFilter}
-          >
-            Filter
-          </Button>
+
         </Container>
       </div>
-      <h1> Popular in your area </h1>
-      <Carousel />
 
-      <div>{/* <Maps /> */}</div>
-
-      <Container
-        fluid="lg"
-        class="text-center"
-        className="all-events-container"
-        style={{ marginTop: "3rem" }}
-      >
-        <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
-          <TestMap />
-        </Container>
         <Row xs={1} md={2} lg={4} className="g-4">
           {events?.length ? (
             events.map((event) => (
