@@ -3,41 +3,36 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents } from "../../store/allEventsSlice";
 import { addEvents } from "../../store/eventsSlice";
-import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
-import { NavLink } from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import { Nav } from "react-bootstrap";
+import { doc, updateDoc } from "firebase/firestore";
+import {Button,Card,Nav} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
 import { getSearchResults, setDateRange } from "../../store/searchSlice";
 import DatePicker from "../NavBar/SearchComponents/DatePicker";
-import { useLoadScript } from "@react-google-maps/api";
-import Autocomplete from "react-google-autocomplete";
-import CityFilter from "./CityFilter";
 
 const SearchResults = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
-  const [rerender, setRerender] = useState(false);
   const searchState = useSelector((state) => state.search);
   const events = useSelector((state) => state.search.events);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getSearchResults({ query: searchState.query, postalCode: searchState.postalCode, dateRange: searchState.dateRange }));
-  }, [dispatch, searchState.query, searchState.postalCode, searchState.dateRange]);
-
-
+    dispatch(
+      getSearchResults({
+        query: searchState.query,
+        postalCode: searchState.postalCode,
+        dateRange: searchState.dateRange,
+      })
+    );
+  }, [
+    dispatch,
+    searchState.query,
+    searchState.postalCode,
+    searchState.dateRange,
+  ]);
 
   const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
@@ -73,10 +68,9 @@ const SearchResults = () => {
     dispatch(setDateRange(dateRange));
   };
 
-
   return (
     <>
-<DatePicker onSelectDateRange={handleSelectDateRange} />
+      <DatePicker onSelectDateRange={handleSelectDateRange} />
 
       <div className="filter-container">
         <div>
@@ -93,7 +87,6 @@ const SearchResults = () => {
         <Button onClick={handleFilter}>Filter</Button>
       </div>
 
-
       <div className="all-events-container">
         {events?.length ? (
           events.map((event) => (
@@ -101,8 +94,7 @@ const SearchResults = () => {
               style={{ width: "18rem", textDecoration: "none" }}
               class="card"
               className="event-container"
-              key={event.id}
-            >
+              key={event.id}>
               <LinkContainer to={`/events/${event.id}`}>
                 <Nav.Link>
                   <Card.Img

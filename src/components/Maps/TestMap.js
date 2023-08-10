@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState} from "react";
 import {
   GoogleMap,
   useLoadScript,
@@ -6,8 +6,8 @@ import {
   InfoWindowF,
 } from "@react-google-maps/api";
 import { Container } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
+import { useSelector} from "react-redux";
+import { selectEvents } from "../../store/allEventsSlice";
 import "../style/index.css";
 
 export default function TestMap() {
@@ -27,8 +27,6 @@ export default function TestMap() {
 
   const lat = searchLAT === "" ? latitude : searchLAT;
   const lng = searchLNG === "" ? longitude : searchLNG;
-
-  console.log("mapLocation", lat, lng);
 
   if (!isLoaded)
     return (
