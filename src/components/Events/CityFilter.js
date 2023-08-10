@@ -1,17 +1,14 @@
 import Autocomplete from "react-google-autocomplete";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setCity } from "../../store/searchSlice";
+import { setCity, setCoords } from "../../store/searchSlice";
 import { setCityState } from "../../store/locationSlice";
+import { eventEmitter } from "../App";
 
-const CityFilter = ({ onRerender }) => {
+const CityFilter = () => {
     const [selectedPlace, setSelectedPlace] = useState(null); 
     const dispatch = useDispatch();
-    
-    useEffect(() => {
-      onRerender();
-    }, [dispatch, onRerender]);
-  
+
     useEffect(() => {
         if (selectedPlace) {
       const placeId = selectedPlace.place_id;
@@ -32,8 +29,30 @@ const CityFilter = ({ onRerender }) => {
             component.types.includes("administrative_area_level_1")
           )?.short_name;
 
+          const postalCode = place.address_components.find((component) =>
+            component.types.includes("postal_code")
+          )?.long_name;
+
+          const latitude = place.geometry.location.lat(city);
+          const longitude = place.geometry.location.lng(city);
+
+          dispatch(
+            setCity({
+              city: city || "",
+              state: state || "",
+              zip: postalCode || "",
+            })
+          );
+          dispatch(
+            setCoords({
+              lat: latitude,
+              lng: longitude,
+            })
+          );
+
           localStorage.setItem("userCity", city || "");
           localStorage.setItem("userState", state || "");
+          eventEmitter.emit('cityChanged', { city, state });
         }
       });
     }
@@ -41,6 +60,7 @@ const CityFilter = ({ onRerender }) => {
 
     return (
       <>
+      <div>
       📍
         <Autocomplete
   apiKey="AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU"
@@ -48,10 +68,10 @@ const CityFilter = ({ onRerender }) => {
     setSelectedPlace(place);
   }}
 />
+</div>
 </>
     );
   };
-  
-  export default CityFilter
 
 
+export default CityFilter;

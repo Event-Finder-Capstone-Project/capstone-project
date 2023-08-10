@@ -16,6 +16,7 @@ import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import Carousel from "./Carousel";
+import { eventEmitter } from "../App";
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -23,6 +24,7 @@ const AllEvents = () => {
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [clickedEvents, setClickedEvents] = useState([]);
+  const [rerender, setRerender] = useState(false);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
 
@@ -33,6 +35,18 @@ const AllEvents = () => {
       dispatch(getAllEvents({ type: filter }));
     }
   }, [dispatch, filter]);
+
+  useEffect(() => {
+    const cityChangedListener = (data) => {
+      setRerender(!rerender); 
+    };
+
+    eventEmitter.on('cityChanged', cityChangedListener);
+
+    return () => {
+      eventEmitter.off('cityChanged', cityChangedListener);
+    };
+  }, [rerender]);
 
   useEffect(() => {
     const handleScroll = () => {
