@@ -17,7 +17,7 @@ import {
   Today,
   Weekend,
 } from "./";
-import { setCityState, setLocation } from "../store/locationSlice";
+import { setLocation } from "../store/locationSlice";
 import mitt from "mitt";
 
 export const eventEmitter = mitt();
@@ -35,11 +35,8 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  const { city } = useSelector((state) => state.location.city);
-  const { state } = useSelector((state) => state.location.state);
-
   useEffect(() => {
-    if ("geolocation" in navigator && !city) {
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -49,10 +46,8 @@ function App() {
           console.error("Error getting user's location:", error.message);
         }
       );
-    } else if (city) {
-      dispatch(setCityState({ city, state }));
     }
-  }, [dispatch, city]);
+  }, [dispatch]);
 
   return (
     <Router>

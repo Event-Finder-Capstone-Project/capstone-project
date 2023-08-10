@@ -32,7 +32,6 @@ export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page
       auth: auth,
   params: params
     });
-    console.log(response.data)
     return response.data.events;
   } catch (err) {
     console.log(err);

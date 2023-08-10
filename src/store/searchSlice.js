@@ -22,10 +22,6 @@ export const getSearchResults = createAsyncThunk(
         }
       }
 
-      if (postalCode) {
-        params["postal_code"] = postalCode.trim();
-      }
-
       const response = await axios.get(`https://api.seatgeek.com/2/events`, {
         auth: auth,
         params: params,
@@ -38,10 +34,6 @@ export const getSearchResults = createAsyncThunk(
 );
 
 const initialState = {
-  postalCode: "",
-  city: "",
-  state: "",
-  zip: "",
   query: "",
   lat: "",
   lng: "",
@@ -53,16 +45,8 @@ const searchSlice = createSlice({
   name: "search",
   initialState,
   reducers: {
-    setPostalCode: (state, action) => {
-      state.postalCode = action.payload;
-    },
     setQuery: (state, action) => {
       state.query = action.payload;
-    },
-    setCity: (state, action) => {
-      state.city = action.payload.city;
-      state.state = action.payload.state;
-      state.zip = action.payload.zip;
     },
     setDateRange: (state, action) => {
       state.dateRange = {
@@ -82,6 +66,6 @@ const searchSlice = createSlice({
   },
 });
 
-export const { setPostalCode, setQuery, setCity, setDateRange, setCoords } =
+export const { setQuery, setDateRange, setCoords } =
   searchSlice.actions;
 export default searchSlice.reducer;
