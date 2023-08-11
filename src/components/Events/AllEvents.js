@@ -17,6 +17,8 @@ import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel } from "../";
 import { eventEmitter } from "../App";
+import PrevNext from "./PrevNext";
+
 const AllEvents = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
@@ -26,15 +28,30 @@ const AllEvents = () => {
   const [rerender, setRerender] = useState(false);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
+  const events = useSelector(selectEvents);
+  const latitude = useSelector((state) => state.location.latitude);
+  const longitude = useSelector((state) => state.location.longitude);
+  const totalEvents = useSelector((state) => state.allEvents.totalEvents);
+  const totalPages = Math.ceil(totalEvents / 8);
+
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (filter === "") {
-      dispatch(getAllEvents({ type: filter }));
-    }
-  }, [dispatch, filter]);
+
+  const handlePreviousPage = () => {
+    setPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
+  };
+
   useEffect(() => {
     const cityChangedListener = (data) => {
       setRerender(!rerender);
+      setPage(1);
     };
     eventEmitter.on("cityChanged", cityChangedListener);
     return () => {
@@ -50,9 +67,6 @@ const AllEvents = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const events = useSelector(selectEvents);
-  const latitude = useSelector((state) => state.location.latitude);
-  const longitude = useSelector((state) => state.location.longitude);
   useEffect(() => {
     if (storedCity && storedState) {
       const venue = {
@@ -125,16 +139,6 @@ const AllEvents = () => {
     } else {
       setClickedEvents([...clickedEvents, eventId]);
     }
-  };
-  const handleFilter = () => {
-    setPage(1);
-    dispatch(getAllEvents({ type: filter, page: 1 }));
-  };
-  const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-  const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
   };
   return (
     <>
@@ -236,16 +240,13 @@ const AllEvents = () => {
         className="d-flex justify-content-center"
         style={{ alignContent: "center", marginTop: "2rem" }}
       >
-        <Button
-          variant="secondary"
-          style={{ marginRight: "1rem" }}
-          onClick={handlePreviousPage}
-        >
-          Previous
-        </Button>
-        <Button variant="secondary" onClick={handleNextPage}>
-          Next
-        </Button>
+        <PrevNext
+          currentPage={page}
+          totalPages={totalPages}
+          onPageClick={handlePageClick}
+          onNextClick={handleNextPage}
+          onPreviousClick={handlePreviousPage}
+        />
       </Container>
     </>
   );
