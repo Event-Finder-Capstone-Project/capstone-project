@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   GoogleMap,
   useLoadScript,
@@ -21,16 +21,15 @@ export default function TestMap() {
 
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
-  console.log(latitude,longitude);
+
   const searchLAT = useSelector((state) => state.search.lat);
   const searchLNG = useSelector((state) => state.search.lng);
-  console.log(searchLAT,searchLNG)
+
   const lat = searchLAT === "" ? latitude : searchLAT;
   const lng = searchLNG === "" ? longitude : searchLNG;
-  console.log(lat,lng);
+
   localStorage.setItem("mapCenterLat", lat);
   localStorage.setItem("mapCenterLng", lng);
-
 
   if (!isLoaded)
     return (
@@ -39,11 +38,16 @@ export default function TestMap() {
       </Container>
     );
   return (
-    <Container style={{ width: "120%", marginLeft: "-2.2rem" }}>
+    <Container
+      xs={{ maxHeight: "400px" }}
+      sm={{ maxHeight: "100vh" }}
+      style={{ width: "100%" }}
+    >
       <GoogleMap
         zoom={11}
         center={{ lat: lat, lng: lng }}
-        mapContainerStyle={{ width: "100%", height: 350 }}>
+        mapContainerStyle={{ width: "100%", height: "100vh" }}
+      >
         {events.map((marker) => (
           <MarkerF
             key={marker.id}
@@ -60,20 +64,22 @@ export default function TestMap() {
               lat: selectedEvent.venue.location.lat,
               lng: selectedEvent.venue.location.lon,
             }}
-            onCloseClick={() => setSelectedEvent(null)}>
+            onCloseClick={() => setSelectedEvent(null)}
+          >
             <div className="custom-infowindow-content">
               <h6>{selectedEvent.title}</h6>
               <p>{selectedEvent.venue.name}</p>
               <p>
                 {" "}
-                {selectedEvent.venue.address} 
+                {selectedEvent.venue.address}
                 <br />
                 {selectedEvent.venue.extended_address}
               </p>
               <a
                 href={`https://www.google.com/maps/dir/?api=1&destination=${selectedEvent.venue.location.lat},${selectedEvent.venue.location.lon}`}
                 target="_blank"
-                rel="noopener noreferrer">
+                rel="noopener noreferrer"
+              >
                 Get Directions
               </a>
             </div>

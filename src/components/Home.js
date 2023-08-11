@@ -1,10 +1,10 @@
 import React from "react";
-import AllEvents from "./Events/AllEvents";
+import { AllEvents, AllEventsNew } from "./";
 
 const Home = () => {
   return (
     <div>
-      <AllEvents />
+      <AllEventsNew />
     </div>
   );
 };
