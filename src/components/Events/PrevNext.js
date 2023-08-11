@@ -3,19 +3,35 @@ import React from "react";
 const PrevNext = ({ currentPage, totalPages, onPageClick, onNextClick, onPreviousClick }) => {
   const renderPageButtons = () => {
     const pageButtons = [];
+    const visiblePages = 5;
 
-    for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
+    let startPage = currentPage - 2;
+    let endPage = currentPage + 2;
+
+    if (startPage < 1) {
+      startPage = 1;
+      endPage = Math.min(visiblePages, totalPages);
+    }
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(1, totalPages - visiblePages + 1);
+    }
+
+    for (let pageNumber = startPage; pageNumber <= endPage; pageNumber++) {
       pageButtons.push(
         <button
           key={pageNumber}
           onClick={() => onPageClick(pageNumber)}
           className={currentPage === pageNumber ? "active" : ""}
         >
-          {pageNumber}
+           {currentPage === pageNumber ? (
+          <strong>{pageNumber}</strong>
+        ) : (
+          pageNumber
+        )}
         </button>
       );
     }
-
     return pageButtons;
   };
 
@@ -25,7 +41,7 @@ const PrevNext = ({ currentPage, totalPages, onPageClick, onNextClick, onPreviou
         Previous
       </button>
       {renderPageButtons()}
-      <button onClick={onNextClick} disabled={currentPage === totalPages}>
+      <button onClick={onNextClick} disabled={currentPage === totalPages || totalPages === 0}>
         Next
       </button>
     </div>
@@ -33,4 +49,3 @@ const PrevNext = ({ currentPage, totalPages, onPageClick, onNextClick, onPreviou
 };
 
 export default PrevNext;
-

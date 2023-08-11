@@ -34,12 +34,7 @@ const AllEvents = () => {
   const totalEvents = useSelector((state) => state.allEvents.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
 
-
   const dispatch = useDispatch();
-
-/*   useEffect(() => {
-    dispatch(getAllEvents({ type: filter, page, latitude, longitude }));
-  }, [dispatch, filter, page, latitude, longitude]); */
 
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
@@ -57,6 +52,7 @@ const AllEvents = () => {
   useEffect(() => {
     const cityChangedListener = (data) => {
       setRerender(!rerender);
+      setPage(1);
     };
 
     eventEmitter.on("cityChanged", cityChangedListener);
