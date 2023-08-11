@@ -6,7 +6,6 @@ import { addEvents } from "../../store/eventsSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
-import Toastify from "toastify-js";
 import {
   collection,
   getDocs,
@@ -135,7 +134,7 @@ const AllEvents = () => {
   };
   return (
     <>
-      <h1> Popular in your area </h1>
+      <h1> Popular in {storedCity ? storedCity : "your area"} </h1>
       <NewCarousel />
       <Container
         fluid="lg"

@@ -29,7 +29,7 @@ const UserEvents = () => {
                 return eventDetails.payload;
               })
             );
-            setLoginUserEvents(userEventData);
+            setLoginUserEvents(userEventData.filter((event) => event !== undefined && event.status !== 400));
           } else {
             console.log("Document does not exist");
           }
@@ -51,7 +51,7 @@ const UserEvents = () => {
             return eventDetails.payload;
           })
         );
-        setSavedEvents(eventsData);
+        setSavedEvents(eventsData.filter((event) => event !== undefined && event.status !== 400));
       };
 
       fetchSavedEvents();
@@ -87,7 +87,6 @@ const UserEvents = () => {
       <ul>
         {user
           ? loginUserEvents
-              .filter((event) => event !== undefined && event.status !== 400)
               .map((event) => (
                 <li key={event.id}>
                   <h3>{event.title}</h3>
@@ -99,7 +98,6 @@ const UserEvents = () => {
                 </li>
               ))
           : savedEvents
-              .filter((event) => event !== undefined && event.status !== 400)
               .map((event) => (
                 <li key={event.id}>
                   <h3>{event.title}</h3>
