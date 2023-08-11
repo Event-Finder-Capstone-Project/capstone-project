@@ -163,7 +163,7 @@ const Weekend = () => {
 
   return (
     <>
-      <h1 style={{ marginTop: "1rem" }}> Happening This Weekend </h1>
+      <h1 style={{ marginTop: "1rem" }}> Happening This Weekend {storedCity ? `in ${storedCity}` : ""}</h1>
 
       <Container
         fluid="lg"

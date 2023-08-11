@@ -132,7 +132,7 @@ const Today = () => {
 
   return (
     <>
-      <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
+      <h1 style={{ marginTop: "1rem" }}> Happening Today {storedCity ? `in ${storedCity}` : ""}</h1>
 
       <Container
         fluid="lg"

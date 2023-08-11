@@ -152,7 +152,7 @@ const AllEvents = () => {
 
   return (
     <>
-      <h1> Popular in your area </h1>
+      <h1> Popular in {storedCity ? storedCity : "your area"} </h1>
       <NewCarousel />
 
       <Container
