@@ -171,7 +171,7 @@ const AllEventsNew = () => {
           </Container>
         </div>
 
-        <Row xs={1} sm={2} style={{ width: "100%" }}>
+        <Row xs={1} sm={2}>
           <Col>
             <TestMap />
           </Col>
@@ -182,7 +182,7 @@ const AllEventsNew = () => {
                   xs={1}
                   sm={2}
                   className="g-4"
-                  style={{ marginBottom: "2rem", width: "100%" }}
+                  style={{ marginBottom: "2rem" }}
                 >
                   <LinkContainer to={`/events/${event.id}`}>
                     <Nav.Link>
@@ -224,7 +224,7 @@ const AllEventsNew = () => {
                             marginRight: "3rem",
                             textAlign: "center",
                           }}
-                          style={{ paddingTop: "80px", textAlign: "right" }}
+                          style={{ textAlign: "right" }}
                           id="event-name"
                         >
                           {event.title}
