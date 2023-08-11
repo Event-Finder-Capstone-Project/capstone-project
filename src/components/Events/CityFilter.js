@@ -101,6 +101,10 @@ const CityFilter = () => {
         <Autocomplete
           apiKey={process.env.REACT_APP_FIREBASE_API_KEY}
           onPlaceSelected={handlePlaceSelected}
+          options={{
+            types: ["(cities)"],
+            componentRestrictions: { country: ["us", "ca"] }, // Add the desired countries here
+          }}
         />
 
         <button onClick={askForLocation}>
