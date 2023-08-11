@@ -182,7 +182,6 @@ const AllEventsNew = () => {
                   style={{
                     border: "none",
                     fontSize: "32px",
-                    paddingBottom: "-50px",
                   }}
                   onClick={() => handleAddEvents(event.id)}
                 >
