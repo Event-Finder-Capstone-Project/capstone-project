@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { Nav, Row, Col, Container, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { TestMap, NewCarousel } from "..";
+import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
 const AllEventsNew = () => {
   const [page, setPage] = useState(1);
@@ -136,7 +136,7 @@ const AllEventsNew = () => {
   return (
     <>
       <h1> Popular in your area </h1>
-      <NewCarousel />
+      <Carousel />
       <Container
         fluid="lg"
         class="text-center"

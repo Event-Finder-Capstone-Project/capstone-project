@@ -21,13 +21,13 @@ export default function TestMap() {
 
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
-  console.log(latitude, longitude);
+
   const searchLAT = useSelector((state) => state.search.lat);
   const searchLNG = useSelector((state) => state.search.lng);
-  console.log(searchLAT, searchLNG);
+
   const lat = searchLAT === "" ? latitude : searchLAT;
   const lng = searchLNG === "" ? longitude : searchLNG;
-  console.log(lat, lng);
+
   localStorage.setItem("mapCenterLat", lat);
   localStorage.setItem("mapCenterLng", lng);
 
@@ -38,11 +38,11 @@ export default function TestMap() {
       </Container>
     );
   return (
-    <Container style={{ width: "120%", marginLeft: "-2.2rem" }}>
+    <Container style={{ width: "110%", marginLeft: "-2.2rem" }}>
       <GoogleMap
         zoom={11}
         center={{ lat: lat, lng: lng }}
-        mapContainerStyle={{ width: "100%", height: "100rem" }}
+        mapContainerStyle={{ width: "100%", height: "150rem" }}
       >
         {events.map((marker) => (
           <MarkerF
