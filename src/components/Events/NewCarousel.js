@@ -6,7 +6,7 @@ import { selectEvents } from "../../store/allEventsSlice";
 
 const NewCarousel = () => {
   const events = useSelector(selectEvents);
-  const sortedEvents = [...events]
+  const sortedEvents = [...(events|| [])]
     .sort((a, b) => b.venue.score - a.venue.score)
     .slice(0, 4);
 
