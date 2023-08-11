@@ -6,8 +6,8 @@ export const getSearchResults = createAsyncThunk(
   async ({ query, postalCode, dateRange }) => {
     try {
       const auth = {
-       username: process.env.REACT_APP_ALL_EVENTS_USERNAME,
-      password: process.env.REACT_APP_ALL_EVENTS_PASSWORD,
+        username: process.env.REACT_APP_ALL_EVENTS_USERNAME,
+        password: process.env.REACT_APP_ALL_EVENTS_PASSWORD,
       };
       const params = {};
 
@@ -43,8 +43,8 @@ const initialState = {
   state: "",
   zip: "",
   query: "",
-  lat: "",
-  lng: "",
+  lat: parseFloat(localStorage.getItem("mapCenterLat")) || "",
+  lng: parseFloat(localStorage.getItem("mapCenterLng")) || "",
   dateRange: null,
   events: [],
 };
