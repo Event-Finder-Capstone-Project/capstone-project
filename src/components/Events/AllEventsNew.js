@@ -136,12 +136,12 @@ const AllEventsNew = () => {
   return (
     <>
       <h1> Popular in your area </h1>
-      <Carousel />
+      <NewCarousel />
       <Container
         fluid="lg"
         class="text-center"
         className="all-events-container"
-        style={{ marginTop: "3rem" }}
+        style={{ marginTop: "3rem", marginLeft: "0px" }}
       >
         <div className="filter-container">
           <Container
@@ -171,22 +171,17 @@ const AllEventsNew = () => {
           </Container>
         </div>
 
-        <Row xs={1} sm={2}>
-          <Col>
+        <Row xs={1} sm={1} md={2}>
+          <Col style={{ maxWidth: "100%" }}>
             <TestMap />
           </Col>
           <Col>
             {events?.length ? (
               events.map((event) => (
-                <Row
-                  xs={1}
-                  sm={2}
-                  className="g-4"
-                  style={{ marginBottom: "2rem" }}
-                >
+                <Row xs={1} md={2} style={{ marginBottom: "2rem" }}>
                   <LinkContainer to={`/events/${event.id}`}>
                     <Nav.Link>
-                      <Col style={{ backgroundColor: "black" }}>
+                      <Col style={{ backgroundColor: "slategray" }}>
                         <img
                           sm={{ maxWidth: "200px", maxHeight: "200px" }}
                           xs={{
@@ -200,7 +195,14 @@ const AllEventsNew = () => {
                     </Nav.Link>
                   </LinkContainer>
 
-                  <Col style={{ backgroundColor: "slateGrey" }}>
+                  <Col
+                    style={{
+                      backgroundColor: "slateGrey",
+                      maxWidth: "200px",
+                      maxHeight: "100%",
+                    }}
+                    className="overflow-hidden"
+                  >
                     <Button
                       variant="outline"
                       style={{
@@ -221,8 +223,8 @@ const AllEventsNew = () => {
                         <h4
                           xs={{
                             color: "white",
-                            marginRight: "3rem",
                             textAlign: "center",
+                            width: "",
                           }}
                           style={{ textAlign: "right" }}
                           id="event-name"

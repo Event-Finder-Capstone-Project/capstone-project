@@ -38,11 +38,15 @@ export default function TestMap() {
       </Container>
     );
   return (
-    <Container style={{ width: "110%", marginLeft: "-2.2rem" }}>
+    <Container
+      xs={{ maxHeight: "400px" }}
+      sm={{ maxHeight: "100vh" }}
+      style={{ width: "100%", marginLeft: "-2rem" }}
+    >
       <GoogleMap
         zoom={11}
         center={{ lat: lat, lng: lng }}
-        mapContainerStyle={{ width: "100%", height: "150rem" }}
+        mapContainerStyle={{ width: "100%", height: "100vh" }}
       >
         {events.map((marker) => (
           <MarkerF
