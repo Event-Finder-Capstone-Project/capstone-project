@@ -255,6 +255,7 @@ const AllEvents = () => {
        <PrevNext
           currentPage={page}
           totalPages={totalPages}
+          totalEvents={totalEvents}
         onPageClick={handlePageClick}
         onNextClick={handleNextPage}
         onPreviousClick={handlePreviousPage}
