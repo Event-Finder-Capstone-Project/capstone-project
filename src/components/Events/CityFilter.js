@@ -10,26 +10,37 @@ const CityFilter = () => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const dispatch = useDispatch();
 
-  const askForLocation = () => {
+  const askForLocation = async () => {
     if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
+          console.log(latitude,longitude);
 
           localStorage.setItem("userCity", "");
           localStorage.setItem("userState", "");
+          localStorage.setItem("mapCenterLat", latitude);
+          localStorage.setItem("mapCenterLng", longitude);
 
           eventEmitter.emit("cityChanged", { latitude, longitude });
-        },
-        (error) => {
+          dispatch(
+            setCoords({
+              lat: latitude,
+              lng: longitude,
+            })
+            );
+
+        } catch (error) {
           console.error("Error getting location:", error);
         }
-      );
     } else {
       console.error("Geolocation is not available in this browser.");
     }
   };
+
 
   useEffect(() => {
     if (selectedPlace) {
@@ -79,15 +90,17 @@ const CityFilter = () => {
       });
     }
   }, [dispatch, selectedPlace]);
+  const handlePlaceSelected=(place)=>{
+    setSelectedPlace(place);
+    console.log(selectedPlace)
+  }
 
   return (
     <>
       <div>
         <Autocomplete
           apiKey={process.env.REACT_APP_FIREBASE_API_KEY}
-          onPlaceSelected={(place) => {
-            setSelectedPlace(place);
-          }}
+          onPlaceSelected={handlePlaceSelected}
         />
 
         <button onClick={askForLocation}>
