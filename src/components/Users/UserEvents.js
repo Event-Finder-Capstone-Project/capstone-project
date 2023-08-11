@@ -4,7 +4,7 @@ import { auth, db } from "../../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { deleteEvent } from "../../store/eventsSlice";
 import { getSingleEvent } from "../../store/singleEventSlice";
-import CalendarEvents from "./CalendarEvents";
+import BigCalendar from "./BigCalendar";
 
 const UserEvents = () => {
   const user = auth.currentUser;
@@ -109,7 +109,7 @@ const UserEvents = () => {
                 </li>
               ))}
       </ul>
-      <CalendarEvents savedEvents={user ? loginUserEvents : savedEvents} />
+      <BigCalendar savedEvents={user ? loginUserEvents: savedEvents}/>
     </div>
   );
 };
