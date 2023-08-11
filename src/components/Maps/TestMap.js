@@ -25,8 +25,8 @@ export default function TestMap() {
   const searchLAT = useSelector((state) => state.search.lat);
   const searchLNG = useSelector((state) => state.search.lng);
   console.log(searchLAT,searchLNG)
-  const lat = searchLAT === "" ? localStorage.getItem("mapCenterLat")===''?localStorage.getItem("mapCenterLat"):latitude : searchLAT;
-  const lng = searchLNG === "" ? localStorage.getItem("mapCenterLng")===''?localStorage.getItem("mapCenterLng"):longitude : searchLNG;
+  const lat = searchLAT === "" ? latitude : searchLAT;
+  const lng = searchLNG === "" ? longitude : searchLNG;
   console.log(lat,lng);
   localStorage.setItem("mapCenterLat", lat);
   localStorage.setItem("mapCenterLng", lng);
