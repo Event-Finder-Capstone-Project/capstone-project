@@ -106,6 +106,7 @@ const AllEvents = () => {
         if (userDocSnapshot.exists()) {
           const userData = userDocSnapshot.data();
           setUserEvents(userData.events || []);
+          setClickedEvents(userData.events || []);
         }
       }
     };
@@ -116,24 +117,25 @@ const AllEvents = () => {
   const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
-      if (userEvents.includes(eventId)) {
-        const updatedEvents = userEvents.filter((id) => id !== eventId);
-        await updateDoc(userDocRef, {
-          events: updatedEvents,
-        });
+      let updatedEvents = [...userEvents];
 
-        setUserEvents(updatedEvents);
+      if (updatedEvents.includes(eventId)) {
+        updatedEvents = updatedEvents.filter((id) => id !== eventId);
       } else {
-        await updateDoc(userDocRef, {
-          events: [...userEvents, eventId],
-        });
-        setUserEvents([...userEvents, eventId]);
+        updatedEvents.push(eventId);
       }
+      
+      await updateDoc(userDocRef, {
+        events: updatedEvents,
+      });
+  
+      setUserEvents(updatedEvents);
+      setClickedEvents(updatedEvents);
     } else {
       dispatch(addEvents(eventId));
     }
-    setClickedEvents([...clickedEvents, eventId]);
   };
+  
 
   const handleFilter = () => {
     setPage(1);
