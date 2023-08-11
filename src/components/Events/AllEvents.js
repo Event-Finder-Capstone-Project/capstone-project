@@ -243,10 +243,11 @@ const AllEvents = () => {
         <PrevNext
           currentPage={page}
           totalPages={totalPages}
-          onPageClick={handlePageClick}
-          onNextClick={handleNextPage}
-          onPreviousClick={handlePreviousPage}
-        />
+          totalEvents={totalEvents}
+        onPageClick={handlePageClick}
+        onNextClick={handleNextPage}
+        onPreviousClick={handlePreviousPage}
+      />
       </Container>
     </>
   );
