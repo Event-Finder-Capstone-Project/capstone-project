@@ -182,6 +182,8 @@ const AllEventsNew = () => {
                   style={{
                     border: "none",
                     fontSize: "32px",
+                    transform: "translatey(60px)",
+                    marginRight: "0",
                   }}
                   onClick={() => handleAddEvents(event.id)}
                 >
