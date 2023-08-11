@@ -10,7 +10,7 @@ export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page
     const params = {
       page: page,
       type: type,
-      per_page: 8
+per_page: 8
     };
 
     if (venue) {
@@ -33,7 +33,9 @@ export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page
   params: params
     });
     console.log(response.data)
-    return response.data.events;
+    return {   events: response.data.events,
+    total: response.data.meta.total 
+    };
   } catch (err) {
     console.log(err);
   }
@@ -43,12 +45,14 @@ const allEventsSlice = createSlice({
   name: "allEvents",
   initialState: {
     allEvents: [],
+    totalEvents: 0
   },
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getAllEvents.fulfilled, (state, { payload }) => {
-      state.allEvents = payload;
-    });
+      state.allEvents = payload.events;
+      state.totalEvents = payload.total;
+    })
   },
 });
 
