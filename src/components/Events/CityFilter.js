@@ -16,31 +16,29 @@ const CityFilter = () => {
         const position = await new Promise((resolve, reject) => {
           navigator.geolocation.getCurrentPosition(resolve, reject);
         });
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          console.log(latitude,longitude);
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        console.log(latitude, longitude);
 
-          localStorage.setItem("userCity", "");
-          localStorage.setItem("userState", "");
-          localStorage.setItem("mapCenterLat", latitude);
-          localStorage.setItem("mapCenterLng", longitude);
+        localStorage.setItem("userCity", "");
+        localStorage.setItem("userState", "");
+        localStorage.setItem("mapCenterLat", latitude);
+        localStorage.setItem("mapCenterLng", longitude);
 
-          eventEmitter.emit("cityChanged", { latitude, longitude });
-          dispatch(
-            setCoords({
-              lat: latitude,
-              lng: longitude,
-            })
-            );
-
-        } catch (error) {
-          console.error("Error getting location:", error);
-        }
+        eventEmitter.emit("cityChanged", { latitude, longitude });
+        dispatch(
+          setCoords({
+            lat: latitude,
+            lng: longitude,
+          })
+        );
+      } catch (error) {
+        console.error("Error getting location:", error);
+      }
     } else {
       console.error("Geolocation is not available in this browser.");
     }
   };
-
 
   useEffect(() => {
     if (selectedPlace) {
@@ -62,10 +60,6 @@ const CityFilter = () => {
             component.types.includes("administrative_area_level_1")
           )?.short_name;
 
-          const postalCode = place.address_components.find((component) =>
-            component.types.includes("postal_code")
-          )?.long_name;
-
           const latitude = place.geometry.location.lat(city);
           const longitude = place.geometry.location.lng(city);
 
@@ -73,7 +67,6 @@ const CityFilter = () => {
             setCity({
               city: city || "",
               state: state || "",
-              zip: postalCode || "",
             })
           );
           dispatch(
@@ -90,10 +83,10 @@ const CityFilter = () => {
       });
     }
   }, [dispatch, selectedPlace]);
-  const handlePlaceSelected=(place)=>{
+  const handlePlaceSelected = (place) => {
     setSelectedPlace(place);
-    console.log(selectedPlace)
-  }
+    console.log(selectedPlace);
+  };
 
   return (
     <>
@@ -103,7 +96,8 @@ const CityFilter = () => {
           onPlaceSelected={handlePlaceSelected}
           options={{
             types: ["(cities)"],
-            componentRestrictions: { country: ["us", "ca"] }, // Add the desired countries here
+            componentRestrictions: { country: ["us", "ca"] },
+            placeholder: "hello",
           }}
         />
 
