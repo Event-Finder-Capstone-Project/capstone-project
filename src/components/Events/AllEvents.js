@@ -132,7 +132,11 @@ const AllEvents = () => {
     } else {
       dispatch(addEvents(eventId));
     }
-    setClickedEvents([...clickedEvents, eventId]);
+    if (clickedEvents.includes(eventId)) {
+      setClickedEvents(clickedEvents.filter((id) => id !== eventId));
+    } else {
+      setClickedEvents([...clickedEvents, eventId]);
+    }
   };
 
   const handleFilter = () => {
