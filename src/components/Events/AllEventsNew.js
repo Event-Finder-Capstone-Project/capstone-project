@@ -14,11 +14,11 @@ import {
   getDoc,
   updateDoc,
 } from "firebase/firestore";
-import { Nav, Row, Container, Button, Card } from "react-bootstrap";
+import { Nav, Row, Col, Container, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { TestMap, NewCarousel } from "../";
+import { TestMap, NewCarousel } from "..";
 import { eventEmitter } from "../App";
-const AllEvents = () => {
+const AllEventsNew = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
@@ -173,56 +173,57 @@ const AllEvents = () => {
             </select>
           </Container>
         </div>
-        <Row xs={1} md={2} lg={4} className="g-4">
+        <Row xs={1} className="g-4">
           {events?.length ? (
             events.map((event) => (
-              <Card
-                style={{
-                  border: "none",
-                  textDecoration: "none",
-                }}
-                className="event-container"
-                key={event.id}
-                xs={{ width: "100%" }}
-              >
+              <Container>
+                <Button
+                  variant="outline"
+                  style={{
+                    border: "none",
+                    fontSize: "32px",
+                    paddingBottom: "-50px",
+                  }}
+                  onClick={() => handleAddEvents(event.id)}
+                >
+                  {!clickedEvents.includes(event.id) &&
+                  !userEvents.includes(event.id) ? (
+                    <FontAwesomeIcon icon={outlineStar} />
+                  ) : (
+                    <FontAwesomeIcon icon={solidStar} />
+                  )}
+                </Button>
                 <LinkContainer to={`/events/${event.id}`}>
                   <Nav.Link>
-                    <Card.Img
-                      variant="top"
-                      src={event.performers[0].image}
-                      alt={event.name}
-                    />
-                    <Card.Body
-                      style={{
-                        backgroundColor: "black",
-                        opacity: "50%",
-                      }}
-                    >
-                      <Card.Title style={{ color: "white" }} id="event-name">
-                        {event.title}
-                      </Card.Title>
-                    </Card.Body>
+                    <Row xs={1} md={2}>
+                      <Col style={{ backgroundColor: "black" }}>
+                        <img
+                          sm={{ maxWidth: "200px", maxHeight: "200px" }}
+                          xs={{
+                            maxWidth: "100%",
+                            maxHeight: "100%",
+                          }}
+                          src={event.performers[0].image}
+                          alt={event.name}
+                        />
+                      </Col>
+                      <Col style={{ backgroundColor: "slateGrey" }}>
+                        <h4
+                          xs={{
+                            color: "white",
+                            marginRight: "3rem",
+                            textAlign: "center",
+                          }}
+                          style={{ paddingTop: "80px", textAlign: "right" }}
+                          id="event-name"
+                        >
+                          {event.title}
+                        </h4>
+                      </Col>
+                    </Row>
                   </Nav.Link>
                 </LinkContainer>
-                <div className="star-button-container">
-                  <Button
-                    variant="outline"
-                    style={{
-                      border: "none",
-                      fontSize: "32px",
-                      marginTop: "-15px",
-                    }}
-                    onClick={() => handleAddEvents(event.id)}
-                  >
-                    {!clickedEvents.includes(event.id) &&
-                    !userEvents.includes(event.id) ? (
-                      <FontAwesomeIcon icon={outlineStar} />
-                    ) : (
-                      <FontAwesomeIcon icon={solidStar} />
-                    )}
-                  </Button>
-                </div>
-              </Card>
+              </Container>
             ))
           ) : (
             <p>{!events?.length ? "No events found!" : ""}</p>
@@ -247,4 +248,4 @@ const AllEvents = () => {
     </>
   );
 };
-export default AllEvents;
+export default AllEventsNew;

@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import {
   GoogleMap,
   useLoadScript,
@@ -6,7 +6,7 @@ import {
   InfoWindowF,
 } from "@react-google-maps/api";
 import { Container } from "react-bootstrap";
-import { useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import { selectEvents } from "../../store/allEventsSlice";
 import "../style/index.css";
 
@@ -39,7 +39,7 @@ export default function TestMap() {
       <GoogleMap
         zoom={11}
         center={{ lat: lat, lng: lng }}
-        mapContainerStyle={{ width: "100%", height: 350 }}
+        mapContainerStyle={{ width: "100%", height: "100rem" }}
       >
         {events.map((marker) => (
           <MarkerF
