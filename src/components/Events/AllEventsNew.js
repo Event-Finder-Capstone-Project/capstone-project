@@ -143,12 +143,9 @@ const AllEventsNew = () => {
         className="all-events-container"
         style={{ marginTop: "3rem" }}
       >
-        <Container style={{ marginTop: "1.5rem", marginBottom: "3rem" }}>
-          <TestMap />
-        </Container>
         <div className="filter-container">
           <Container
-            style={{ marginTop: ".5rem" }}
+            style={{ marginTop: ".5rem", marginBottom: "1rem" }}
             className="d-flex justify-content-center"
           >
             <h5
@@ -173,30 +170,22 @@ const AllEventsNew = () => {
             </select>
           </Container>
         </div>
-        <Row xs={1} className="g-4">
-          {events?.length ? (
-            events.map((event) => (
-              <Container>
-                <Button
-                  variant="outline"
-                  style={{
-                    border: "none",
-                    fontSize: "32px",
-                    transform: "translatey(60px)",
-                    marginRight: "0",
-                  }}
-                  onClick={() => handleAddEvents(event.id)}
+
+        <Row xs={1} sm={2} style={{ width: "100%" }}>
+          <Col>
+            <TestMap />
+          </Col>
+          <Col>
+            {events?.length ? (
+              events.map((event) => (
+                <Row
+                  xs={1}
+                  sm={2}
+                  className="g-4"
+                  style={{ marginBottom: "2rem", width: "100%" }}
                 >
-                  {!clickedEvents.includes(event.id) &&
-                  !userEvents.includes(event.id) ? (
-                    <FontAwesomeIcon icon={outlineStar} />
-                  ) : (
-                    <FontAwesomeIcon icon={solidStar} />
-                  )}
-                </Button>
-                <LinkContainer to={`/events/${event.id}`}>
-                  <Nav.Link>
-                    <Row xs={1} md={2}>
+                  <LinkContainer to={`/events/${event.id}`}>
+                    <Nav.Link>
                       <Col style={{ backgroundColor: "black" }}>
                         <img
                           sm={{ maxWidth: "200px", maxHeight: "200px" }}
@@ -208,7 +197,27 @@ const AllEventsNew = () => {
                           alt={event.name}
                         />
                       </Col>
-                      <Col style={{ backgroundColor: "slateGrey" }}>
+                    </Nav.Link>
+                  </LinkContainer>
+
+                  <Col style={{ backgroundColor: "slateGrey" }}>
+                    <Button
+                      variant="outline"
+                      style={{
+                        border: "none",
+                        fontSize: "32px",
+                      }}
+                      onClick={() => handleAddEvents(event.id)}
+                    >
+                      {!clickedEvents.includes(event.id) &&
+                      !userEvents.includes(event.id) ? (
+                        <FontAwesomeIcon icon={outlineStar} />
+                      ) : (
+                        <FontAwesomeIcon icon={solidStar} />
+                      )}
+                    </Button>
+                    <LinkContainer to={`/events/${event.id}`}>
+                      <Nav.Link>
                         <h4
                           xs={{
                             color: "white",
@@ -220,15 +229,15 @@ const AllEventsNew = () => {
                         >
                           {event.title}
                         </h4>
-                      </Col>
-                    </Row>
-                  </Nav.Link>
-                </LinkContainer>
-              </Container>
-            ))
-          ) : (
-            <p>{!events?.length ? "No events found!" : ""}</p>
-          )}
+                      </Nav.Link>
+                    </LinkContainer>
+                  </Col>
+                </Row>
+              ))
+            ) : (
+              <p>{!events?.length ? "No events found!" : ""}</p>
+            )}
+          </Col>
         </Row>
       </Container>
       <Container
