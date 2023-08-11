@@ -138,10 +138,15 @@ const AllEventsNew = () => {
       <h1> Popular in your area </h1>
       <NewCarousel />
       <Container
-        fluid="lg"
+        fluid="true"
         class="text-center"
         className="all-events-container"
-        style={{ marginTop: "3rem", marginLeft: "0px" }}
+        style={{
+          marginTop: "3rem",
+          marginLeft: "0px",
+          marginRight: "0px",
+          width: "100%",
+        }}
       >
         <div className="filter-container">
           <Container
@@ -150,7 +155,6 @@ const AllEventsNew = () => {
           >
             <h5
               style={{
-                marginRight: "1rem",
                 paddingTop: ".3rem",
               }}
             >
@@ -172,73 +176,86 @@ const AllEventsNew = () => {
         </div>
 
         <Row xs={1} sm={1} md={2}>
-          <Col style={{ maxWidth: "100%" }}>
+          <Col style={{ width: "50%" }}>
             <TestMap />
           </Col>
-          <Col>
-            {events?.length ? (
-              events.map((event) => (
-                <Row xs={1} md={2} style={{ marginBottom: "2rem" }}>
-                  <LinkContainer to={`/events/${event.id}`}>
-                    <Nav.Link>
-                      <Col style={{ backgroundColor: "slategray" }}>
-                        <img
-                          sm={{ maxWidth: "200px", maxHeight: "200px" }}
-                          xs={{
-                            maxWidth: "100%",
-                            maxHeight: "100%",
-                          }}
-                          src={event.performers[0].image}
-                          alt={event.name}
-                        />
-                      </Col>
-                    </Nav.Link>
-                  </LinkContainer>
-
-                  <Col
+          <Col style={{ width: "50%" }}>
+            {events?.length
+              ? events.map((event) => (
+                  <Row
+                    xs={1}
+                    md={2}
                     style={{
-                      backgroundColor: "slateGrey",
-                      maxWidth: "200px",
-                      maxHeight: "100%",
+                      marginBottom: "2rem",
+                      marginRight: "0px",
                     }}
-                    className="overflow-hidden"
+                    fluid={true}
                   >
-                    <Button
-                      variant="outline"
-                      style={{
-                        border: "none",
-                        fontSize: "32px",
-                      }}
-                      onClick={() => handleAddEvents(event.id)}
-                    >
-                      {!clickedEvents.includes(event.id) &&
-                      !userEvents.includes(event.id) ? (
-                        <FontAwesomeIcon icon={outlineStar} />
-                      ) : (
-                        <FontAwesomeIcon icon={solidStar} />
-                      )}
-                    </Button>
                     <LinkContainer to={`/events/${event.id}`}>
                       <Nav.Link>
-                        <h4
-                          xs={{
-                            color: "white",
-                            textAlign: "center",
-                            width: "",
-                          }}
-                          style={{ textAlign: "right" }}
-                          id="event-name"
-                        >
-                          {event.title}
-                        </h4>
+                        <Col style={{ backgroundColor: "slategray" }}>
+                          <img
+                            sm={{ maxWidth: "200px", maxHeight: "200px" }}
+                            xs={{
+                              maxWidth: "200px",
+                              maxHeight: "100%",
+                            }}
+                            src={event.performers[0].image}
+                            alt={event.name}
+                          />
+                        </Col>
                       </Nav.Link>
                     </LinkContainer>
-                  </Col>
-                </Row>
-              ))
-            ) : (
-              <p>{!events?.length ? "No events found!" : ""}</p>
-            )}
+
+                    <Col
+                      style={{
+                        backgroundColor: "slateGrey",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        overflow: "hidden",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Button
+                        variant="outline"
+                        style={{
+                          border: "none",
+                          fontSize: "32px",
+                        }}
+                        onClick={() => handleAddEvents(event.id)}
+                      >
+                        {!clickedEvents.includes(event.id) &&
+                        !userEvents.includes(event.id) ? (
+                          <FontAwesomeIcon icon={outlineStar} />
+                        ) : (
+                          <FontAwesomeIcon icon={solidStar} />
+                        )}
+                      </Button>
+                      <LinkContainer to={`/events/${event.id}`}>
+                        <Nav.Link>
+                          <h4
+                            xs={{
+                              color: "white",
+                              textAlign: "center",
+                            }}
+                            style={{
+                              textAlign: "right",
+                              fontSize: "20px",
+                            }}
+                            id="event-name"
+                          >
+                            {event.title}
+                          </h4>
+                        </Nav.Link>
+                      </LinkContainer>
+                    </Col>
+                  </Row>
+                ))
+              : // <p>{!events?.length ? "No events found!" : ""}</p>
+                null}
           </Col>
         </Row>
       </Container>

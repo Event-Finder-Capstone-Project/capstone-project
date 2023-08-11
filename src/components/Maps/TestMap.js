@@ -41,7 +41,7 @@ export default function TestMap() {
     <Container
       xs={{ maxHeight: "400px" }}
       sm={{ maxHeight: "100vh" }}
-      style={{ width: "100%", marginLeft: "-2rem" }}
+      style={{ width: "100%" }}
     >
       <GoogleMap
         zoom={11}
