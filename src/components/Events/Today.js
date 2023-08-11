@@ -9,15 +9,11 @@ import {
   getDocs,
   doc,
   getDoc,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
-import CityFilter from "./CityFilter";
-import Autocomplete from "react-google-autocomplete";
-import Search from "../NavBar/Search";
 import { eventEmitter } from "../App";
 
 const Today = () => {
@@ -28,6 +24,7 @@ const Today = () => {
   const [clickedEvents, setClickedEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
   const dispatch = useDispatch();
+  
   useEffect(() => {
     const cityChangedListener = (data) => {
       setRerender(!rerender); 
@@ -135,7 +132,7 @@ const Today = () => {
 
   return (
     <>
-      <h1 style={{ marginTop: "1rem" }}> Happening Today </h1>
+      <h1 style={{ marginTop: "1rem" }}> Happening Today {storedCity ? `in ${storedCity}` : ""}</h1>
 
       <Container
         fluid="lg"

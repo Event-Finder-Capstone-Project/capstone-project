@@ -4,7 +4,7 @@ const initialState = {
   latitude: 40.7128,
   longitude: -74.006,
   city: "",
-  state: ""
+  state: "",
 };
 
 const locationSlice = createSlice({

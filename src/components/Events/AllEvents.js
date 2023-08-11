@@ -3,19 +3,19 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { addEvents } from "../../store/eventsSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import {
   collection,
   getDocs,
   doc,
   getDoc,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
-
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import TestMap from "../Maps/TestMap";
-import Carousel from "./Carousel";
+import { TestMap, NewCarousel } from "../";
 import { eventEmitter } from "../App";
 
 const AllEvents = () => {
@@ -38,13 +38,13 @@ const AllEvents = () => {
 
   useEffect(() => {
     const cityChangedListener = (data) => {
-      setRerender(!rerender); 
+      setRerender(!rerender);
     };
 
-    eventEmitter.on('cityChanged', cityChangedListener);
+    eventEmitter.on("cityChanged", cityChangedListener);
 
     return () => {
-      eventEmitter.off('cityChanged', cityChangedListener);
+      eventEmitter.off("cityChanged", cityChangedListener);
     };
   }, [rerender]);
 
@@ -66,13 +66,13 @@ const AllEvents = () => {
     if (storedCity && storedState) {
       const venue = {
         city: storedCity,
-        state: storedState
+        state: storedState,
       };
       dispatch(
         getAllEvents({
           type: filter,
           page: page,
-          venue: venue
+          venue: venue,
         })
       );
     } else {
@@ -116,16 +116,20 @@ const AllEvents = () => {
   const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
+      if (userEvents.includes(eventId)) {
+        const updatedEvents = userEvents.filter((id) => id !== eventId);
+        await updateDoc(userDocRef, {
+          events: updatedEvents,
+        });
 
-      // Add the event ID to the user's events array in Firestore
-      await updateDoc(userDocRef, {
-        events: [...userEvents, eventId],
-      });
-
-      // Update the local state
-      setUserEvents([...userEvents, eventId]);
+        setUserEvents(updatedEvents);
+      } else {
+        await updateDoc(userDocRef, {
+          events: [...userEvents, eventId],
+        });
+        setUserEvents([...userEvents, eventId]);
+      }
     } else {
-      // For guest users, add the event to local storage
       dispatch(addEvents(eventId));
     }
     setClickedEvents([...clickedEvents, eventId]);
@@ -146,8 +150,8 @@ const AllEvents = () => {
 
   return (
     <>
-      <h1> Popular in your area </h1>
-      <Carousel />
+      <h1> Popular in {storedCity ? storedCity : "your area"} </h1>
+      <NewCarousel />
 
       <Container
         fluid="lg"
@@ -160,34 +164,32 @@ const AllEvents = () => {
         </Container>
 
         <div className="filter-container">
-        <Container
-          style={{ marginTop: ".5rem" }}
-          className="d-flex justify-content-center"
-        >
-          <h5
-            style={{
-              marginRight: "1rem",
-              paddingTop: ".3rem",
-            }}
+          <Container
+            style={{ marginTop: ".5rem" }}
+            className="d-flex justify-content-center"
           >
-            Event Type
-          </h5>
-          <select
-            style={{ height: "35px" }}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="">None</option>
-            {eventsData.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
-          </select>
-
-
-        </Container>
-      </div>
+            <h5
+              style={{
+                marginRight: "1rem",
+                paddingTop: ".3rem",
+              }}
+            >
+              Event Type
+            </h5>
+            <select
+              style={{ height: "35px" }}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="">None</option>
+              {eventsData.map((eventType) => (
+                <option key={eventType} value={eventType}>
+                  {eventType}
+                </option>
+              ))}
+            </select>
+          </Container>
+        </div>
 
         <Row xs={1} md={2} lg={4} className="g-4">
           {events?.length ? (
@@ -220,19 +222,24 @@ const AllEvents = () => {
                     </Card.Body>
                   </Nav.Link>
                 </LinkContainer>
-                {!clickedEvents.includes(event.id) &&
-                !userEvents.includes(event.id) ? (
+                <div className="star-button-container">
                   <Button
-                    variant="secondary"
+                    variant="outline"
+                    style={{
+                      border: "none",
+                      fontSize: "32px",
+                      marginTop: "-15px",
+                    }}
                     onClick={() => handleAddEvents(event.id)}
                   >
-                    Add Event
+                    {!clickedEvents.includes(event.id) &&
+                    !userEvents.includes(event.id) ? (
+                      <FontAwesomeIcon icon={outlineStar} />
+                    ) : (
+                      <FontAwesomeIcon icon={solidStar} />
+                    )}
                   </Button>
-                ) : (
-                  <Button variant="secondary" disabled>
-                    Event Added
-                  </Button>
-                )}
+                </div>
               </Card>
             ))
           ) : (
