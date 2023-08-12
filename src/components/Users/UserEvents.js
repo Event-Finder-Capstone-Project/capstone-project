@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { deleteEvent } from "../../store/eventsSlice";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import { getSingleEvent } from "../../store/singleEventSlice";
 import BigCalendar from "./BigCalendar";
 
@@ -40,7 +40,7 @@ const UserEvents = () => {
 
       fetchUserData();
     }
-  }, [user, dispatch]);
+  }, [ ]);
 
   useEffect(() => {
     if (!user) {
@@ -59,11 +59,11 @@ const UserEvents = () => {
   }, [dispatch, savedEventIds, user]);
 
   const handleDeleteEvent = (eventId) => {
-    dispatch(deleteEvent(eventId));
+    dispatch(handleEvents(eventId));
   };
 
-  const handleDeleteLoginUserEvent = async (eventId) => {
-    try {
+  const handleDeleteLoginUserEvent = async(eventId) => {
+    await dispatch(handleEventAsync(eventId))
       const userId = auth.currentUser.uid;
       const userDocRef = doc(db, "users", userId);
 
@@ -71,14 +71,11 @@ const UserEvents = () => {
         (event) => event.id !== eventId
       );
 
-      await updateDoc(userDocRef, {
+     await updateDoc(userDocRef, {
         events: updatedEvents.map((event) => event.id),
       });
 
       setLoginUserEvents(updatedEvents);
-    } catch (error) {
-      console.error("Error deleting user event:", error);
-    }
   };
 
   return (

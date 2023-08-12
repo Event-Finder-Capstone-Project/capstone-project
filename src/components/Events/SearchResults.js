@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { auth, db } from "../../firebase";
+import { auth} from "../../firebase";
 import { getAllEvents } from "../../store/allEventsSlice";
-import { addEvents } from "../../store/eventsSlice";
-import { doc, updateDoc } from "firebase/firestore";
+import { handleEvents,handleEventAsync } from "../../store/eventsSlice";
 import {Button,Card,Nav} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
@@ -35,20 +34,11 @@ const SearchResults = () => {
   ]);
 
   const handleAddEvents = async (eventId) => {
-    if (auth.currentUser) {
-      const userDocRef = doc(db, "users", auth.currentUser.uid);
-
-      // Add the event ID to the user's events array in Firestore
-      await updateDoc(userDocRef, {
-        events: [...userEvents, eventId],
-      });
-
-      // Update the local state
-      setUserEvents([...userEvents, eventId]);
-    } else {
-      // For guest users, add the event to local storage
-      dispatch(addEvents(eventId));
-    }
+    if(auth.currentUser){
+      dispatch(handleEventAsync(eventId));
+    } else{
+      dispatch(handleEvents(eventId));
+    } 
   };
 
   const handleFilter = () => {

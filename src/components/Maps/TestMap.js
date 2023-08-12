@@ -21,13 +21,13 @@ export default function TestMap() {
 
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
-  console.log(latitude,longitude);
+ 
   const searchLAT = useSelector((state) => state.search.lat);
   const searchLNG = useSelector((state) => state.search.lng);
-  console.log(searchLAT,searchLNG)
+
   const lat = searchLAT === "" ? latitude : searchLAT;
   const lng = searchLNG === "" ? longitude : searchLNG;
-  console.log(lat,lng);
+
   localStorage.setItem("mapCenterLat", lat);
   localStorage.setItem("mapCenterLng", lng);
 
