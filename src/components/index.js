@@ -21,4 +21,5 @@ export { default as Login } from "./Auth/Login";
 export { default as Signout } from "./Auth/Signout";
 export { default as Signup } from "./Auth/Signup";
 export { default as NewCarousel } from "./Events/NewCarousel";
-export { default as BigCalendar } from "../components/Users/BigCalendar"
+export { default as AllEventsNew } from "./Events/AllEventsNew";
+export { default as BigCalendar } from "./Users/BigCalendar";
