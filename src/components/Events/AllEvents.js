@@ -113,16 +113,16 @@ const AllEvents = () => {
     dispatch(getAllEvents({ type: filter, page: 1 }));
   };
 
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
+  };
+
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
-  };
-
-  const handlePageClick = (pageNumber) => {
-    setPage(pageNumber);
   };
 
   return (
