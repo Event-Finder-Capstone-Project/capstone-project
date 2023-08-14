@@ -16,7 +16,7 @@ import { Nav, Row, Col, Container, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
-import userEvent from "@testing-library/user-event";
+import PrevNext from "./PrevNext";
 const AllEventsNew = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
@@ -28,6 +28,9 @@ const AllEventsNew = () => {
   const savedEventIds = useSelector((state) => state.events);
 
   const dispatch = useDispatch();
+  const totalEvents = useSelector((state) => state.allEvents.totalEvents);
+  const totalPages = Math.ceil(totalEvents / 8);
+
   useEffect(() => {
     if (filter === "") {
       dispatch(getAllEvents({ type: filter }));
@@ -125,12 +128,19 @@ const AllEventsNew = () => {
     setPage(1);
     dispatch(getAllEvents({ type: filter, page: 1 }));
   };
+
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
   };
+
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
+
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
+  };
+
   return (
     <>
       <h1> Popular in your area </h1>
@@ -252,16 +262,18 @@ const AllEventsNew = () => {
       </Container>
       <Container
         className="d-flex justify-content-center"
-        style={{ alignContent: "center", marginTop: "2rem" }}>
-        <Button
-          variant="secondary"
-          style={{ marginRight: "1rem" }}
-          onClick={handlePreviousPage}>
-          Previous
-        </Button>
-        <Button variant="secondary" onClick={handleNextPage}>
-          Next
-        </Button>
+
+        style={{ alignContent: "center", marginTop: "2rem" }}
+      >
+        <PrevNext
+          currentPage={page}
+          totalPages={totalPages}
+          totalEvents={totalEvents}
+        onPageClick={handlePageClick}
+        onNextClick={handleNextPage}
+        onPreviousClick={handlePreviousPage}
+      />
+
       </Container>
     </>
   );

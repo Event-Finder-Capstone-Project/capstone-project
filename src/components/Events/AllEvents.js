@@ -18,6 +18,7 @@ import { TestMap, NewCarousel } from "../";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
 
+
 const AllEvents = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
@@ -34,6 +35,7 @@ const AllEvents = () => {
   const totalPages = Math.ceil(totalEvents / 8);
 
   const dispatch = useDispatch();
+
 
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
@@ -129,6 +131,11 @@ const AllEvents = () => {
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
+
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
+  };
+  
   return (
     <>
       <h1> Popular in {storedCity ? storedCity : "your area"} </h1>
@@ -242,3 +249,4 @@ const AllEvents = () => {
   );
 };
 export default AllEvents;
+
