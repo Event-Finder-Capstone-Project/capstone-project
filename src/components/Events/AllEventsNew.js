@@ -17,6 +17,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
+
 const AllEventsNew = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
