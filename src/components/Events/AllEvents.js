@@ -35,14 +35,6 @@ const AllEvents = () => {
 
   const dispatch = useDispatch();
 
-  const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
-
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
   };
