@@ -18,7 +18,7 @@ const AllEventsNew = () => {
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
-
+  const [clickedEvents, setClickedEvents] = useState([]);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
   const savedEventIds = useSelector((state) => state.events);
@@ -120,10 +120,10 @@ const AllEventsNew = () => {
     }
   };
 
-  const handleFilter = () => {
-    setPage(1);
-    dispatch(getAllEvents({ type: filter, page: 1 }));
-  };
+  // const handleFilter = () => {
+  //   setPage(1);
+  //   dispatch(getAllEvents({ type: filter, page: 1 }));
+  // };
 
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
@@ -273,16 +273,14 @@ const AllEventsNew = () => {
           className="d-flex justify-content-center"
           style={{ alignContent: "center", marginTop: "2rem" }}
         >
-          <Button
-            variant="secondary"
-            style={{ marginRight: "1rem" }}
-            onClick={handlePreviousPage}
-          >
-            Previous
-          </Button>
-          <Button variant="secondary" onClick={handleNextPage}>
-            Next
-          </Button>
+          <PrevNext
+            currentPage={page}
+            totalPages={totalPages}
+            totalEvents={totalEvents}
+            onPageClick={handlePageClick}
+            onNextClick={handleNextPage}
+            onPreviousClick={handlePreviousPage}
+          />
         </Container>
       </Container>
     </>

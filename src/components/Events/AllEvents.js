@@ -2,22 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-import { handleEvents , handleEventAsync} from "../../store/eventsSlice";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
-import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel } from "../";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
-
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -35,11 +29,6 @@ const AllEvents = () => {
   const totalPages = Math.ceil(totalEvents / 8);
 
   const dispatch = useDispatch();
-
-
-  const handlePageClick = (pageNumber) => {
-    setPage(pageNumber);
-  };
 
   useEffect(() => {
     const cityChangedListener = (data) => {
@@ -111,11 +100,11 @@ const AllEvents = () => {
   }, []);
 
   const handleAddEvents = (eventId) => {
-      if(auth.currentUser){
-        dispatch(handleEventAsync(eventId));
-      } else{
-        dispatch(handleEvents(eventId));
-      }  
+    if (auth.currentUser) {
+      dispatch(handleEventAsync(eventId));
+    } else {
+      dispatch(handleEvents(eventId));
+    }
     setClickedEvents([...clickedEvents, eventId]);
   };
 
@@ -135,7 +124,7 @@ const AllEvents = () => {
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
   };
-  
+
   return (
     <>
       <h1> Popular in {storedCity ? storedCity : "your area"} </h1>
@@ -240,13 +229,12 @@ const AllEvents = () => {
           currentPage={page}
           totalPages={totalPages}
           totalEvents={totalEvents}
-        onPageClick={handlePageClick}
-        onNextClick={handleNextPage}
-        onPreviousClick={handlePreviousPage}
-      />
+          onPageClick={handlePageClick}
+          onNextClick={handleNextPage}
+          onPreviousClick={handlePreviousPage}
+        />
       </Container>
     </>
   );
 };
 export default AllEvents;
-
