@@ -5,7 +5,7 @@ import {
   MarkerF,
   InfoWindowF,
 } from "@react-google-maps/api";
-import { Container } from "react-bootstrap";
+import { Container, Col, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { selectEvents } from "../../store/allEventsSlice";
 import "../style/index.css";
@@ -46,16 +46,13 @@ export default function TestMap() {
         <h4>Map Loading</h4>
       </Container>
     );
+
   return (
-    <Container
-      xs={{ maxHeight: "400px" }}
-      sm={{ maxHeight: "100vh" }}
-      style={{ width: "100%" }}
-    >
+    <Container>
       <GoogleMap
         zoom={11}
         center={{ lat: lat, lng: lng }}
-        mapContainerStyle={{ width: "100%", height: "100vh" }}
+        mapContainerClassName="google-map-container"
       >
         {events.map((marker) => (
           <MarkerF

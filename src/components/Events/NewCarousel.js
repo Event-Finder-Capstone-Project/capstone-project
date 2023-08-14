@@ -6,13 +6,13 @@ import { selectEvents } from "../../store/allEventsSlice";
 
 const NewCarousel = () => {
   const events = useSelector(selectEvents);
-  const sortedEvents = [...(events|| [])]
+  const sortedEvents = [...(events || [])]
     .sort((a, b) => b.venue.score - a.venue.score)
     .slice(0, 4);
 
   return (
     <Container style={{ width: "100%", height: "40%" }}>
-      <Carousel data-bs-theme="dark">
+      <Carousel data-bs-theme="dark" className="d-none d-md-block">
         {sortedEvents.map((event, index) => (
           <Carousel.Item key={index}>
             <LinkContainer
@@ -26,6 +26,7 @@ const NewCarousel = () => {
                   alt={`${index + 1}`}
                 />
                 <Carousel.Caption
+                  sm={{ maxHeight: "20%", fontSize: "12px" }}
                   style={{ paddingLeft: "15%", color: "white", width: "55%" }}
                 >
                   <h4 style={{ maxHeight: "50%" }} className="legend">
