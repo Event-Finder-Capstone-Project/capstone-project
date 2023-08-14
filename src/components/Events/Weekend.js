@@ -14,6 +14,7 @@ import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import { eventEmitter } from "../App";
+import PrevNext from "./PrevNext";
 
 const Weekend = () => {
   const [page, setPage] = useState(1);
@@ -24,6 +25,8 @@ const Weekend = () => {
   const [rerender, setRerender] = useState(false);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
+  const totalEvents = useSelector((state) => state.allEvents.totalEvents);
+  const totalPages = Math.ceil(totalEvents / 8);
 
   const dispatch = useDispatch();
 
@@ -140,6 +143,10 @@ const Weekend = () => {
     dispatch(getAllEvents({ type: filter, page: 1 }));
   };
 
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
+  };
+
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
   };
@@ -245,16 +252,14 @@ const Weekend = () => {
         className="d-flex justify-content-center"
         style={{ marginTop: "2rem" }}
       >
-        <Button
-          variant="secondary"
-          style={{ marginRight: "1rem" }}
-          onClick={handlePreviousPage}
-        >
-          Previous
-        </Button>
-        <Button variant="secondary" onClick={handleNextPage}>
-          Next
-        </Button>
+      <PrevNext
+          currentPage={page}
+          totalPages={totalPages}
+          totalEvents={totalEvents}
+        onPageClick={handlePageClick}
+        onNextClick={handleNextPage}
+        onPreviousClick={handlePreviousPage}
+      />
       </Container>
     </>
   );
