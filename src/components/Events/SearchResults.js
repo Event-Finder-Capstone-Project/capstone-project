@@ -6,8 +6,6 @@ import { getAllEvents } from "../../store/allEventsSlice";
 
 import { handleEvents,handleEventAsync } from "../../store/eventsSlice";
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
-import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
-import { Button, Card, Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
