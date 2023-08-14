@@ -31,6 +31,15 @@ export default function TestMap() {
   localStorage.setItem("mapCenterLat", lat);
   localStorage.setItem("mapCenterLng", lng);
 
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');  // January is 0!
+    const year = date.getFullYear();
+  
+    return `${month}/${day}/${year}`;
+  }
+
   if (!isLoaded)
     return (
       <Container>
@@ -75,6 +84,7 @@ export default function TestMap() {
                 <br />
                 {selectedEvent.venue.extended_address}
               </p>
+              <p>{formatDate(selectedEvent.datetime_local)}</p>
               <a
                 href={`https://www.google.com/maps/dir/?api=1&destination=${selectedEvent.venue.location.lat},${selectedEvent.venue.location.lon}`}
                 target="_blank"

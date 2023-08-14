@@ -18,6 +18,7 @@ import { TestMap, NewCarousel } from "../";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
 
+
 const AllEvents = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
@@ -243,3 +244,4 @@ const AllEvents = () => {
   );
 };
 export default AllEvents;
+

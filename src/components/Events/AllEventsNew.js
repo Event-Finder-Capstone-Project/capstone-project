@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-import { addEvents } from "../../store/eventsSlice";
+import { handleEvents , handleEventAsync } from "../../store/eventsSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
@@ -107,26 +107,14 @@ const AllEventsNew = () => {
     fetchEventsData();
     fetchUserEvents();
   }, []);
-  const handleAddEvents = async (eventId) => {
-    if (auth.currentUser) {
-      const userDocRef = doc(db, "users", auth.currentUser.uid);
-      if (userEvents.includes(eventId)) {
-        const updatedEvents = userEvents.filter((id) => id !== eventId);
-        await updateDoc(userDocRef, {
-          events: updatedEvents,
-        });
-        setUserEvents(updatedEvents);
-      } else {
-        await updateDoc(userDocRef, {
-          events: [...userEvents, eventId],
-        });
-        setUserEvents([...userEvents, eventId]);
-      }
-    } else {
-      dispatch(addEvents(eventId));
-    }
-    setClickedEvents([...clickedEvents, eventId]);
-  };
+  const handleAddEvents = (eventId) => {
+    if(auth.currentUser){
+      dispatch(handleEventAsync(eventId));
+    } else{
+      dispatch(handleEvents(eventId));
+    }  
+  setClickedEvents([...clickedEvents, eventId]);
+};
   const handleFilter = () => {
     setPage(1);
     dispatch(getAllEvents({ type: filter, page: 1 }));
