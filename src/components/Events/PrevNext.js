@@ -1,6 +1,15 @@
 import React from "react";
+import { Nav, Row, Col, Container, Button } from "react-bootstrap";
+import "../style/index.css";
 
-const PrevNext = ({ currentPage, totalPages, totalEvents, onPageClick, onNextClick, onPreviousClick }) => {
+const PrevNext = ({
+  currentPage,
+  totalPages,
+  totalEvents,
+  onPageClick,
+  onNextClick,
+  onPreviousClick,
+}) => {
   const renderPageButtons = () => {
     const pageButtons = [];
     const visiblePages = 5;
@@ -19,17 +28,24 @@ const PrevNext = ({ currentPage, totalPages, totalEvents, onPageClick, onNextCli
 
     for (let pageNumber = startPage; pageNumber <= endPage; pageNumber++) {
       pageButtons.push(
-        <button
+        <Button
           key={pageNumber}
+          value={pageNumber}
+          variant="outline"
+          style={{
+            color: "white",
+            border: "none",
+            fontSize: "24px",
+          }}
           onClick={() => onPageClick(pageNumber)}
           className={currentPage === pageNumber ? "active" : ""}
         >
-           {currentPage === pageNumber ? (
-          <strong>{pageNumber}</strong>
-        ) : (
-          pageNumber
-        )}
-        </button>
+          {currentPage === pageNumber ? (
+            <strong>{pageNumber}</strong>
+          ) : (
+            pageNumber
+          )}
+        </Button>
       );
     }
     return pageButtons;
@@ -39,25 +55,39 @@ const PrevNext = ({ currentPage, totalPages, totalEvents, onPageClick, onNextCli
   const endResult = Math.min(currentPage * 8, totalEvents);
 
   return (
-    <div className="pagination-container">
+    <div className="pagination-container" style={{ marginBottom: "5rem" }}>
       {totalEvents > 0 ? (
         <>
-          <p className="pagination-info">
+          <p className="pagination-info" style={{ fontSize: "18px" }}>
             Viewing results {startResult}-{endResult} of {totalEvents}
           </p>
           <div className="pagination-buttons">
-            <button onClick={onPreviousClick} disabled={currentPage === 1}>
+            <Button
+              onClick={onPreviousClick}
+              disabled={currentPage === 1}
+              variant="outline-light"
+              style={{
+                fontSize: "24px",
+              }}
+            >
               Previous
-            </button>
+            </Button>
             {renderPageButtons()}
-            <button onClick={onNextClick} disabled={currentPage === totalPages || totalPages === 0}>
+            <Button
+              onClick={onNextClick}
+              disabled={currentPage === totalPages || totalPages === 0}
+              variant="outline-light"
+              style={{
+                fontSize: "24px",
+              }}
+            >
               Next
-            </button>
+            </Button>
           </div>
         </>
       ) : null}
     </div>
   );
-      }
+};
 
 export default PrevNext;
