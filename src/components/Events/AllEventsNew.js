@@ -2,31 +2,31 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-import { addEvents } from "../../store/eventsSlice";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
-import Toastify from "toastify-js";
 import {
   collection,
   getDocs,
   doc,
   getDoc,
-  updateDoc,
 } from "firebase/firestore";
 import { Nav, Row, Col, Container, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
+import userEvent from "@testing-library/user-event";
 const AllEventsNew = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
-  const [clickedEvents, setClickedEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
+  const savedEventIds = useSelector((state) => state.events);
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (filter === "") {
@@ -98,31 +98,29 @@ const AllEventsNew = () => {
           const userData = userDocSnapshot.data();
           setUserEvents(userData.events || []);
         }
+      } else {
+        setUserEvents(savedEventIds || []);
       }
     };
     fetchEventsData();
     fetchUserEvents();
   }, []);
-  const handleAddEvents = async (eventId) => {
+
+  //handle add and remove event use icon
+  const handleAddEvents = (eventId) => {
     if (auth.currentUser) {
-      const userDocRef = doc(db, "users", auth.currentUser.uid);
-      if (userEvents.includes(eventId)) {
-        const updatedEvents = userEvents.filter((id) => id !== eventId);
-        await updateDoc(userDocRef, {
-          events: updatedEvents,
-        });
-        setUserEvents(updatedEvents);
-      } else {
-        await updateDoc(userDocRef, {
-          events: [...userEvents, eventId],
-        });
-        setUserEvents([...userEvents, eventId]);
-      }
+      dispatch(handleEventAsync(eventId));
     } else {
-      dispatch(addEvents(eventId));
+      dispatch(handleEvents(eventId));
     }
-    setClickedEvents([...clickedEvents, eventId]);
+    // Toggle the event in userEvents state
+  if (userEvents.includes(eventId)) {
+    setUserEvents(userEvents.filter(id => id !== eventId));
+  } else {
+    setUserEvents([...userEvents, eventId]);
+  }
   };
+
   const handleFilter = () => {
     setPage(1);
     dispatch(getAllEvents({ type: filter, page: 1 }));
@@ -146,25 +144,21 @@ const AllEventsNew = () => {
           marginLeft: "0px",
           marginRight: "0px",
           width: "100%",
-        }}
-      >
+        }}>
         <div className="filter-container">
           <Container
             style={{ marginTop: ".5rem", marginBottom: "1rem" }}
-            className="d-flex justify-content-center"
-          >
+            className="d-flex justify-content-center">
             <h5
               style={{
                 paddingTop: ".3rem",
-              }}
-            >
+              }}>
               Event Type
             </h5>
             <select
               style={{ height: "35px" }}
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            >
+              onChange={(e) => setFilter(e.target.value)}>
               <option value="">None</option>
               {eventsData.map((eventType) => (
                 <option key={eventType} value={eventType}>
@@ -189,8 +183,7 @@ const AllEventsNew = () => {
                       marginBottom: "2rem",
                       marginRight: "0px",
                     }}
-                    fluid={true}
-                  >
+                    fluid={true}>
                     <LinkContainer to={`/events/${event.id}`}>
                       <Nav.Link>
                         <Col style={{ backgroundColor: "slategray" }}>
@@ -217,22 +210,21 @@ const AllEventsNew = () => {
                         flexDirection: "column",
                         alignItems: "flex-end",
                         justifyContent: "space-between",
-                      }}
-                    >
+                      }}>
                       <Button
                         variant="outline"
                         style={{
                           border: "none",
                           fontSize: "32px",
                         }}
-                        onClick={() => handleAddEvents(event.id)}
-                      >
-                        {!clickedEvents.includes(event.id) &&
-                        !userEvents.includes(event.id) ? (
-                          <FontAwesomeIcon icon={outlineStar} />
-                        ) : (
-                          <FontAwesomeIcon icon={solidStar} />
-                        )}
+                        onClick={() => handleAddEvents(event.id)}>
+                        <FontAwesomeIcon
+                          icon={
+                            userEvents.includes(event.id)
+                              ? solidStar
+                              : outlineStar
+                          }
+                        />
                       </Button>
                       <LinkContainer to={`/events/${event.id}`}>
                         <Nav.Link>
@@ -245,8 +237,7 @@ const AllEventsNew = () => {
                               textAlign: "right",
                               fontSize: "20px",
                             }}
-                            id="event-name"
-                          >
+                            id="event-name">
                             {event.title}
                           </h4>
                         </Nav.Link>
@@ -261,13 +252,11 @@ const AllEventsNew = () => {
       </Container>
       <Container
         className="d-flex justify-content-center"
-        style={{ alignContent: "center", marginTop: "2rem" }}
-      >
+        style={{ alignContent: "center", marginTop: "2rem" }}>
         <Button
           variant="secondary"
           style={{ marginRight: "1rem" }}
-          onClick={handlePreviousPage}
-        >
+          onClick={handlePreviousPage}>
           Previous
         </Button>
         <Button variant="secondary" onClick={handleNextPage}>
