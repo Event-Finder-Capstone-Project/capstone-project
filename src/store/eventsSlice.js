@@ -1,4 +1,31 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
+
+export const handleEventAsync = createAsyncThunk(
+  "events/handleEventAsync",
+  async (eventId) => {
+    const userDocRef = doc(db, "users", auth.currentUser.uid);
+
+    try {
+      const userDocSnapshot = await getDoc(userDocRef);
+      const userEvents = userDocSnapshot.data()?.events || [];
+
+      if (userEvents.includes(eventId)) {
+        const updatedEvents = userEvents.filter((id) => id !== eventId);
+        await updateDoc(userDocRef, {
+          events: updatedEvents,
+        });
+      } else {
+        await updateDoc(userDocRef, {
+          events: [...userEvents, eventId],
+        });
+      }
+    } catch (error) {
+      console.error("Error updating user events:", error);
+    }
+  }
+);
 
 const initialState = JSON.parse(localStorage.getItem("events")) || [];
 
@@ -6,25 +33,34 @@ const eventsSlice = createSlice({
   name: "events",
   initialState,
   reducers: {
-    addEvents: (state, action) => {
+    handleEvents: (state, action) => {
       const eventId = action.payload;
-      const existingEvent = state.find((event) => event=== eventId);
-        console.log(existingEvent);
+
+      const existingEvent = state.find((event) => event === eventId);
       if (!existingEvent) {
         state.push(eventId);
         localStorage.setItem("events", JSON.stringify(state));
-      }
-    },
-    deleteEvent: (state, action) => {
-        const eventId = action.payload;
+      } else {
         const updatedEvents = state.filter((event) => event !== eventId);
         localStorage.setItem("events", JSON.stringify(updatedEvents));
         return updatedEvents;
-      },      
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(handleEventAsync.fulfilled, (state, action) => {
+      const eventId = action.payload;
+      const userEvents = state;
+
+      if (userEvents.includes(eventId)) {
+        return userEvents.filter((id) => id !== eventId);
+      } else {
+        return [...userEvents, eventId];
+      }
+    });
   },
 });
 
-export const { addEvents, deleteEvent } = eventsSlice.actions;
+export const { handleEvents } = eventsSlice.actions;
 
 export default eventsSlice.reducer;
-

@@ -8,6 +8,7 @@ import {
   Login,
   SingleEvent,
   AllEvents,
+  AllEventsNew,
   NavBar,
   Home,
   UserDetails,
@@ -62,7 +63,7 @@ function App() {
           <div className="w-100 mb-3">
             <Routes>
               <Route path="/events/:id" element={<SingleEvent />} />
-              <Route path="/events" element={<AllEvents />} />
+              <Route path="/events" element={<AllEventsNew />} />
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />
               <Route path="/thisweekend" element={<Weekend />} />

@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getSingleEvent } from "../../store/singleEventSlice";
-import { addEvents } from "../../store/eventsSlice";
+import { handleEvents,handleEventAsync } from "../../store/eventsSlice";
 import BackButton from "../BackButton";
-import { auth, db } from "../../firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth} from "../../firebase";
 import { Button, Image, Container, Row, Col } from "react-bootstrap";
 import ShareEvent from "./ShareEvent";
 
@@ -33,31 +32,14 @@ const SingleEvent = () => {
     return `${formattedDate} at ${formattedTime}`;
   };
 
-  const handleAddEvent = async () => {
+  const handleAddEvents = async (eventId) => {
     if (event) {
       try {
-        const user = auth.currentUser; // Replace with your authentication object
-        if (user) {
-          const userDocRef = doc(db, "users", user.uid);
-          const userDocSnapshot = await getDoc(userDocRef);
-
-          if (userDocSnapshot.exists()) {
-            const userData = userDocSnapshot.data();
-
-            // Check if the event ID is not already in the user's collection
-            if (!userData.events.includes(event.id)) {
-              // Add the event ID to the user's collection
-              await setDoc(
-                userDocRef,
-                { events: [...userData.events, event.id] },
-                { merge: true }
-              );
-            }
-          }
-        } else {
-          // For guest users, add the event to local storage
-          dispatch(addEvents(event.id));
-        }
+        if(auth.currentUser){
+          dispatch(handleEventAsync(eventId));
+        } else{
+          dispatch(handleEvents(eventId));
+        } 
         setIsEventAdded(true);
       } catch (error) {
         console.error("Error adding event to user collection:", error);
@@ -127,7 +109,7 @@ const SingleEvent = () => {
                   <Button
                     style={{ marginRight: "1rem", marginBottom: "1rem" }}
                     variant="secondary"
-                    onClick={handleAddEvent}
+                    onClick={() => handleAddEvents(event.id)}
                   >
                     Add Event
                   </Button>
