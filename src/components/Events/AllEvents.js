@@ -36,6 +36,11 @@ const AllEvents = () => {
 
   const dispatch = useDispatch();
 
+
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
+  };
+
   useEffect(() => {
     const cityChangedListener = (data) => {
       setRerender(!rerender);

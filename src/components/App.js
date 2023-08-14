@@ -83,7 +83,7 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/today" element={<Today />} />
-                <Route path="/events" element={<AllEvents />} />
+                <Route path="/events" element={<AllEventsNew />} />
                 <Route path="/events/:id" element={<SingleEvent />} />
                 <Route path="/myevents" element={<UserEvents />} />
                 <Route path="/thisweekend" element={<Weekend />} />
