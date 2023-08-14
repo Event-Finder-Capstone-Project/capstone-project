@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-import { addEvents } from "../../store/eventsSlice";
+import { handleEvents } from "../../store/eventsSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
@@ -18,6 +18,8 @@ import { Nav, Row, Col, Container, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
+import "../style/Body.css";
+
 const AllEventsNew = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
@@ -25,6 +27,7 @@ const AllEventsNew = () => {
   const [userEvents, setUserEvents] = useState([]);
   const [clickedEvents, setClickedEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
+
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
   const dispatch = useDispatch();
@@ -119,7 +122,7 @@ const AllEventsNew = () => {
         setUserEvents([...userEvents, eventId]);
       }
     } else {
-      dispatch(addEvents(eventId));
+      dispatch(handleEvents(eventId));
     }
     setClickedEvents([...clickedEvents, eventId]);
   };
@@ -133,29 +136,38 @@ const AllEventsNew = () => {
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
+
+  useEffect(() => {});
+  const showCarousel = window.innerWidth > 767;
+
   return (
     <>
       <h1> Popular in your area </h1>
-      <NewCarousel />
+      <Container>
+        <NewCarousel />
+      </Container>
       <Container
-        fluid="true"
         class="text-center"
         className="all-events-container"
         style={{
           marginTop: "3rem",
-          marginLeft: "0px",
-          marginRight: "0px",
-          width: "100%",
+          minWidth: "100%",
         }}
       >
         <div className="filter-container">
           <Container
-            style={{ marginTop: ".5rem", marginBottom: "1rem" }}
-            className="d-flex justify-content-center"
+            style={{
+              marginTop: ".5rem",
+              marginBottom: "1rem",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
           >
             <h5
               style={{
                 paddingTop: ".3rem",
+                marginRight: "1rem",
               }}
             >
               Event Type
@@ -175,104 +187,106 @@ const AllEventsNew = () => {
           </Container>
         </div>
 
-        <Row xs={1} sm={1} md={2}>
-          <Col style={{ width: "50%" }}>
-            <TestMap />
-          </Col>
-          <Col style={{ width: "50%" }}>
-            {events?.length
-              ? events.map((event) => (
-                  <Row
-                    xs={1}
-                    md={2}
-                    style={{
-                      marginBottom: "2rem",
-                      marginRight: "0px",
-                    }}
-                    fluid={true}
-                  >
-                    <LinkContainer to={`/events/${event.id}`}>
-                      <Nav.Link>
-                        <Col style={{ backgroundColor: "slategray" }}>
-                          <img
-                            sm={{ maxWidth: "200px", maxHeight: "200px" }}
-                            xs={{
-                              maxWidth: "200px",
-                              maxHeight: "100%",
-                            }}
-                            src={event.performers[0].image}
-                            alt={event.name}
-                          />
-                        </Col>
-                      </Nav.Link>
-                    </LinkContainer>
-
-                    <Col
-                      style={{
-                        backgroundColor: "slateGrey",
-                        maxWidth: "100%",
-                        maxHeight: "100%",
-                        overflow: "hidden",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Button
-                        variant="outline"
+        <Container>
+          <Row xs={1} sm={1} md={2}>
+            <Col style={{ marginBottom: "2rem" }} className="stickyMaps">
+              <TestMap />
+            </Col>
+            <Col style={{ position: "relative" }}>
+              <Container>
+                {events?.length
+                  ? events.map((event) => (
+                      <Row
+                        xs={1}
+                        md={2}
                         style={{
-                          border: "none",
-                          fontSize: "32px",
+                          marginBottom: "2rem",
+                          minWidth: "100%",
+                          backgroundColor: "slategray",
                         }}
-                        onClick={() => handleAddEvents(event.id)}
                       >
-                        {!clickedEvents.includes(event.id) &&
-                        !userEvents.includes(event.id) ? (
-                          <FontAwesomeIcon icon={outlineStar} />
-                        ) : (
-                          <FontAwesomeIcon icon={solidStar} />
-                        )}
-                      </Button>
-                      <LinkContainer to={`/events/${event.id}`}>
-                        <Nav.Link>
-                          <h4
-                            xs={{
-                              color: "white",
-                              textAlign: "center",
-                            }}
+                        <LinkContainer to={`/events/${event.id}`}>
+                          <Nav.Link>
+                            <Col>
+                              <img
+                                style={{
+                                  minWidth: "100%",
+                                  minHeight: "100%",
+                                }}
+                                src={event.performers[0].image}
+                                alt={event.name}
+                              />
+                            </Col>
+                          </Nav.Link>
+                        </LinkContainer>
+
+                        <Col
+                          style={{
+                            backgroundColor: "slateGrey",
+                            maxWidth: "100%",
+                            maxHeight: "100%",
+                            paddingBottom: ".5rem",
+                            overflow: "hidden",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Button
+                            variant="outline"
                             style={{
-                              textAlign: "right",
-                              fontSize: "20px",
+                              color: "white",
+                              border: "none",
+                              fontSize: "32px",
                             }}
-                            id="event-name"
+                            onClick={() => handleAddEvents(event.id)}
                           >
-                            {event.title}
-                          </h4>
-                        </Nav.Link>
-                      </LinkContainer>
-                    </Col>
-                  </Row>
-                ))
-              : // <p>{!events?.length ? "No events found!" : ""}</p>
-                null}
-          </Col>
-        </Row>
-      </Container>
-      <Container
-        className="d-flex justify-content-center"
-        style={{ alignContent: "center", marginTop: "2rem" }}
-      >
-        <Button
-          variant="secondary"
-          style={{ marginRight: "1rem" }}
-          onClick={handlePreviousPage}
+                            {!clickedEvents.includes(event.id) &&
+                            !userEvents.includes(event.id) ? (
+                              <FontAwesomeIcon icon={outlineStar} />
+                            ) : (
+                              <FontAwesomeIcon icon={solidStar} />
+                            )}
+                          </Button>
+                          <LinkContainer to={`/events/${event.id}`}>
+                            <Nav.Link>
+                              <h4
+                                style={{
+                                  fontSize: "20px",
+                                  color: "white",
+                                }}
+                                id="event-name"
+                              >
+                                {event.title}
+                              </h4>
+                            </Nav.Link>
+                          </LinkContainer>
+                        </Col>
+                      </Row>
+                    ))
+                  : // <p>{!events?.length ? "No events found!" : ""}</p>
+                    null}
+              </Container>
+            </Col>
+          </Row>
+        </Container>
+
+        <Container
+          className="d-flex justify-content-center"
+          style={{ alignContent: "center", marginTop: "2rem" }}
         >
-          Previous
-        </Button>
-        <Button variant="secondary" onClick={handleNextPage}>
-          Next
-        </Button>
+          <Button
+            variant="secondary"
+            style={{ marginRight: "1rem" }}
+            onClick={handlePreviousPage}
+          >
+            Previous
+          </Button>
+          <Button variant="secondary" onClick={handleNextPage}>
+            Next
+          </Button>
+        </Container>
       </Container>
     </>
   );

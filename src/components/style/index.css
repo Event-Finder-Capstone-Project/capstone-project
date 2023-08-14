@@ -1,14 +1,46 @@
 .custom-infowindow-content {
-    color: black;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .star-button-container {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0.5rem;
-    z-index: 1; 
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+  z-index: 1;
+}
+@media (min-width: 400px) {
+  .google-map-container {
+    height: 400px;
+    width: 100%;
   }
+}
+
+@media (min-width: 770px) {
+  .google-map-container {
+    height: 100vh;
+    width: 100%;
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (min-width: 990px) {
+  .google-map-container {
+    height: 100vh;
+    width: 100%;
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (min-width: 770px) {
+  .stickyMaps {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+}
