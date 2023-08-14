@@ -14,6 +14,7 @@ const UserEvents = () => {
   const [savedEvents, setSavedEvents] = useState([]);
   const [loginUserEvents, setLoginUserEvents] = useState([]);
 
+
   useEffect(() => {
     if (user) {
       const fetchUserData = async () => {
@@ -80,6 +81,37 @@ const UserEvents = () => {
       console.error("Error deleting user event:", error);
     }
   };
+
+
+  const checkEventsOneDayAway = (events) => {
+    const currentTime = new Date().getTime();
+    events.forEach(event => {
+      const eventTime = new Date(event.datetime_utc).getTime();
+      const timeDifference = eventTime - currentTime;
+  
+      if (timeDifference <= 24*60*60*1000 && timeDifference > 23.5*60*60*1000) {  // between 23.5 to 24 hours
+        new Notification(`Event Reminder: ${event.title} is tomorrow!`);
+      }
+    });
+  };
+
+
+  useEffect(() => {
+    if(user) {
+      checkEventsOneDayAway(loginUserEvents);
+    } else {
+      checkEventsOneDayAway(savedEvents);
+    }
+    const intervalId = setInterval(() => {
+      if(user) {
+        checkEventsOneDayAway(loginUserEvents);
+      } else {
+        checkEventsOneDayAway(savedEvents);
+      }
+    }, 60*60*1000);
+  
+    return () => clearInterval(intervalId);
+  }, [loginUserEvents, savedEvents, user]);
 
   return (
     <div>

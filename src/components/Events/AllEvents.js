@@ -17,6 +17,7 @@ import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel } from "../";
 import { eventEmitter } from "../App";
+import { requestNotificationPermission, sendNotification } from './Notifications'
 
 const AllEvents = () => {
   const [page, setPage] = useState(1);
@@ -113,6 +114,10 @@ const AllEvents = () => {
     fetchUserEvents();
   }, []);
 
+  useEffect(() => {
+    requestNotificationPermission();
+  }, []);
+
   const handleAddEvents = async (eventId) => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
@@ -123,14 +128,17 @@ const AllEvents = () => {
         });
 
         setUserEvents(updatedEvents);
+        sendNotification('Event removed from your list!');
       } else {
         await updateDoc(userDocRef, {
           events: [...userEvents, eventId],
         });
         setUserEvents([...userEvents, eventId]);
+        sendNotification('Event added to your list!');
       }
     } else {
       dispatch(addEvents(eventId));
+      sendNotification('Event added to your list!');
     }
     setClickedEvents([...clickedEvents, eventId]);
   };
