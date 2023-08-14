@@ -2,35 +2,31 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-import { handleEvents } from "../../store/eventsSlice";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
-import Toastify from "toastify-js";
-import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { Nav, Row, Col, Container, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
-import "../style/Body.css";
-
+import PrevNext from "./PrevNext";
 const AllEventsNew = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
-  const [clickedEvents, setClickedEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
 
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
+  const savedEventIds = useSelector((state) => state.events);
+
   const dispatch = useDispatch();
+  const totalEvents = useSelector((state) => state.allEvents.totalEvents);
+  const totalPages = Math.ceil(totalEvents / 8);
+
   useEffect(() => {
     if (filter === "") {
       dispatch(getAllEvents({ type: filter }));
@@ -101,44 +97,45 @@ const AllEventsNew = () => {
           const userData = userDocSnapshot.data();
           setUserEvents(userData.events || []);
         }
+      } else {
+        setUserEvents(savedEventIds || []);
       }
     };
     fetchEventsData();
     fetchUserEvents();
   }, []);
-  const handleAddEvents = async (eventId) => {
+
+  //handle add and remove event use icon
+  const handleAddEvents = (eventId) => {
     if (auth.currentUser) {
-      const userDocRef = doc(db, "users", auth.currentUser.uid);
-      if (userEvents.includes(eventId)) {
-        const updatedEvents = userEvents.filter((id) => id !== eventId);
-        await updateDoc(userDocRef, {
-          events: updatedEvents,
-        });
-        setUserEvents(updatedEvents);
-      } else {
-        await updateDoc(userDocRef, {
-          events: [...userEvents, eventId],
-        });
-        setUserEvents([...userEvents, eventId]);
-      }
+      dispatch(handleEventAsync(eventId));
     } else {
       dispatch(handleEvents(eventId));
     }
-    setClickedEvents([...clickedEvents, eventId]);
+    // Toggle the event in userEvents state
+    if (userEvents.includes(eventId)) {
+      setUserEvents(userEvents.filter((id) => id !== eventId));
+    } else {
+      setUserEvents([...userEvents, eventId]);
+    }
   };
+
   const handleFilter = () => {
     setPage(1);
     dispatch(getAllEvents({ type: filter, page: 1 }));
   };
+
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
   };
+
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  useEffect(() => {});
-  const showCarousel = window.innerWidth > 767;
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
+  };
 
   return (
     <>
