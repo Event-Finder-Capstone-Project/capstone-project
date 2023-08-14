@@ -3,6 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { handleEvents,handleEventAsync } from "../../store/eventsSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import { useLoadScript } from "@react-google-maps/api";
 import {
   collection,
@@ -21,8 +24,8 @@ const Today = () => {
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
-  const [clickedEvents, setClickedEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
+  const savedEventIds = useSelector((state) => state.events);
   const dispatch = useDispatch();
   const totalEvents = useSelector((state) => state.allEvents.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
@@ -99,19 +102,30 @@ const Today = () => {
           const userData = userDocSnapshot.data();
           setUserEvents(userData.events || []);
         }
+      } else{
+        setUserEvents(savedEventIds || []);
       }
     };
     fetchEventsData();
     fetchUserEvents();
   }, []);
-  const handleAddEvents = async (eventId) => {
-    if(auth.currentUser){
+
+   //handle add and remove event use icon
+   const handleAddEvents = (eventId) => {
+    if (auth.currentUser) {
       dispatch(handleEventAsync(eventId));
-    } else{
+    } else {
       dispatch(handleEvents(eventId));
-    }  
-    setClickedEvents((prevClicked) => [...prevClicked, eventId]);
+    }
+    // Toggle the event in userEvents state
+    if (userEvents.includes(eventId)) {
+      setUserEvents(userEvents.filter((id) => id !== eventId));
+    } else {
+      setUserEvents([...userEvents, eventId]);
+    }
   };
+
+
   const handleFilter = () => {
     setPage(1);
     dispatch(getAllEvents({ type: filter, page: 1 }));
@@ -205,14 +219,17 @@ const Today = () => {
                     </Card.Body>
                   </Nav.Link>
                 </LinkContainer>
-                {!clickedEvents.includes(event.id) && (
-                  <Button
-                    variant="secondary"
-                    onClick={() => handleAddEvents(event.id)}
-                  >
-                    Add Event
-                  </Button>
-                )}
+                <Button
+                variant="outline"
+                style={{
+                  border: "none",
+                  fontSize: "32px",
+                }}
+                onClick={() => handleAddEvents(event.id)}>
+                <FontAwesomeIcon
+                  icon={userEvents.includes(event.id) ? solidStar : outlineStar}
+                />
+              </Button>
               </Card>
             ))
           ) : (

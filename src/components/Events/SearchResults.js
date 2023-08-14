@@ -1,10 +1,17 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { auth} from "../../firebase";
+import { auth,db } from "../../firebase";
+import { doc, getDoc } from "firebase/firestore";
 import { getAllEvents } from "../../store/allEventsSlice";
+
 import { handleEvents,handleEventAsync } from "../../store/eventsSlice";
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
+import { Button, Card, Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import { getSearchResults, setDateRange } from "../../store/searchSlice";
 import DatePicker from "../NavBar/SearchComponents/DatePicker";
@@ -17,6 +24,7 @@ const SearchResults = () => {
   const [userEvents, setUserEvents] = useState([]);
   const searchState = useSelector((state) => state.search);
   const events = useSelector((state) => state.search.events);
+  const savedEventIds = useSelector((state) => state.events);
   const dispatch = useDispatch();
     const totalEvents = useSelector((state) => state.search.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
@@ -38,12 +46,35 @@ const SearchResults = () => {
     page
   ]);
 
-  const handleAddEvents = async (eventId) => {
-    if(auth.currentUser){
+  useEffect(() => {
+    const fetchUserEvents = async () => {
+      if (auth.currentUser) {
+        const userDocRef = doc(db, "users", auth.currentUser.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          setUserEvents(userData.events || []);
+        }
+      } else {
+        setUserEvents(savedEventIds || []);
+      }
+    };
+    fetchUserEvents();
+  }, []);
+
+  //handle add and remove event use icon
+  const handleAddEvents = (eventId) => {
+    if (auth.currentUser) {
       dispatch(handleEventAsync(eventId));
-    } else{
+    } else {
       dispatch(handleEvents(eventId));
-    } 
+    }
+    // Toggle the event in userEvents state
+    if (userEvents.includes(eventId)) {
+      setUserEvents(userEvents.filter((id) => id !== eventId));
+    } else {
+      setUserEvents([...userEvents, eventId]);
+    }
   };
 
   const handleFilter = () => {
@@ -108,11 +139,17 @@ const SearchResults = () => {
                   </Card.Body>
                 </Nav.Link>
               </LinkContainer>
-              {!userEvents.includes(event.id) && (
-                <button onClick={() => handleAddEvents(event.id)}>
-                  Add Event
-                </button>
-              )}
+              <Button
+                variant="outline"
+                style={{
+                  border: "none",
+                  fontSize: "32px",
+                }}
+                onClick={() => handleAddEvents(event.id)}>
+                <FontAwesomeIcon
+                  icon={userEvents.includes(event.id) ? solidStar : outlineStar}
+                />
+              </Button>
             </Card>
           ))
         ) : (
