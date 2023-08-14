@@ -35,10 +35,6 @@ const AllEvents = () => {
 
   const dispatch = useDispatch();
 
-  const handlePageClick = (pageNumber) => {
-    setPage(pageNumber);
-  };
-
   useEffect(() => {
     const cityChangedListener = (data) => {
       setRerender(!rerender);
@@ -122,6 +118,10 @@ const AllEvents = () => {
     dispatch(getAllEvents({ type: filter, page: 1 }));
   };
 
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
+  };
+
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
   };
@@ -129,6 +129,7 @@ const AllEvents = () => {
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
+  
   return (
     <>
       <h1> Popular in {storedCity ? storedCity : "your area"} </h1>

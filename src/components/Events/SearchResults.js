@@ -3,11 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth} from "../../firebase";
 import { getAllEvents } from "../../store/allEventsSlice";
 import { handleEvents,handleEventAsync } from "../../store/eventsSlice";
-import {Button,Card,Nav} from "react-bootstrap";
+import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useState } from "react";
 import { getSearchResults, setDateRange } from "../../store/searchSlice";
 import DatePicker from "../NavBar/SearchComponents/DatePicker";
+import PrevNext from "./PrevNext";
 
 const SearchResults = () => {
   const [page, setPage] = useState(1);
@@ -17,6 +18,8 @@ const SearchResults = () => {
   const searchState = useSelector((state) => state.search);
   const events = useSelector((state) => state.search.events);
   const dispatch = useDispatch();
+    const totalEvents = useSelector((state) => state.search.totalEvents);
+  const totalPages = Math.ceil(totalEvents / 8);
 
   useEffect(() => {
     dispatch(
@@ -24,6 +27,7 @@ const SearchResults = () => {
         query: searchState.query,
         postalCode: searchState.postalCode,
         dateRange: searchState.dateRange,
+        page: page,
       })
     );
   }, [
@@ -31,6 +35,7 @@ const SearchResults = () => {
     searchState.query,
     searchState.postalCode,
     searchState.dateRange,
+    page
   ]);
 
   const handleAddEvents = async (eventId) => {
@@ -44,6 +49,10 @@ const SearchResults = () => {
   const handleFilter = () => {
     setPage(1);
     dispatch(getAllEvents({ type: filter, page: 1 }));
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
   };
 
   const handlePreviousPage = () => {
@@ -110,10 +119,22 @@ const SearchResults = () => {
           <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
         )}
       </div>
-      <div className="pageButtons">
-        <button onClick={handlePreviousPage}>Previous</button>
-        <button onClick={handleNextPage}>Next</button>
-      </div>
+
+      {events?.length > 0 && (
+        <Container
+          className="d-flex justify-content-center"
+          style={{ marginTop: "2rem" }}
+        >
+          <PrevNext
+            currentPage={page}
+            totalPages={totalPages}
+            totalEvents={totalEvents}
+            onPageClick={handlePageClick}
+            onNextClick={handleNextPage}
+            onPreviousClick={handlePreviousPage}
+          />
+        </Container>
+      )}
     </>
   );
 };

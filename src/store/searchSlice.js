@@ -3,13 +3,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getSearchResults = createAsyncThunk(
   "getSearchResults",
-  async ({ query, postalCode, dateRange }) => {
+  async ({ query, postalCode, page, dateRange }) => {
     try {
       const auth = {
         username: process.env.REACT_APP_ALL_EVENTS_USERNAME,
         password: process.env.REACT_APP_ALL_EVENTS_PASSWORD,
       };
-      const params = {};
+      const params = {
+        page: page,
+        per_page: 8
+      };
 
       if (query) {
         params["q"] = query;
@@ -30,7 +33,9 @@ export const getSearchResults = createAsyncThunk(
         auth: auth,
         params: params,
       });
-      return response.data.events;
+      return {   events: response.data.events,
+        total: response.data.meta.total 
+        };
     } catch (err) {
       console.log(err);
     }
@@ -47,6 +52,7 @@ const initialState = {
   lng: parseFloat(localStorage.getItem("mapCenterLng")) || "",
   dateRange: null,
   events: [],
+  totalEvents: 0
 };
 
 const searchSlice = createSlice({
@@ -76,8 +82,9 @@ const searchSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getSearchResults.fulfilled, (state, action) => {
-      state.events = action.payload;
+    builder.addCase(getSearchResults.fulfilled, (state,  { payload }) => {
+      state.events = payload.events;
+      state.totalEvents = payload.total;
     });
   },
 });
