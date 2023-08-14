@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-import { addEvents } from "../../store/eventsSlice";
+import { handleEvents , handleEventAsync} from "../../store/eventsSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
@@ -11,7 +11,6 @@ import {
   getDocs,
   doc,
   getDoc,
-  updateDoc,
 } from "firebase/firestore";
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
@@ -116,29 +115,27 @@ const AllEvents = () => {
     fetchEventsData();
     fetchUserEvents();
   }, []);
-  const handleAddEvents = async (eventId) => {
-    if (auth.currentUser) {
-      const userDocRef = doc(db, "users", auth.currentUser.uid);
-      if (userEvents.includes(eventId)) {
-        const updatedEvents = userEvents.filter((id) => id !== eventId);
-        await updateDoc(userDocRef, {
-          events: updatedEvents,
-        });
-        setUserEvents(updatedEvents);
-      } else {
-        await updateDoc(userDocRef, {
-          events: [...userEvents, eventId],
-        });
-        setUserEvents([...userEvents, eventId]);
-      }
-    } else {
-      dispatch(addEvents(eventId));
-    }
-    if (clickedEvents.includes(eventId)) {
-      setClickedEvents(clickedEvents.filter((id) => id !== eventId));
-    } else {
-      setClickedEvents([...clickedEvents, eventId]);
-    }
+
+  const handleAddEvents = (eventId) => {
+      if(auth.currentUser){
+        dispatch(handleEventAsync(eventId));
+      } else{
+        dispatch(handleEvents(eventId));
+      }  
+    setClickedEvents([...clickedEvents, eventId]);
+  };
+
+  const handleFilter = () => {
+    setPage(1);
+    dispatch(getAllEvents({ type: filter, page: 1 }));
+  };
+
+  const handlePreviousPage = () => {
+    setPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setPage((prevPage) => prevPage + 1);
   };
   return (
     <>

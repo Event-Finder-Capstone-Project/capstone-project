@@ -2,21 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-import { addEvents } from "../../store/eventsSlice";
-import { useLoadScript } from "@react-google-maps/api";
+import { handleEvents ,handleEventAsync} from "../../store/eventsSlice";
 import {
   collection,
   getDocs,
   doc,
   getDoc,
-  updateDoc,
 } from "firebase/firestore";
 
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
-import CityFilter from "./CityFilter";
-import Autocomplete from "react-google-autocomplete";
 import { eventEmitter } from "../App";
 
 const Weekend = () => {
@@ -131,20 +127,11 @@ const Weekend = () => {
   }, []);
 
   const handleAddEvents = async (eventId) => {
-    if (auth.currentUser) {
-      const userDocRef = doc(db, "users", auth.currentUser.uid);
-
-      // Add the event ID to the user's events array in Firestore
-      await updateDoc(userDocRef, {
-        events: [...userEvents, eventId],
-      });
-
-      // Update the local state
-      setUserEvents([...userEvents, eventId]);
-    } else {
-      // For guest users, add the event to local storage
-      dispatch(addEvents(eventId));
-    }
+    if(auth.currentUser){
+      dispatch(handleEventAsync(eventId));
+    } else{
+      dispatch(handleEvents(eventId));
+    }  
     setClickedEvents((prevClicked) => [...prevClicked, eventId]);
   };
 
