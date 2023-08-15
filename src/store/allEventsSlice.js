@@ -26,18 +26,18 @@ per_page: 8
       }
     }
     if (type === "Dance") {
-      params["type"] = "dance_performance_tour";
+      params["type"] = ["dance_performance_tour", "cirque_du_soleil"];
     } else if (type === "Sports") {
       params["type"] = [
         "pga", "minor_league_baseball", "extreme_sports", "sports",
         "nfl", "wnba", "mlb", "ncaa_football", "mls", "tennis",
         "olympic_sports", "european_soccer", "soccer", "horse_racing", 
         "rodeo", "auto_racing", "nascar", "monster_truck", "minor_league_hockey",
-        "womens_college_volleyball", "national_womens_soccer"
+        "womens_college_volleyball", "national_womens_soccer", "football"
       ];
     }
     else if (type === "Theater") {
-      params["type"] = ["theater", "broadway_tickets_national"];
+      params["type"] = ["theater", "broadway_tickets_national", "cirque_du_soleil"];
     }
     else if (type === "Concerts") {
       params["type"] = [
