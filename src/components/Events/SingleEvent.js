@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getSingleEvent } from "../../store/singleEventSlice";
-import { handleEvents,handleEventAsync } from "../../store/eventsSlice";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import BackButton from "../BackButton";
-import { auth} from "../../firebase";
+import { auth } from "../../firebase";
 import { Button, Image, Container, Row, Col } from "react-bootstrap";
 import ShareEvent from "./ShareEvent";
 
@@ -35,11 +35,11 @@ const SingleEvent = () => {
   const handleAddEvents = async (eventId) => {
     if (event) {
       try {
-        if(auth.currentUser){
+        if (auth.currentUser) {
           dispatch(handleEventAsync(eventId));
-        } else{
+        } else {
           dispatch(handleEvents(eventId));
-        } 
+        }
         setIsEventAdded(true);
       } catch (error) {
         console.error("Error adding event to user collection:", error);

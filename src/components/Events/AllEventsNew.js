@@ -12,6 +12,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
+
 const AllEventsNew = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
@@ -186,82 +187,83 @@ const AllEventsNew = () => {
             </Col>
             <Col style={{ position: "relative" }}>
               <Container>
-                {events?.length
-                  ? events.map((event) => (
-                      <Row
-                        xs={1}
-                        md={2}
+                {events?.length ? (
+                  events.map((event) => (
+                    <Row
+                      xs={1}
+                      md={2}
+                      style={{
+                        marginBottom: "2rem",
+                        minWidth: "100%",
+                        backgroundColor: "slategray",
+                      }}
+                    >
+                      <LinkContainer to={`/events/${event.id}`}>
+                        <Nav.Link>
+                          <Col>
+                            <img
+                              style={{
+                                minWidth: "100%",
+                                minHeight: "100%",
+                              }}
+                              src={event.performers[0].image}
+                              alt={event.name}
+                            />
+                          </Col>
+                        </Nav.Link>
+                      </LinkContainer>
+
+                      <Col
                         style={{
-                          marginBottom: "2rem",
-                          minWidth: "100%",
-                          backgroundColor: "slategray",
+                          backgroundColor: "slateGrey",
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          paddingBottom: ".5rem",
+
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "flex-end",
+                          alignText: "right",
+                          overflow: "hidden",
+                          justifyContent: "space-between",
                         }}
                       >
+                        <Button
+                          variant="outline"
+                          style={{
+                            color: "white",
+                            border: "none",
+                            fontSize: "32px",
+                          }}
+                          onClick={() => handleAddEvents(event.id)}
+                        >
+                          {!clickedEvents.includes(event.id) &&
+                          !userEvents.includes(event.id) ? (
+                            <FontAwesomeIcon icon={outlineStar} />
+                          ) : (
+                            <FontAwesomeIcon icon={solidStar} />
+                          )}
+                        </Button>
                         <LinkContainer to={`/events/${event.id}`}>
                           <Nav.Link>
-                            <Col>
-                              <img
-                                style={{
-                                  minWidth: "100%",
-                                  minHeight: "100%",
-                                }}
-                                src={event.performers[0].image}
-                                alt={event.name}
-                              />
-                            </Col>
+                            <h4
+                              style={{
+                                fontSize: "20px",
+                                color: "white",
+                                alignText: "right",
+                              }}
+                              id="event-name"
+                            >
+                              {event.title}
+                            </h4>
                           </Nav.Link>
                         </LinkContainer>
-
-                        <Col
-                          style={{
-                            backgroundColor: "slateGrey",
-                            maxWidth: "100%",
-                            maxHeight: "100%",
-                            paddingBottom: ".5rem",
-
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                            alignText: "right",
-                            overflow: "hidden",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Button
-                            variant="outline"
-                            style={{
-                              color: "white",
-                              border: "none",
-                              fontSize: "32px",
-                            }}
-                            onClick={() => handleAddEvents(event.id)}
-                          >
-                            {!clickedEvents.includes(event.id) &&
-                            !userEvents.includes(event.id) ? (
-                              <FontAwesomeIcon icon={outlineStar} />
-                            ) : (
-                              <FontAwesomeIcon icon={solidStar} />
-                            )}
-                          </Button>
-                          <LinkContainer to={`/events/${event.id}`}>
-                            <Nav.Link>
-                              <h4
-                                style={{
-                                  fontSize: "20px",
-                                  color: "white",
-                                  alignText: "right",
-                                }}
-                                id="event-name"
-                              >
-                                {event.title}
-                              </h4>
-                            </Nav.Link>
-                          </LinkContainer>
-                        </Col>
-                      </Row>
-                    ))
-                  : // <p>{!events?.length ? "No events found!" : ""}</p>
-                    null}
+                      </Col>
+                    </Row>
+                  ))
+                ) : (
+                  <p>{!events?.length ? "No events found!" : ""}</p>
+                )}
               </Container>
             </Col>
           </Row>
