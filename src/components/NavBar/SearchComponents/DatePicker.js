@@ -41,8 +41,7 @@ const DatePicker = ({ onSelectDateRange }) => {
     });
   };
 
-  // toggles target element
-  const refOne = useRef(null);
+  const refContainer = useRef(null);
 
   useEffect(() => {
     document.addEventListener("keydown", hideOnEscape, true);
@@ -55,7 +54,7 @@ const DatePicker = ({ onSelectDateRange }) => {
   }, []);
 
   const hideOnClickOutside = (e) => {
-    if (refOne.current && !refOne.current.contains(e.target)) {
+    if (refContainer.current && !refContainer.current.contains(e.target)) {
       setOpen(false);
     }
   };
@@ -74,6 +73,7 @@ const DatePicker = ({ onSelectDateRange }) => {
         zIndex: 1,
         marginRight: "1rem",
       }}
+      ref={refContainer}
     >
       <InputGroup
         className="input-container"
