@@ -1,18 +1,18 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
-const sgMail = require('@sendgrid/mail');
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+const sgMail = require("@sendgrid/mail");
 
 admin.initializeApp();
 
 // SendGrid API key here
 sgMail.setApiKey(functions.config().sendgrid.key);
 
-
-exports.sendEventEmail = functions.firestore
-    .document('users/{userId}')
+exports.sendEventNotification = functions.firestore
+    .document("users/{userId}")
     .onUpdate((change, context) => {
-        const beforeData = change.before.data();
-        const afterData = change.after.data();
+      const beforeData = change.before.data();
+      const afterData = change.after.data();
+
 
         // Check if an event has been added
         console.log("Function triggered!");
@@ -52,4 +52,4 @@ exports.sendEventEmail = functions.firestore
 
         // If no event was added or removed, simply return without doing anything
         return null;
-    });
+
