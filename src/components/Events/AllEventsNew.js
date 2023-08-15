@@ -19,7 +19,6 @@ const AllEventsNew = () => {
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
-  const [clickedEvents, setClickedEvents] = useState([]);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
   const savedEventIds = useSelector((state) => state.events);
@@ -152,8 +151,7 @@ const AllEventsNew = () => {
         style={{
           marginTop: "3rem",
           minWidth: "100%",
-        }}
-      >
+        }}>
         <div className="filter-container">
           <Container
             style={{
@@ -162,21 +160,18 @@ const AllEventsNew = () => {
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
-            }}
-          >
+            }}>
             <h5
               style={{
                 paddingTop: ".3rem",
                 marginRight: "1rem",
-              }}
-            >
+              }}>
               Event Type
             </h5>
             <select
               style={{ height: "35px" }}
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            >
+              onChange={(e) => setFilter(e.target.value)}>
               <option value="">None</option>
               {eventsData.map((eventType) => (
                 <option key={eventType} value={eventType}>
@@ -236,21 +231,21 @@ const AllEventsNew = () => {
                         }}
                       >
                         <Button
-                          variant="outline"
-                          style={{
-                            color: "white",
-                            border: "none",
-                            fontSize: "32px",
-                          }}
-                          onClick={() => handleAddEvents(event.id)}
-                        >
-                          {!clickedEvents.includes(event.id) &&
-                          !userEvents.includes(event.id) ? (
-                            <FontAwesomeIcon icon={outlineStar} />
-                          ) : (
-                            <FontAwesomeIcon icon={solidStar} />
-                          )}
-                        </Button>
+                            variant="outline"
+                            style={{
+                              border: "none",
+                              fontSize: "32px",
+                            }}
+                            onClick={() => handleAddEvents(event.id)}>
+                            <FontAwesomeIcon
+                              icon={
+                                userEvents.includes(event.id)
+                                  ? solidStar
+                                  : outlineStar
+                              }
+                            />
+                          </Button>
+
                         <LinkContainer to={`/events/${event.id}`}>
                           <Nav.Link>
                             <h4
@@ -278,8 +273,7 @@ const AllEventsNew = () => {
 
         <Container
           className="d-flex justify-content-center"
-          style={{ alignContent: "center", marginTop: "2rem" }}
-        >
+          style={{ alignContent: "center", marginTop: "2rem" }}>
           <PrevNext
             currentPage={page}
             totalPages={totalPages}
