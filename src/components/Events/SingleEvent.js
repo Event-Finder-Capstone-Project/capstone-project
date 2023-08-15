@@ -103,7 +103,6 @@ const SingleEvent = () => {
                   <Col>
                     <h5>{event.venue.name_v2}</h5>
                   </Col>
-
                   <Col>
                     <h5>
                       {event.venue.address}
