@@ -9,7 +9,6 @@ export const getAllEvents = createAsyncThunk("getAllEvents", async ({ type, page
     };
     const params = {
       page: page,
-      type: type,
 per_page: 8
     };
 
@@ -25,6 +24,30 @@ per_page: 8
       if (dateRange.endDate) {
         params["datetime_utc.lte"] = dateRange.endDate;
       }
+    }
+    if (type === "Dance") {
+      params["type"] = "dance_performance_tour";
+    } else if (type === "Sports") {
+      params["type"] = [
+        "pga", "minor_league_baseball", "extreme_sports", "sports",
+        "nfl", "wnba", "mlb", "ncaa_football", "mls", "tennis",
+        "olympic_sports", "european_soccer", "soccer", "horse_racing", 
+        "rodeo", "auto_racing", "nascar", "monster_truck", "minor_league_hockey",
+        "womens_college_volleyball", "national_womens_soccer"
+      ];
+    }
+    else if (type === "Theater") {
+      params["type"] = ["theater", "broadway_tickets_national"];
+    }
+    else if (type === "Concerts") {
+      params["type"] = [
+        "concert", "music_festival",
+        "classical_orchestral_instrumental", "classical"
+      ];
+    }
+    
+    else {
+      params["type"] = type;
     }
 
 
