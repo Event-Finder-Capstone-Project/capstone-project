@@ -33,7 +33,7 @@ per_page: 8
         "nfl", "wnba", "mlb", "ncaa_football", "mls", "tennis",
         "olympic_sports", "european_soccer", "soccer", "horse_racing", 
         "rodeo", "auto_racing", "nascar", "monster_truck", "minor_league_hockey",
-        "womens_college_volleyball", "national_womens_soccer"
+        "womens_college_volleyball", "national_womens_soccer", "football"
       ];
     }
     else if (type === "Theater") {
