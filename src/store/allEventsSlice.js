@@ -26,7 +26,7 @@ per_page: 8
       }
     }
     if (type === "Dance") {
-      params["type"] = "dance_performance_tour";
+      params["type"] = ["dance_performance_tour", "cirque_du_soleil"];
     } else if (type === "Sports") {
       params["type"] = [
         "pga", "minor_league_baseball", "extreme_sports", "sports",
@@ -37,7 +37,7 @@ per_page: 8
       ];
     }
     else if (type === "Theater") {
-      params["type"] = ["theater", "broadway_tickets_national"];
+      params["type"] = ["theater", "broadway_tickets_national", "cirque_du_soleil"];
     }
     else if (type === "Concerts") {
       params["type"] = [
