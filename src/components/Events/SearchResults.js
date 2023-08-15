@@ -115,42 +115,61 @@ const SearchResults = () => {
   return (
     <>
       <h1>Search Results</h1>
-      <Container className="resultsContainer">
-        <DatePicker onSelectDateRange={handleSelectDateRange} />
-
-        <Container
-          className="filter"
+      <Container
+        className="resultsContainer"
+        // style={{
+        //   display: "flex",
+        //   flexDirection: "column",
+        //   alignItems: "flex-start",
+        // }}
+      >
+        <div
           style={{
-            marginTop: ".3rem",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-start",
             marginBottom: "1rem",
-            marginLeft: ".5rem",
           }}
         >
-          <Form.Label
+          <Container
+            style={{ position: "absolute", zIndex: 9999, width: "30%" }}
+          >
+            <DatePicker onSelectDateRange={handleSelectDateRange} />
+          </Container>
+          <Container
+            className="filter"
             style={{
-              width: "100px",
-              fontSize: "18px",
-              paddingTop: "7px",
-              whiteSpace: "nowrap",
-              marginRight: ".7rem",
+              marginTop: "4rem",
+              marginBottom: "1rem",
+              marginLeft: ".5rem",
             }}
           >
-            Event Type
-          </Form.Label>
-          <Form.Select
-            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
-            variant="light"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="">None</option>
-            {eventsData.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
-          </Form.Select>
-        </Container>
+            <Form.Label
+              style={{
+                width: "100px",
+                fontSize: "18px",
+                paddingTop: "7px",
+                whiteSpace: "nowrap",
+                marginRight: ".7rem",
+              }}
+            >
+              Event Type
+            </Form.Label>
+            <Form.Select
+              style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
+              variant="light"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="">None</option>
+              {eventsData.map((eventType) => (
+                <option key={eventType} value={eventType}>
+                  {eventType}
+                </option>
+              ))}
+            </Form.Select>
+          </Container>
+        </div>
       </Container>
 
       <Container>

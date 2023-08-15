@@ -67,7 +67,7 @@ const DatePicker = ({ onSelectDateRange }) => {
   };
 
   return (
-    <Container className="calendar">
+    <div className={`datepicker-container`}>
       <InputGroup
         className="input-container"
         style={{
@@ -108,7 +108,7 @@ const DatePicker = ({ onSelectDateRange }) => {
           Clear Date Selection
         </Button>
       </InputGroup>
-      <div ref={refOne}>
+      <div className="datepicker-popup">
         {open && (
           <DateRange
             onChange={(item) => {
@@ -124,7 +124,7 @@ const DatePicker = ({ onSelectDateRange }) => {
           />
         )}
       </div>
-    </Container>
+    </div>
   );
 };
 
