@@ -98,7 +98,7 @@ const SingleEvent = () => {
             <Col>
               <div>
                 <h1>{event.title}</h1>
-                <h4>{formatDate(event.datetime_utc)}</h4>
+                <h4>{formatDate(event.datetime_local)}</h4>
                 <Row style={{ marginTop: "1rem" }}>
                   <Col>
                     <h5>{event.venue.name_v2}</h5>
