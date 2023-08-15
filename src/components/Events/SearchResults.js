@@ -5,7 +5,15 @@ import { doc, getDoc } from "firebase/firestore";
 import { getAllEvents } from "../../store/allEventsSlice";
 
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
-import { Nav, Row, Container, Button, Col } from "react-bootstrap";
+import {
+  Nav,
+  Row,
+  Container,
+  Button,
+  Col,
+  Form,
+  InputGroup,
+} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
@@ -46,6 +54,11 @@ const SearchResults = () => {
     searchState.dateRange,
     page,
   ]);
+  useEffect(() => {
+    if (filter === "") {
+      dispatch(getAllEvents({ type: filter }));
+    }
+  }, [dispatch, filter]);
 
   useEffect(() => {
     const fetchUserEvents = async () => {
@@ -101,12 +114,22 @@ const SearchResults = () => {
 
   return (
     <>
-      <DatePicker onSelectDateRange={handleSelectDateRange} />
+      <h1>Search Results</h1>
+      <Container
+        style={{
+          marginTop: ".5rem",
+          marginBottom: "1rem",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+        }}
+      >
+        <DatePicker onSelectDateRange={handleSelectDateRange} />
 
-      <div className="filter-container">
         <Container
+          className="filter-container"
           style={{
-            marginTop: ".5rem",
+            marginTop: "1rem",
             marginBottom: "1rem",
             display: "flex",
             flexDirection: "row",
@@ -115,14 +138,13 @@ const SearchResults = () => {
         >
           <h5
             style={{
-              paddingTop: ".3rem",
               marginRight: "1rem",
             }}
           >
             Event Type
           </h5>
           <select
-            style={{ height: "35px" }}
+            style={{}}
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
@@ -134,20 +156,7 @@ const SearchResults = () => {
             ))}
           </select>
         </Container>
-        <Button
-          variant="outline-light"
-          style={{
-            marginTop: "-5px",
-            height: "28px",
-            lineHeight: "0px",
-            paddingTop: "4px",
-            fontSize: "19px",
-          }}
-          onClick={handleFilter}
-        >
-          Filter
-        </Button>
-      </div>
+      </Container>
 
       <Container>
         <Row xs={1} sm={1} md={2}>

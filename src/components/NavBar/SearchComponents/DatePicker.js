@@ -1,7 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { DateRange } from "react-date-range";
 import { useDispatch } from "react-redux";
-import { Nav, Row, Container, Button, Col } from "react-bootstrap";
+import {
+  Nav,
+  Row,
+  Container,
+  Button,
+  Col,
+  Form,
+  InputGroup,
+} from "react-bootstrap";
 import { setDateRange } from "../../../store/searchSlice";
 import format from "date-fns/format";
 import "react-date-range/dist/styles.css";
@@ -59,9 +67,19 @@ const DatePicker = ({ onSelectDateRange }) => {
   };
 
   return (
-    <div className="calendar">
-      <div className="input-container">
-        <input
+    <Container className="calendar">
+      <InputGroup
+        className="input-container"
+        style={{
+          marginTop: ".5rem",
+          marginBottom: "1.5rem",
+          height: "28px",
+          lineHeight: "0px",
+          paddingTop: "4px",
+          fontSize: "19px",
+        }}
+      >
+        <Form.Control
           value={
             range[0].endDate
               ? `${format(range[0].startDate, "MM/dd/yyyy")} ${
@@ -77,13 +95,7 @@ const DatePicker = ({ onSelectDateRange }) => {
         />
         <Button
           variant="outline-light"
-          style={{
-            marginTop: "-5px",
-            height: "28px",
-            lineHeight: "0px",
-            paddingTop: "4px",
-            fontSize: "19px",
-          }}
+          style={{}}
           className="clearButton"
           onClick={() => {
             setRange([
@@ -98,7 +110,7 @@ const DatePicker = ({ onSelectDateRange }) => {
         >
           Clear Date Selection
         </Button>
-      </div>
+      </InputGroup>
       <div ref={refOne}>
         {open && (
           <DateRange
@@ -115,7 +127,7 @@ const DatePicker = ({ onSelectDateRange }) => {
           />
         )}
       </div>
-    </div>
+    </Container>
   );
 };
 
