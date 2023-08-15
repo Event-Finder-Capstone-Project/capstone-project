@@ -12,10 +12,14 @@ const SingleEvent = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [isEventAdded, setIsEventAdded] = useState(false);
+  const eventContainer = document.getElementById("single-event-container");
 
   useEffect(() => {
     dispatch(getSingleEvent(id));
-  }, [dispatch, id]);
+    if (eventContainer) {
+    eventContainer.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [dispatch, id, eventContainer]);
 
   const event = useSelector((state) => state.singleEvent.singleEvent);
 
@@ -58,7 +62,7 @@ const SingleEvent = () => {
       className="event-details"
     >
       {event ? (
-        <Row xs={1} md={2} lg={2} className="single-event-container">
+        <Row xs={1} md={2} lg={2} className="single-event-container" id="single-event-container">
           <Col>
             <Image
               src={event.performers[0].image}
