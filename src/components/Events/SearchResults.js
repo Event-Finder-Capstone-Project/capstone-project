@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { getAllEvents } from "../../store/allEventsSlice";
 
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
@@ -42,17 +42,17 @@ const SearchResults = () => {
     dispatch(
       getSearchResults({
         query: searchState.query,
-        postalCode: searchState.postalCode,
         dateRange: searchState.dateRange,
         page: page,
+        type: filter
       })
     );
   }, [
     dispatch,
     searchState.query,
-    searchState.postalCode,
     searchState.dateRange,
     page,
+    filter
   ]);
   useEffect(() => {
     if (filter === "") {
@@ -75,6 +75,22 @@ const SearchResults = () => {
     };
     fetchUserEvents();
   }, []);
+
+  useEffect(() => {
+    const fetchEventsData = async () => {
+      try {
+        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
+        const eventsData = eventsQuerySnapshot.docs.map(
+          (doc) => doc.data().type
+        );
+        setEventsData(eventsData);
+      } catch (error) {
+        console.error("Error fetching events data:", error);
+      }
+    };
+    fetchEventsData();
+  }, []);
+
 
   //handle add and remove event use icon
   const handleAddEvents = (eventId) => {
