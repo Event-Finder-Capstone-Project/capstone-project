@@ -115,22 +115,15 @@ const SearchResults = () => {
   return (
     <>
       <h1>Search Results</h1>
-      <Container
-        style={{
-          marginTop: ".5rem",
-          marginBottom: "1rem",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "flex-start",
-        }}
-      >
+      <Container className="resultsContainer">
         <DatePicker onSelectDateRange={handleSelectDateRange} />
 
         <Container
           className="filter"
           style={{
-            marginTop: ".5rem",
+            marginTop: ".3rem",
             marginBottom: "1rem",
+            marginLeft: ".5rem",
           }}
         >
           <Form.Label
