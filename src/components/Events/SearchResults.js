@@ -134,7 +134,19 @@ const SearchResults = () => {
             ))}
           </select>
         </Container>
-        <Button onClick={handleFilter}>Filter</Button>
+        <Button
+          variant="outline-light"
+          style={{
+            marginTop: "-5px",
+            height: "28px",
+            lineHeight: "0px",
+            paddingTop: "4px",
+            fontSize: "19px",
+          }}
+          onClick={handleFilter}
+        >
+          Filter
+        </Button>
       </div>
 
       <Container>
