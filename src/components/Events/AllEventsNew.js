@@ -122,14 +122,20 @@ const AllEventsNew = () => {
 
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
+    const eventsContainer = document.getElementById("all-events-container");
+    eventsContainer.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
+    const eventsContainer = document.getElementById("all-events-container");
+    eventsContainer.scrollIntoView({ behavior: "smooth" });
   };
 
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
+    const eventsContainer = document.getElementById("all-events-container");
+    eventsContainer.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -141,6 +147,7 @@ const AllEventsNew = () => {
       <Container
         class="text-center"
         className="all-events-container"
+        id="all-events-container"
         style={{
           marginTop: "3rem",
           minWidth: "100%",
@@ -182,46 +189,48 @@ const AllEventsNew = () => {
             </Col>
             <Col style={{ position: "relative" }}>
               <Container>
-                {events?.length
-                  ? events.map((event) => (
-                      <Row
-                        xs={1}
-                        md={2}
+                {events?.length ? (
+                  events.map((event) => (
+                    <Row
+                      xs={1}
+                      md={2}
+                      style={{
+                        marginBottom: "2rem",
+                        minWidth: "100%",
+                        backgroundColor: "slategray",
+                      }}
+                    >
+                      <LinkContainer to={`/events/${event.id}`}>
+                        <Nav.Link>
+                          <Col>
+                            <img
+                              style={{
+                                minWidth: "100%",
+                                minHeight: "100%",
+                              }}
+                              src={event.performers[0].image}
+                              alt={event.name}
+                            />
+                          </Col>
+                        </Nav.Link>
+                      </LinkContainer>
+
+                      <Col
                         style={{
-                          marginBottom: "2rem",
-                          minWidth: "100%",
-                          backgroundColor: "slategray",
-                        }}>
-                        <LinkContainer to={`/events/${event.id}`}>
-                          <Nav.Link>
-                            <Col>
-                              <img
-                                style={{
-                                  minWidth: "100%",
-                                  minHeight: "100%",
-                                }}
-                                src={event.performers[0].image}
-                                alt={event.name}
-                              />
-                            </Col>
-                          </Nav.Link>
-                        </LinkContainer>
+                          backgroundColor: "slateGrey",
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          paddingBottom: ".5rem",
 
-                        <Col
-                          style={{
-                            backgroundColor: "slateGrey",
-                            maxWidth: "100%",
-                            maxHeight: "100%",
-                            paddingBottom: ".5rem",
-
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                            alignText: "right",
-                            overflow: "hidden",
-                            justifyContent: "space-between",
-                          }}>
-                          <Button
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "flex-end",
+                          alignText: "right",
+                          overflow: "hidden",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Button
                             variant="outline"
                             style={{
                               border: "none",
@@ -236,24 +245,27 @@ const AllEventsNew = () => {
                               }
                             />
                           </Button>
-                          <LinkContainer to={`/events/${event.id}`}>
-                            <Nav.Link>
-                              <h4
-                                style={{
-                                  fontSize: "20px",
-                                  color: "white",
-                                  alignText: "right",
-                                }}
-                                id="event-name">
-                                {event.title}
-                              </h4>
-                            </Nav.Link>
-                          </LinkContainer>
-                        </Col>
-                      </Row>
-                    ))
-                  : // <p>{!events?.length ? "No events found!" : ""}</p>
-                    null}
+
+                        <LinkContainer to={`/events/${event.id}`}>
+                          <Nav.Link>
+                            <h4
+                              style={{
+                                fontSize: "20px",
+                                color: "white",
+                                alignText: "right",
+                              }}
+                              id="event-name"
+                            >
+                              {event.title}
+                            </h4>
+                          </Nav.Link>
+                        </LinkContainer>
+                      </Col>
+                    </Row>
+                  ))
+                ) : (
+                  <p>{!events?.length ? "No events found!" : ""}</p>
+                )}
               </Container>
             </Col>
           </Row>

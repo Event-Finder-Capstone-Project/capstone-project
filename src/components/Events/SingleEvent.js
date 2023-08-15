@@ -57,6 +57,7 @@ const SingleEvent = () => {
         } else {
           dispatch(handleEvents(eventId));
         }
+
         // Toggle the event in userEvents state
         if (userEvents.includes(eventId)) {
           setUserEvents(userEvents.filter((id) => id !== eventId));

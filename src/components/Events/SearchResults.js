@@ -5,7 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { getAllEvents } from "../../store/allEventsSlice";
 
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
-import { Nav, Row, Container, Button, Card } from "react-bootstrap";
+import { Nav, Row, Container, Button, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
@@ -14,12 +14,15 @@ import { useState } from "react";
 import { getSearchResults, setDateRange } from "../../store/searchSlice";
 import DatePicker from "../NavBar/SearchComponents/DatePicker";
 import PrevNext from "./PrevNext";
+import { TestMap, NewCarousel, Carousel } from "../";
+import "../style/index.css";
 
 const SearchResults = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
+  const [clickedEvents, setClickedEvents] = useState([]);
   const searchState = useSelector((state) => state.search);
   const events = useSelector((state) => state.search.events);
   const savedEventIds = useSelector((state) => state.events);
@@ -101,9 +104,28 @@ const SearchResults = () => {
       <DatePicker onSelectDateRange={handleSelectDateRange} />
 
       <div className="filter-container">
-        <div>
-          <label>Event Type</label>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <Container
+          style={{
+            marginTop: ".5rem",
+            marginBottom: "1rem",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <h5
+            style={{
+              paddingTop: ".3rem",
+              marginRight: "1rem",
+            }}
+          >
+            Event Type
+          </h5>
+          <select
+            style={{ height: "35px" }}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
             <option value="">None</option>
             {eventsData.map((eventType) => (
               <option key={eventType} value={eventType}>
@@ -111,51 +133,98 @@ const SearchResults = () => {
               </option>
             ))}
           </select>
-        </div>
+        </Container>
         <Button onClick={handleFilter}>Filter</Button>
       </div>
 
-      <div className="all-events-container">
-        {events?.length ? (
-          events.map((event) => (
-            <Card
-              style={{ width: "18rem", textDecoration: "none" }}
-              class="card"
-              className="event-container"
-              key={event.id}
-            >
-              <LinkContainer to={`/events/${event.id}`}>
-                <Nav.Link>
-                  <Card.Img
-                    variant="top"
-                    src={event.performers[0].image}
-                    alt={event.name}
-                  />
-                  <Card.Body style={{ background: "grey" }}>
-                    <Card.Title style={{}} id="event-name">
-                      {event.title}
-                    </Card.Title>
-                  </Card.Body>
-                </Nav.Link>
-              </LinkContainer>
-              <Button
-                variant="outline"
-                style={{
-                  border: "none",
-                  fontSize: "32px",
-                }}
-                onClick={() => handleAddEvents(event.id)}
-              >
-                <FontAwesomeIcon
-                  icon={userEvents.includes(event.id) ? solidStar : outlineStar}
-                />
-              </Button>
-            </Card>
-          ))
-        ) : (
-          <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
-        )}
-      </div>
+      <Container>
+        <Row xs={1} sm={1} md={2}>
+          <Col style={{ marginBottom: "2rem" }} className="stickyMaps">
+            <TestMap />
+          </Col>
+          <Col style={{ position: "relative" }}>
+            <Container>
+              {events?.length ? (
+                events.map((event) => (
+                  <Row
+                    xs={1}
+                    md={2}
+                    style={{
+                      marginBottom: "2rem",
+                      minWidth: "100%",
+                      backgroundColor: "slategray",
+                    }}
+                  >
+                    <LinkContainer to={`/events/${event.id}`}>
+                      <Nav.Link>
+                        <Col>
+                          <img
+                            style={{
+                              minWidth: "100%",
+                              minHeight: "100%",
+                            }}
+                            src={event.performers[0].image}
+                            alt={event.name}
+                          />
+                        </Col>
+                      </Nav.Link>
+                    </LinkContainer>
+
+                    <Col
+                      style={{
+                        backgroundColor: "slateGrey",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        paddingBottom: ".5rem",
+
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        alignText: "right",
+                        overflow: "hidden",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Button
+                        variant="outline"
+                        style={{
+                          color: "white",
+                          border: "none",
+                          fontSize: "32px",
+                        }}
+                        onClick={() => handleAddEvents(event.id)}
+                      >
+                        {!clickedEvents.includes(event.id) &&
+                        !userEvents.includes(event.id) ? (
+                          <FontAwesomeIcon icon={outlineStar} />
+                        ) : (
+                          <FontAwesomeIcon icon={solidStar} />
+                        )}
+                      </Button>
+                      <LinkContainer to={`/events/${event.id}`}>
+                        <Nav.Link>
+                          <h4
+                            style={{
+                              fontSize: "20px",
+                              color: "white",
+                              alignText: "right",
+                            }}
+                            id="event-name"
+                          >
+                            {event.title}
+                          </h4>
+                        </Nav.Link>
+                      </LinkContainer>
+                    </Col>
+                  </Row>
+                ))
+              ) : (
+                <p>{!events?.length ? "No events found!" : ""}</p>
+              )}
+            </Container>
+          </Col>
+        </Row>
+      </Container>
 
       {events?.length > 0 && (
         <Container
