@@ -30,6 +30,7 @@ const Today = () => {
   const totalEvents = useSelector((state) => state.allEvents.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
   
+  
   useEffect(() => {
     const cityChangedListener = (data) => {
       setRerender(!rerender); 
@@ -148,7 +149,6 @@ const Today = () => {
   return (
     <>
       <h1 style={{ marginTop: "1rem" }}> Happening Today {storedCity ? `in ${storedCity}` : ""}</h1>
-
       <Container
         fluid="lg"
         class="text-center"
