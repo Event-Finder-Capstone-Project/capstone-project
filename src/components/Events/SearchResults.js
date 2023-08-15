@@ -117,19 +117,30 @@ const SearchResults = () => {
       <h1>Search Results</h1>
       <Container
         style={{
-          marginTop: ".5rem",
-          marginBottom: "1rem",
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "flex-start",
         }}
       >
+            <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-start",
+          marginBottom: "1rem",
+        }}
+      >
+        <Container
+        style={{ position: "absolute",
+        zIndex: 9999,
+        width: "30%"
+     }}>
         <DatePicker onSelectDateRange={handleSelectDateRange} />
-
+</Container>
         <Container
           className="filter-container"
           style={{
-            marginTop: "1rem",
+            marginTop: "4rem",
             marginBottom: "1rem",
             display: "flex",
             flexDirection: "row",
@@ -156,6 +167,7 @@ const SearchResults = () => {
             ))}
           </select>
         </Container>
+        </div>
       </Container>
 
       <Container>
