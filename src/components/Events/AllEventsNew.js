@@ -122,14 +122,20 @@ const AllEventsNew = () => {
 
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
+    const eventsContainer = document.getElementById("all-events-container");
+    eventsContainer.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
+    const eventsContainer = document.getElementById("all-events-container");
+    eventsContainer.scrollIntoView({ behavior: "smooth" });
   };
 
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
+    const eventsContainer = document.getElementById("all-events-container");
+    eventsContainer.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -141,6 +147,7 @@ const AllEventsNew = () => {
       <Container
         class="text-center"
         className="all-events-container"
+        id="all-events-container"
         style={{
           marginTop: "3rem",
           minWidth: "100%",
