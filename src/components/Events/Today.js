@@ -157,19 +157,29 @@ const Today = () => {
         style={{ marginTop: "3rem" }}
       >
         <div className="filter-container">
-          <Container style={{ marginTop: ".5rem" }} className="">
+          <Container
+            style={{
+              marginTop: ".5rem",
+              marginBottom: "1rem",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
             <h5
               style={{
-                marginRight: "1rem",
                 paddingTop: ".3rem",
+                marginRight: "1rem",
               }}
-            ></h5>
+            >
+              Event Type
+            </h5>
             <select
               style={{ height: "35px" }}
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             >
-              <option value="">Choose Event Type</option>
+              <option value="">None</option>
               {eventsData.map((eventType) => (
                 <option key={eventType} value={eventType}>
                   {eventType}

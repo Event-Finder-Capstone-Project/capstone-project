@@ -104,9 +104,28 @@ const SearchResults = () => {
       <DatePicker onSelectDateRange={handleSelectDateRange} />
 
       <div className="filter-container">
-        <div>
-          <label>Event Type</label>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <Container
+          style={{
+            marginTop: ".5rem",
+            marginBottom: "1rem",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <h5
+            style={{
+              paddingTop: ".3rem",
+              marginRight: "1rem",
+            }}
+          >
+            Event Type
+          </h5>
+          <select
+            style={{ height: "35px" }}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
             <option value="">None</option>
             {eventsData.map((eventType) => (
               <option key={eventType} value={eventType}>
@@ -114,7 +133,7 @@ const SearchResults = () => {
               </option>
             ))}
           </select>
-        </div>
+        </Container>
         <Button onClick={handleFilter}>Filter</Button>
       </div>
 
