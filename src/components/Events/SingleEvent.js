@@ -4,14 +4,16 @@ import { useParams } from "react-router-dom";
 import { getSingleEvent } from "../../store/singleEventSlice";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import BackButton from "../BackButton";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
+import { doc, getDoc } from "firebase/firestore";
 import { Button, Image, Container, Row, Col } from "react-bootstrap";
 import ShareEvent from "./ShareEvent";
 
 const SingleEvent = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [isEventAdded, setIsEventAdded] = useState(false);
+  const [userEvents, setUserEvents] = useState([]);
+  const savedEventIds = useSelector((state) => state.events);
   const eventContainer = document.getElementById("single-event-container");
 
   useEffect(() => {
@@ -35,6 +37,21 @@ const SingleEvent = () => {
     });
     return `${formattedDate} at ${formattedTime}`;
   };
+  useEffect(() => {
+    const fetchUserEvents = async () => {
+      if (auth.currentUser) {
+        const userDocRef = doc(db, "users", auth.currentUser.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          setUserEvents(userData.events || []);
+        }
+      } else {
+        setUserEvents(savedEventIds || []);
+      }
+    };
+    fetchUserEvents();
+  }, []);
 
   const handleAddEvents = async (eventId) => {
     if (event) {
@@ -44,7 +61,13 @@ const SingleEvent = () => {
         } else {
           dispatch(handleEvents(eventId));
         }
-        setIsEventAdded(true);
+
+        // Toggle the event in userEvents state
+        if (userEvents.includes(eventId)) {
+          setUserEvents(userEvents.filter((id) => id !== eventId));
+        } else {
+          setUserEvents([...userEvents, eventId]);
+        }
       } catch (error) {
         console.error("Error adding event to user collection:", error);
       }
@@ -59,8 +82,7 @@ const SingleEvent = () => {
     <Container
       style={{ marginTop: "3rem" }}
       fluid="lg"
-      className="event-details"
-    >
+      className="event-details">
       {event ? (
         <Row xs={1} md={2} lg={2} className="single-event-container" id="single-event-container">
           <Col>
@@ -107,14 +129,21 @@ const SingleEvent = () => {
                     </p>
                   </Col>
                 </Row>
-                {isEventAdded ? (
-                  <p>Successfully added to your events!</p>
+                {userEvents.includes(event.id) ? (
+                  <>
+                    <p>Successfully added to your events!</p>
+                    <Button
+                      style={{ marginRight: "1rem", marginBottom: "1rem" }}
+                      variant="secondary"
+                      onClick={() => handleAddEvents(event.id)}>
+                      Remove Event
+                    </Button>
+                  </>
                 ) : (
                   <Button
                     style={{ marginRight: "1rem", marginBottom: "1rem" }}
                     variant="secondary"
-                    onClick={() => handleAddEvents(event.id)}
-                  >
+                    onClick={() => handleAddEvents(event.id)}>
                     Add Event
                   </Button>
                 )}
@@ -122,8 +151,7 @@ const SingleEvent = () => {
                 <Button
                   style={{ marginRight: "1rem", marginBottom: "1rem" }}
                   variant="secondary"
-                  onClick={handleLink}
-                >
+                  onClick={handleLink}>
                   Buy Tickets Here
                 </Button>
                 <BackButton />
