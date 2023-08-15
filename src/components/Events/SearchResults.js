@@ -12,7 +12,7 @@ import {
   Button,
   Col,
   Form,
-  InputGroup,
+  FloatingLabel,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -115,47 +115,32 @@ const SearchResults = () => {
   return (
     <>
       <h1>Search Results</h1>
-      <Container
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-        }}
-      >
-            <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-start",
-          marginBottom: "1rem",
-        }}
-      >
+      <Container className="resultsContainer">
+        <Container>
+          <DatePicker onSelectDateRange={handleSelectDateRange} />
+        </Container>
         <Container
-        style={{ position: "absolute",
-        zIndex: 9999,
-        width: "30%"
-     }}>
-        <DatePicker onSelectDateRange={handleSelectDateRange} />
-</Container>
-        <Container
-          className="filter-container"
+          className="filter"
           style={{
-            marginTop: "4rem",
+            marginTop: ".3rem",
             marginBottom: "1rem",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
+            marginLeft: ".5rem",
           }}
         >
-          <h5
+          <Form.Label
             style={{
-              marginRight: "1rem",
+              width: "100px",
+              fontSize: "18px",
+              paddingTop: "7px",
+              whiteSpace: "nowrap",
+              marginRight: ".7rem",
             }}
           >
             Event Type
-          </h5>
-          <select
-            style={{}}
+          </Form.Label>
+          <Form.Select
+            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
+            variant="light"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
@@ -165,9 +150,8 @@ const SearchResults = () => {
                 {eventType}
               </option>
             ))}
-          </select>
+          </Form.Select>
         </Container>
-        </div>
       </Container>
 
       <Container>

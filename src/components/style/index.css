@@ -50,3 +50,56 @@
   flex-direction: row;
   justify-content: center;
 }
+
+@media (min-width: 400px) {
+  .filter {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+}
+
+@media (min-width: 768px) {
+  .filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 400px) {
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+  }
+}
+
+@media (min-width: 768px) {
+  .input-container {
+    display: flex;
+    flex-direction: row;
+    width: 400px;
+  }
+}
+
+.resultsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.datePicker {
+  position: absolute;
+  z-index: 1;
+  width: 30%;
+}
+
+@media (min-width: 1000px) {
+  .resultsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}

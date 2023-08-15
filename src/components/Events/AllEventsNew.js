@@ -7,7 +7,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-import { Nav, Row, Col, Container, Button } from "react-bootstrap";
+import {
+  Nav,
+  Row,
+  Col,
+  Form,
+  FloatingLabel,
+  Container,
+  Button,
+} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
@@ -151,36 +159,24 @@ const AllEventsNew = () => {
         style={{
           marginTop: "3rem",
           minWidth: "100%",
-        }}>
-        <div className="filter-container">
-          <Container
-            style={{
-              marginTop: ".5rem",
-              marginBottom: "1rem",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-            }}>
-            <h5
-              style={{
-                paddingTop: ".3rem",
-                marginRight: "1rem",
-              }}>
-              Event Type
-            </h5>
-            <select
-              style={{ height: "35px" }}
+        }}
+      >
+        <Container style={{ width: "15%" }}>
+          <FloatingLabel label="Event Type" className="filter-container">
+            <Form.Select
+              style={{}}
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}>
+              onChange={(e) => setFilter(e.target.value)}
+            >
               <option value="">None</option>
               {eventsData.map((eventType) => (
                 <option key={eventType} value={eventType}>
                   {eventType}
                 </option>
               ))}
-            </select>
-          </Container>
-        </div>
+            </Form.Select>
+          </FloatingLabel>
+        </Container>
 
         <Container>
           <Row xs={1} sm={1} md={2}>
@@ -231,20 +227,21 @@ const AllEventsNew = () => {
                         }}
                       >
                         <Button
-                            variant="outline"
-                            style={{
-                              border: "none",
-                              fontSize: "32px",
-                            }}
-                            onClick={() => handleAddEvents(event.id)}>
-                            <FontAwesomeIcon
-                              icon={
-                                userEvents.includes(event.id)
-                                  ? solidStar
-                                  : outlineStar
-                              }
-                            />
-                          </Button>
+                          variant="outline"
+                          style={{
+                            border: "none",
+                            fontSize: "32px",
+                          }}
+                          onClick={() => handleAddEvents(event.id)}
+                        >
+                          <FontAwesomeIcon
+                            icon={
+                              userEvents.includes(event.id)
+                                ? solidStar
+                                : outlineStar
+                            }
+                          />
+                        </Button>
 
                         <LinkContainer to={`/events/${event.id}`}>
                           <Nav.Link>
@@ -273,7 +270,8 @@ const AllEventsNew = () => {
 
         <Container
           className="d-flex justify-content-center"
-          style={{ alignContent: "center", marginTop: "2rem" }}>
+          style={{ alignContent: "center", marginTop: "2rem" }}
+        >
           <PrevNext
             currentPage={page}
             totalPages={totalPages}
