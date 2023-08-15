@@ -50,3 +50,33 @@
   flex-direction: row;
   justify-content: center;
 }
+
+@media (min-width: 400px) {
+  .filter {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 768px) {
+  .filter {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 400px) {
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+  }
+}
+
+@media (min-width: 768px) {
+  .input-container {
+    display: flex;
+    flex-direction: row;
+    width: 400px;
+  }
+}

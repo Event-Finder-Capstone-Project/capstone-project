@@ -12,7 +12,7 @@ import {
   Button,
   Col,
   Form,
-  InputGroup,
+  FloatingLabel,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -121,30 +121,32 @@ const SearchResults = () => {
           marginBottom: "1rem",
           display: "flex",
           flexDirection: "row",
-          justifyContent: "center",
+          justifyContent: "flex-start",
         }}
       >
         <DatePicker onSelectDateRange={handleSelectDateRange} />
 
         <Container
-          className="filter-container"
+          className="filter"
           style={{
-            marginTop: "1rem",
+            marginTop: ".5rem",
             marginBottom: "1rem",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
           }}
         >
-          <h5
+          <Form.Label
             style={{
-              marginRight: "1rem",
+              width: "100px",
+              fontSize: "18px",
+              paddingTop: "7px",
+              whiteSpace: "nowrap",
+              marginRight: ".7rem",
             }}
           >
             Event Type
-          </h5>
-          <select
-            style={{}}
+          </Form.Label>
+          <Form.Select
+            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
+            variant="light"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
@@ -154,7 +156,7 @@ const SearchResults = () => {
                 {eventType}
               </option>
             ))}
-          </select>
+          </Form.Select>
         </Container>
       </Container>
 

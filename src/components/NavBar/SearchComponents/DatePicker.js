@@ -73,13 +73,11 @@ const DatePicker = ({ onSelectDateRange }) => {
         style={{
           marginTop: ".5rem",
           marginBottom: "1.5rem",
-          height: "28px",
-          lineHeight: "0px",
-          paddingTop: "4px",
-          fontSize: "19px",
         }}
       >
         <Form.Control
+          style={{ width: "225px" }}
+          className="calendarInput"
           value={
             range[0].endDate
               ? `${format(range[0].startDate, "MM/dd/yyyy")} ${
@@ -90,13 +88,12 @@ const DatePicker = ({ onSelectDateRange }) => {
               : `${format(range[0].startDate, "MM/dd/yyyy")}`
           }
           readOnly
-          className="inputBox"
           onClick={() => setOpen((open) => !open)}
         />
         <Button
           variant="outline-light"
-          style={{}}
           className="clearButton"
+          style={{ opacity: "80%" }}
           onClick={() => {
             setRange([
               {
