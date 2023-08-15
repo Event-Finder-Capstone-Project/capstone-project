@@ -10,7 +10,8 @@
 const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 
-const {sendEventEmail} = require("./emailnotifications");
+
+const { sendEventEmail } = require('./emailnotifications');
 
 exports.sendEventEmail = sendEventEmail;
 
