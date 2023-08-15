@@ -67,7 +67,14 @@ const DatePicker = ({ onSelectDateRange }) => {
   };
 
   return (
-    <div className={`datepicker-container`}>
+    <div
+      className="datepicker-container"
+      style={{
+        position: "absolute",
+        zIndex: 1,
+        marginRight: "1rem",
+      }}
+    >
       <InputGroup
         className="input-container"
         style={{
