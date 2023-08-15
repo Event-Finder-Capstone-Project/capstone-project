@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { auth,db } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { getAllEvents } from "../../store/allEventsSlice";
 
-import { handleEvents,handleEventAsync } from "../../store/eventsSlice";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import { Nav, Row, Container, Button, Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,7 +24,7 @@ const SearchResults = () => {
   const events = useSelector((state) => state.search.events);
   const savedEventIds = useSelector((state) => state.events);
   const dispatch = useDispatch();
-    const totalEvents = useSelector((state) => state.search.totalEvents);
+  const totalEvents = useSelector((state) => state.search.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const SearchResults = () => {
     searchState.query,
     searchState.postalCode,
     searchState.dateRange,
-    page
+    page,
   ]);
 
   useEffect(() => {
@@ -122,7 +122,8 @@ const SearchResults = () => {
               style={{ width: "18rem", textDecoration: "none" }}
               class="card"
               className="event-container"
-              key={event.id}>
+              key={event.id}
+            >
               <LinkContainer to={`/events/${event.id}`}>
                 <Nav.Link>
                   <Card.Img
@@ -143,7 +144,8 @@ const SearchResults = () => {
                   border: "none",
                   fontSize: "32px",
                 }}
-                onClick={() => handleAddEvents(event.id)}>
+                onClick={() => handleAddEvents(event.id)}
+              >
                 <FontAwesomeIcon
                   icon={userEvents.includes(event.id) ? solidStar : outlineStar}
                 />

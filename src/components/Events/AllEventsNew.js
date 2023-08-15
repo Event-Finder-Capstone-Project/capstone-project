@@ -120,11 +120,6 @@ const AllEventsNew = () => {
     }
   };
 
-  // const handleFilter = () => {
-  //   setPage(1);
-  //   dispatch(getAllEvents({ type: filter, page: 1 }));
-  // };
-
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
   };
@@ -218,10 +213,12 @@ const AllEventsNew = () => {
                             maxWidth: "100%",
                             maxHeight: "100%",
                             paddingBottom: ".5rem",
-                            overflow: "hidden",
+
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "flex-end",
+                            alignText: "right",
+                            overflow: "hidden",
                             justifyContent: "space-between",
                           }}>
                           <Button
@@ -245,6 +242,7 @@ const AllEventsNew = () => {
                                 style={{
                                   fontSize: "20px",
                                   color: "white",
+                                  alignText: "right",
                                 }}
                                 id="event-name">
                                 {event.title}
