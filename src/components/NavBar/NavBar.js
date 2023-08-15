@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../../firebase";
-import Search from "./Search";
+import {Search , SingleEvent} from "../index";
 import { Container, Nav, Navbar, Image } from "react-bootstrap";
 import Signout from "../Auth/Signout";
 import { useLoadScript } from "@react-google-maps/api";
@@ -19,7 +19,7 @@ const NavBar = () => {
   }, []);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyDrusDlQbaU-_fqPwkbZfTP1EMDzvQMGWU",
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
   });
 
@@ -28,8 +28,8 @@ const NavBar = () => {
       {userLoggedIn ? (
         <Navbar bg="dark" className="bg-body-tertiary">
           <Container>
-            <Navbar.Brand href="/">
-              <Image src="favicon.ico" />
+            <Navbar.Brand href="/" >
+            <Image src="/favicon.ico" />
             </Navbar.Brand>
             <Nav.Link href="/" className="navlink">
               Home
@@ -52,7 +52,7 @@ const NavBar = () => {
         <Navbar bg="dark" className="bg-body-tertiary">
           <Container>
             <Navbar.Brand href="/">
-              <Image src="favicon.ico" />
+            <Image src="/favicon.ico" />
             </Navbar.Brand>
             <Nav.Link href="/" className="navlink">
               Home
