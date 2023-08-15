@@ -8,26 +8,48 @@ admin.initializeApp();
 sgMail.setApiKey(functions.config().sendgrid.key);
 
 
-exports.sendEventNotification = functions.firestore
+exports.sendEventEmail = functions.firestore
     .document('users/{userId}')
     .onUpdate((change, context) => {
         const beforeData = change.before.data();
         const afterData = change.after.data();
 
         // Check if an event has been added
+        console.log("Function triggered!");
         if (afterData.events.length > beforeData.events.length) {
+            console.log("Event added detected!");
+
             const msg = {
                 to: afterData.email,
-                from: 'no-reply@yourapp.com',
-                subject: 'New Event Added',
-                text: `Hello ${afterData.name}, You've added a new event to your calendar.`,
+                from: 'richiepchavez@gmail.com',
+                templateId: 'd-aede448302fe4cae8ad9101568ab688b',
+                dynamicTemplateData: {
+                    name: afterData.name,
+            }
+        };
+
+            return sgMail.send(msg).catch(error => {
+                console.error('There was an error sending the email', error);
+            });
+        } else if (afterData.events.length < beforeData.events.length) {
+            console.log("Removed Event detected!");
+
+            const msg = {
+                to: afterData.email,
+                from: 'richiepchavez@gmail.com',
+                templateId: 'd-c73ec11d87e74b81a70c3fa9ee4cfcac',
+                dynamicTemplateData: {
+                    name: afterData.name,
+                }
             };
 
             return sgMail.send(msg).catch(error => {
                 console.error('There was an error sending the email', error);
             });
+        } else {
+            console.log("No change in events detected.");
         }
 
-        // If no new event was added, simply return without doing anything
+        // If no event was added or removed, simply return without doing anything
         return null;
     });
