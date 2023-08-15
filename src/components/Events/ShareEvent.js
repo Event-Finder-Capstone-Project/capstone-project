@@ -17,6 +17,7 @@ import { Container } from "react-bootstrap";
 
 export default class ShareEvent extends Component {
   render() {
+    // It looks like this is just the base URL, so it will be sharing the whole site rather than the specific event. I think this component should take a prop representing the eventId, which you can use to create a link to that specific event.
     const shareUrl = "https://event-finder-test-56e2e.web.app/";
     return (
       <Container

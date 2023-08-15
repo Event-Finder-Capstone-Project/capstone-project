@@ -7,6 +7,7 @@ import { selectEvents } from "../../store/allEventsSlice";
 const Carousel = () => {
   const events = useSelector(selectEvents);
   const sortedEvents = [...events]
+  // smart sorting for recommendations!
     .sort((a, b) => b.venue.score - a.venue.score)
     .slice(0, 4);
 
@@ -24,6 +25,7 @@ const Carousel = () => {
 
   return (
     <div style={{ maxWidth: "100%", backgroundColor: "black" }}>
+      {/* I was gonna leave some feedback about this -- but I don't think this component is actually being used anymore, is it? If not, let's delete this file */}
       <ResponsiveCarousel
         showArrows={true}
         autoPlay={true}

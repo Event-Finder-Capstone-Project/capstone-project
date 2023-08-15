@@ -40,6 +40,7 @@ const CityFilter = () => {
     }
   };
 
+  // this code is interesting and would be a great place to add some comments if you have time -- so you have some extra context about working with the google maps API in the future.
   useEffect(() => {
     if (selectedPlace) {
       const placeId = selectedPlace.place_id;

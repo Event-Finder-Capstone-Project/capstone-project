@@ -150,6 +150,7 @@ const Today = () => {
         {" "}
         Happening Today {storedCity ? `in ${storedCity}` : ""}
       </h1>
+      {/* at a glance -- correct me if I'm wrong -- the code for a map plus a list of events is the same for AllEvents, Today, and Weekend. Are they the same? What's the difference other than the source of the data? Could we extract that code into a component like "EventList"? */}
       <Container
         fluid="lg"
         class="text-center"

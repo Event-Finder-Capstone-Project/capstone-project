@@ -35,8 +35,9 @@ export default function TestMap() {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');  // January is 0!
+    // this is one of the most frustrating things about javascript... arrays of strings related to dates are zero-indexed, but the parts of dates that are numeric aren't. It's madness.
     const year = date.getFullYear();
-  
+
     return `${month}/${day}/${year}`;
   }
 

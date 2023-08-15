@@ -95,6 +95,7 @@ const SingleEvent = () => {
                       {event.type} featuring{" "}
                       {event.performers.length <= 1
                         ? `${event.performers.name}`
+                        // It looks like the map below doesn't insert an "and" where it should. You can write a simple function that will do that... my approach would probably involve a for loop that looks at the index to decide if it should insert an "and" before the last item. I would also recommend defining that function outside the return -- something like turnPerformersArrayIntoString(arr) -- that you can call here.
                         : event.performers.map((e) => `${e.name}, `)}
                       . Come enjoy this grand experience, bring your friends, or
                       don't! Take yourself out on a date! It'll be a blast,

@@ -20,6 +20,8 @@ export default function Signup() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // great comments in this file! Consider adding more comments like this, especially where they give a little context for things that go beyond our core curriculum. It might be helpful if you ever want to refer back to this project when you're working on something else in the future. Also helpful for refreshing your memory if you ever have to explain part of the code or want to work with this project again!
+
   async function handleSubmit(e) {
     e.preventDefault();
 

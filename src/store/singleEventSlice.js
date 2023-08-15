@@ -6,6 +6,7 @@ export const getSingleEvent = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const params = {
+        // I recommend putting these values in .env variables even if they don't strictly need to be secret
         client_id: "MzUzMjU4MjV8MTY5MDgzNjc1MC41OTkwOTEz",
         client_secret: "5204ee3ff5c3c6a060a1e4f6f50552c8e6afa2ba5d638fac32cf2cf5509c9aea",
         id: id,
