@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
+import { handleEvents, handleEventAsync} from "../../store/eventsSlice";
+import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
@@ -26,6 +27,7 @@ const AllEventsNew = () => {
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
+  const [hoveredEventId, setHoveredEventId] = useState(null);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
   const savedEventIds = useSelector((state) => state.events);
@@ -179,6 +181,16 @@ const AllEventsNew = () => {
     setScrollToEvents(true);
   };
 
+  const handleMouseEnter = (eventId) => {
+    setHoveredEventId(eventId);
+    dispatch(selectedHoveredEventId(eventId));
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredEventId(null);
+    dispatch(clearHoveredEventId());
+  };
+
   return (
     <>
       <h1> Popular in your area </h1>
@@ -226,6 +238,9 @@ const AllEventsNew = () => {
                     <Row
                       xs={1}
                       md={2}
+                      className="mb-4 bg-slategray transition"
+                      onMouseEnter={() => handleMouseEnter(event.id)}
+                      onMouseLeave={handleMouseLeave}
                       style={{
                         marginBottom: "2rem",
                         minWidth: "100%",
@@ -238,6 +253,7 @@ const AllEventsNew = () => {
     search: `?filter=${filter}&page=${page}`
   }}
 >
+
                         <Nav.Link>
                           <Col>
                             <img
@@ -254,7 +270,11 @@ const AllEventsNew = () => {
 
                       <Col
                         style={{
-                          backgroundColor: "slateGrey",
+                          backgroundColor:
+                            hoveredEventId === event.id
+                              ? "darkorange"
+                              : "slategray",
+                          transition: "background-color 0.3s ease-in-out",
                           maxWidth: "100%",
                           maxHeight: "100%",
                           paddingBottom: ".5rem",
@@ -265,16 +285,14 @@ const AllEventsNew = () => {
                           alignText: "right",
                           overflow: "hidden",
                           justifyContent: "space-between",
-                        }}
-                      >
+                        }}>
                         <Button
                           variant="outline"
                           style={{
                             border: "none",
                             fontSize: "32px",
                           }}
-                          onClick={() => handleAddEvents(event.id)}
-                        >
+                          onClick={() => handleAddEvents(event.id)}>
                           <FontAwesomeIcon
                             icon={
                               userEvents.includes(event.id)
@@ -292,8 +310,7 @@ const AllEventsNew = () => {
                                 color: "white",
                                 alignText: "right",
                               }}
-                              id="event-name"
-                            >
+                              id="event-name">
                               {event.title}
                             </h4>
                           </Nav.Link>
