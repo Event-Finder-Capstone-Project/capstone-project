@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { getAllEvents } from "../../store/allEventsSlice";
 import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
@@ -12,7 +12,7 @@ import {
   Button,
   Col,
   Form,
-  InputGroup,
+  FloatingLabel,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -42,17 +42,17 @@ const SearchResults = () => {
     dispatch(
       getSearchResults({
         query: searchState.query,
-        postalCode: searchState.postalCode,
         dateRange: searchState.dateRange,
         page: page,
+        type: filter
       })
     );
   }, [
     dispatch,
     searchState.query,
-    searchState.postalCode,
     searchState.dateRange,
     page,
+    filter
   ]);
   useEffect(() => {
     if (filter === "") {
@@ -75,6 +75,22 @@ const SearchResults = () => {
     };
     fetchUserEvents();
   }, []);
+
+  useEffect(() => {
+    const fetchEventsData = async () => {
+      try {
+        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
+        const eventsData = eventsQuerySnapshot.docs.map(
+          (doc) => doc.data().type
+        );
+        setEventsData(eventsData);
+      } catch (error) {
+        console.error("Error fetching events data:", error);
+      }
+    };
+    fetchEventsData();
+  }, []);
+
 
   //handle add and remove event use icon
   const handleAddEvents = (eventId) => {
@@ -125,36 +141,32 @@ const SearchResults = () => {
   return (
     <>
       <h1>Search Results</h1>
-      <Container
-        style={{
-          marginTop: ".5rem",
-          marginBottom: "1rem",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        <DatePicker onSelectDateRange={handleSelectDateRange} />
-
+      <Container className="resultsContainer">
+        <Container>
+          <DatePicker onSelectDateRange={handleSelectDateRange} />
+        </Container>
         <Container
-          className="filter-container"
+          className="filter"
           style={{
-            marginTop: "1rem",
+            marginTop: ".3rem",
             marginBottom: "1rem",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
+            marginLeft: ".5rem",
           }}
         >
-          <h5
+          <Form.Label
             style={{
-              marginRight: "1rem",
+              width: "100px",
+              fontSize: "18px",
+              paddingTop: "7px",
+              whiteSpace: "nowrap",
+              marginRight: ".7rem",
             }}
           >
             Event Type
-          </h5>
-          <select
-            style={{}}
+          </Form.Label>
+          <Form.Select
+            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
+            variant="light"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
@@ -164,7 +176,7 @@ const SearchResults = () => {
                 {eventType}
               </option>
             ))}
-          </select>
+          </Form.Select>
         </Container>
       </Container>
 

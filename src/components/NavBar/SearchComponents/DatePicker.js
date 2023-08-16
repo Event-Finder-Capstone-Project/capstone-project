@@ -41,8 +41,7 @@ const DatePicker = ({ onSelectDateRange }) => {
     });
   };
 
-  // toggles target element
-  const refOne = useRef(null);
+  const refContainer = useRef(null);
 
   useEffect(() => {
     document.addEventListener("keydown", hideOnEscape, true);
@@ -55,7 +54,7 @@ const DatePicker = ({ onSelectDateRange }) => {
   }, []);
 
   const hideOnClickOutside = (e) => {
-    if (refOne.current && !refOne.current.contains(e.target)) {
+    if (refContainer.current && !refContainer.current.contains(e.target)) {
       setOpen(false);
     }
   };
@@ -67,19 +66,25 @@ const DatePicker = ({ onSelectDateRange }) => {
   };
 
   return (
-    <Container className="calendar">
+    <div
+      className="datepicker-container"
+      style={{
+        position: "absolute",
+        zIndex: 1,
+        marginRight: "1rem",
+      }}
+      ref={refContainer}
+    >
       <InputGroup
         className="input-container"
         style={{
           marginTop: ".5rem",
           marginBottom: "1.5rem",
-          height: "28px",
-          lineHeight: "0px",
-          paddingTop: "4px",
-          fontSize: "19px",
         }}
       >
         <Form.Control
+          style={{ width: "225px" }}
+          className="calendarInput"
           value={
             range[0].endDate
               ? `${format(range[0].startDate, "MM/dd/yyyy")} ${
@@ -90,13 +95,12 @@ const DatePicker = ({ onSelectDateRange }) => {
               : `${format(range[0].startDate, "MM/dd/yyyy")}`
           }
           readOnly
-          className="inputBox"
           onClick={() => setOpen((open) => !open)}
         />
         <Button
           variant="outline-light"
-          style={{}}
           className="clearButton"
+          style={{ opacity: "80%" }}
           onClick={() => {
             setRange([
               {
@@ -111,7 +115,7 @@ const DatePicker = ({ onSelectDateRange }) => {
           Clear Date Selection
         </Button>
       </InputGroup>
-      <div ref={refOne}>
+      <div className="datepicker-popup">
         {open && (
           <DateRange
             onChange={(item) => {
@@ -127,7 +131,7 @@ const DatePicker = ({ onSelectDateRange }) => {
           />
         )}
       </div>
-    </Container>
+    </div>
   );
 };
 

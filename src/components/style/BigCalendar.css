@@ -1,9 +1,13 @@
 /* Change the text color of the month header */
 .rbc-off-range-bg {
-   background: #212529;
+   background: #535253;
 }
 
 
 .rbc-today {
-    background-color: rgba(255, 255, 255, 0.3)
+    background-color: rgb(148, 145, 145)
+}
+
+.rbc-event {
+    background-color: rgb(207, 136, 43);
 }
