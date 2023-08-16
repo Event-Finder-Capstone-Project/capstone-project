@@ -3,6 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
+import {
+  selectedHoveredEventId,
+  clearHoveredEventId,
+} from "../../store/hoverSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
@@ -21,24 +25,44 @@ import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
 import "../style/index.css";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 const AllEventsNew = () => {
-  const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
+  const [hoveredEventId, setHoveredEventId] = useState(null);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
   const savedEventIds = useSelector((state) => state.events);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const filterParam = queryParams.get("filter");
+  const pageParam = queryParams.get("page");
+  const [filter, setFilter] = useState(filterParam || "");
+  const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
+  const navigate = useNavigate();
+  const [scrollToEvents, setScrollToEvents] = useState(false);
 
   const dispatch = useDispatch();
   const totalEvents = useSelector((state) => state.allEvents.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
 
   useEffect(() => {
+    const handleScroll = () => {
+      localStorage.setItem("scrollPosition", window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
     if (filter === "") {
-      dispatch(getAllEvents({ type: filter }));
+      dispatch(getAllEvents({ type: filter, page: 1 }));
     }
   }, [dispatch, filter]);
   useEffect(() => {
@@ -50,18 +74,12 @@ const AllEventsNew = () => {
       eventEmitter.off("cityChanged", cityChangedListener);
     };
   }, [rerender]);
-  useEffect(() => {
-    const handleScroll = () => {
-      sessionStorage.setItem("scrollPosition", window.scrollY);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+
   const events = useSelector(selectEvents);
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
+  const scrollPosition = localStorage.getItem("scrollPosition");
+
   useEffect(() => {
     if (storedCity && storedState) {
       const venue = {
@@ -75,6 +93,9 @@ const AllEventsNew = () => {
           venue: venue,
         })
       );
+      if (scrollPosition) {
+        window.scrollTo(0, scrollPosition);
+      }
     } else {
       dispatch(
         getAllEvents({
@@ -84,8 +105,12 @@ const AllEventsNew = () => {
           longitude: longitude,
         })
       );
+      if (scrollPosition) {
+        window.scrollTo(0, scrollPosition);
+      }
     }
   }, [dispatch, filter, page, latitude, longitude, storedCity, storedState]);
+
   useEffect(() => {
     const fetchEventsData = async () => {
       try {
@@ -98,6 +123,7 @@ const AllEventsNew = () => {
         console.error("Error fetching events data:", error);
       }
     };
+
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
         const userDocRef = doc(db, "users", auth.currentUser.uid);
@@ -129,22 +155,45 @@ const AllEventsNew = () => {
     }
   };
 
+  useEffect(() => {
+    if (scrollToEvents) {
+      const eventsContainer = document.getElementById("all-events-container");
+      eventsContainer.scrollIntoView({ behavior: "smooth" });
+      setScrollToEvents(false);
+    }
+  }, [scrollToEvents]);
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setPage(1);
+  };
+
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
-    const eventsContainer = document.getElementById("all-events-container");
-    eventsContainer.scrollIntoView({ behavior: "smooth" });
+    navigate(`/?filter=${filter}&page=${page}`);
+    setScrollToEvents(true);
   };
 
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
-    const eventsContainer = document.getElementById("all-events-container");
-    eventsContainer.scrollIntoView({ behavior: "smooth" });
+    navigate(`/?filter=${filter}&page=${page}`);
+    setScrollToEvents(true);
   };
 
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
-    const eventsContainer = document.getElementById("all-events-container");
-    eventsContainer.scrollIntoView({ behavior: "smooth" });
+    navigate(`/?filter=${filter}&page=${pageNumber}`);
+    setScrollToEvents(true);
+  };
+
+  const handleMouseEnter = (eventId) => {
+    setHoveredEventId(eventId);
+    dispatch(selectedHoveredEventId(eventId));
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredEventId(null);
+    dispatch(clearHoveredEventId());
   };
 
   return (
@@ -208,13 +257,21 @@ const AllEventsNew = () => {
                     <Row
                       xs={1}
                       md={2}
+                      className="mb-4 bg-slategray transition"
+                      onMouseEnter={() => handleMouseEnter(event.id)}
+                      onMouseLeave={handleMouseLeave}
                       style={{
                         marginBottom: "2rem",
                         minWidth: "100%",
                         backgroundColor: "slategray",
                       }}
                     >
-                      <LinkContainer to={`/events/${event.id}`}>
+                      <LinkContainer
+                        to={{
+                          pathname: `/events/${event.id}`,
+                          search: `?filter=${filter}&page=${page}`,
+                        }}
+                      >
                         <Nav.Link>
                           <Col>
                             <img
@@ -231,7 +288,11 @@ const AllEventsNew = () => {
 
                       <Col
                         style={{
-                          backgroundColor: "slateGrey",
+                          backgroundColor:
+                            hoveredEventId === event.id
+                              ? "darkorange"
+                              : "slategray",
+                          transition: "background-color 0.3s ease-in-out",
                           maxWidth: "100%",
                           maxHeight: "100%",
                           paddingBottom: ".5rem",

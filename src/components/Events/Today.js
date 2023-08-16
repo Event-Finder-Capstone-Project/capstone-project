@@ -3,20 +3,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
+import {
+  selectedHoveredEventId,
+  clearHoveredEventId,
+} from "../../store/hoverSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import { useLoadScript } from "@react-google-maps/api";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-import {
-  Nav,
-  Row,
-  Container,
-  Button,
-  Col,
-  InputGroup,
-  Form,
-} from "react-bootstrap";
+import { Nav, Row, Container, Button, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import { eventEmitter } from "../App";
@@ -28,7 +24,7 @@ const Today = () => {
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
-  const [clickedEvents, setClickedEvents] = useState([]);
+  const [hoveredEventId, setHoveredEventId] = useState(null);
   const [rerender, setRerender] = useState(false);
   const savedEventIds = useSelector((state) => state.events);
   const dispatch = useDispatch();
@@ -152,6 +148,16 @@ const Today = () => {
     libraries: ["places"],
   });
 
+  const handleMouseEnter = (eventId) => {
+    setHoveredEventId(eventId);
+    dispatch(selectedHoveredEventId(eventId));
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredEventId(null);
+    dispatch(clearHoveredEventId());
+  };
+
   return (
     <>
       <h1 style={{ marginTop: "1rem" }}>
@@ -164,39 +170,38 @@ const Today = () => {
         className="all-events-container"
         style={{ marginTop: "3rem" }}
       >
-        <Container
-          className="filter"
-          style={{
-            marginTop: ".3rem",
-            marginBottom: "1rem",
-            marginLeft: ".5rem",
-          }}
-        >
-          <Form.Label
+        <div className="filter-container">
+          <Container
             style={{
-              width: "100px",
-              fontSize: "18px",
-              paddingTop: "7px",
-              whiteSpace: "nowrap",
-              marginRight: ".7rem",
+              marginTop: ".5rem",
+              marginBottom: "1rem",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
             }}
           >
-            Event Type
-          </Form.Label>
-          <Form.Select
-            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
-            variant="light"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="">None</option>
-            {eventsData.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
-          </Form.Select>
-        </Container>
+            <h5
+              style={{
+                paddingTop: ".3rem",
+                marginRight: "1rem",
+              }}
+            >
+              Event Type
+            </h5>
+            <select
+              style={{ height: "35px" }}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="">None</option>
+              {eventsData.map((eventType) => (
+                <option key={eventType} value={eventType}>
+                  {eventType}
+                </option>
+              ))}
+            </select>
+          </Container>
+        </div>
         <Container>
           <Row xs={1} sm={1} md={2}>
             <Col style={{ marginBottom: "2rem" }} className="stickyMaps">
@@ -209,6 +214,8 @@ const Today = () => {
                     <Row
                       xs={1}
                       md={2}
+                      onMouseEnter={() => handleMouseEnter(event.id)}
+                      onMouseLeave={handleMouseLeave}
                       style={{
                         marginBottom: "2rem",
                         minWidth: "100%",
@@ -232,7 +239,11 @@ const Today = () => {
 
                       <Col
                         style={{
-                          backgroundColor: "slateGrey",
+                          backgroundColor:
+                            hoveredEventId === event.id
+                              ? "darkorange"
+                              : "slategray",
+                          transition: "background-color 0.3s ease-in-out",
                           maxWidth: "100%",
                           maxHeight: "100%",
                           paddingBottom: ".5rem",
@@ -248,18 +259,18 @@ const Today = () => {
                         <Button
                           variant="outline"
                           style={{
-                            color: "white",
                             border: "none",
                             fontSize: "32px",
                           }}
                           onClick={() => handleAddEvents(event.id)}
                         >
-                          {!clickedEvents.includes(event.id) &&
-                          !userEvents.includes(event.id) ? (
-                            <FontAwesomeIcon icon={outlineStar} />
-                          ) : (
-                            <FontAwesomeIcon icon={solidStar} />
-                          )}
+                          <FontAwesomeIcon
+                            icon={
+                              userEvents.includes(event.id)
+                                ? solidStar
+                                : outlineStar
+                            }
+                          />
                         </Button>
                         <LinkContainer to={`/events/${event.id}`}>
                           <Nav.Link>

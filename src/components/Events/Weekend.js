@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
+import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
@@ -20,7 +21,7 @@ const Weekend = () => {
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
-  const [clickedEvents, setClickedEvents] = useState([]);
+  const [hoveredEventId, setHoveredEventId] = useState(null);
   const [rerender, setRerender] = useState(false);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
@@ -163,6 +164,16 @@ const Weekend = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
+  const handleMouseEnter = (eventId) => {
+    setHoveredEventId(eventId);
+    dispatch(selectedHoveredEventId(eventId));
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredEventId(null);
+    dispatch(clearHoveredEventId());
+  };
+
   return (
     <>
       <h1 style={{ marginTop: "1rem" }}>
@@ -222,6 +233,8 @@ const Weekend = () => {
                     <Row
                       xs={1}
                       md={2}
+                      onMouseEnter={() => handleMouseEnter(event.id)}
+                      onMouseLeave={handleMouseLeave}
                       style={{
                         marginBottom: "2rem",
                         minWidth: "100%",
@@ -245,7 +258,11 @@ const Weekend = () => {
 
                       <Col
                         style={{
-                          backgroundColor: "slateGrey",
+                          backgroundColor:
+                            hoveredEventId === event.id
+                              ? "darkorange"
+                              : "slategray",
+                          transition: "background-color 0.3s ease-in-out",
                           maxWidth: "100%",
                           maxHeight: "100%",
                           paddingBottom: ".5rem",
@@ -261,18 +278,17 @@ const Weekend = () => {
                         <Button
                           variant="outline"
                           style={{
-                            color: "white",
                             border: "none",
                             fontSize: "32px",
                           }}
-                          onClick={() => handleAddEvents(event.id)}
-                        >
-                          {!clickedEvents.includes(event.id) &&
-                          !userEvents.includes(event.id) ? (
-                            <FontAwesomeIcon icon={outlineStar} />
-                          ) : (
-                            <FontAwesomeIcon icon={solidStar} />
-                          )}
+                          onClick={() => handleAddEvents(event.id)}>
+                          <FontAwesomeIcon
+                            icon={
+                              userEvents.includes(event.id)
+                                ? solidStar
+                                : outlineStar
+                            }
+                          />
                         </Button>
                         <LinkContainer to={`/events/${event.id}`}>
                           <Nav.Link>
