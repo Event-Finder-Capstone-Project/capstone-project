@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
+import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
@@ -14,8 +15,6 @@ import {
   Container,
   Button,
   Col,
-  InputGroup,
-  Form,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
@@ -28,7 +27,7 @@ const Today = () => {
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
-  const [clickedEvents, setClickedEvents] = useState([]);
+  const [hoveredEventId, setHoveredEventId] = useState(null);
   const [rerender, setRerender] = useState(false);
   const savedEventIds = useSelector((state) => state.events);
   const dispatch = useDispatch();
@@ -152,6 +151,16 @@ const Today = () => {
     libraries: ["places"],
   });
 
+  const handleMouseEnter = (eventId) => {
+    setHoveredEventId(eventId);
+    dispatch(selectedHoveredEventId(eventId));
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredEventId(null);
+    dispatch(clearHoveredEventId());
+  };
+
   return (
     <>
       <h1 style={{ marginTop: "1rem" }}>
@@ -162,8 +171,7 @@ const Today = () => {
         fluid="lg"
         class="text-center"
         className="all-events-container"
-        style={{ marginTop: "3rem" }}
-      >
+        style={{ marginTop: "3rem" }}>
         <div className="filter-container">
           <Container
             style={{
@@ -172,21 +180,18 @@ const Today = () => {
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
-            }}
-          >
+            }}>
             <h5
               style={{
                 paddingTop: ".3rem",
                 marginRight: "1rem",
-              }}
-            >
+              }}>
               Event Type
             </h5>
             <select
               style={{ height: "35px" }}
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            >
+              onChange={(e) => setFilter(e.target.value)}>
               <option value="">None</option>
               {eventsData.map((eventType) => (
                 <option key={eventType} value={eventType}>
@@ -208,12 +213,13 @@ const Today = () => {
                     <Row
                       xs={1}
                       md={2}
+                      onMouseEnter={() => handleMouseEnter(event.id)}
+                      onMouseLeave={handleMouseLeave}
                       style={{
                         marginBottom: "2rem",
                         minWidth: "100%",
                         backgroundColor: "slategray",
-                      }}
-                    >
+                      }}>
                       <LinkContainer to={`/events/${event.id}`}>
                         <Nav.Link>
                           <Col>
@@ -231,7 +237,11 @@ const Today = () => {
 
                       <Col
                         style={{
-                          backgroundColor: "slateGrey",
+                          backgroundColor:
+                            hoveredEventId === event.id
+                              ? "darkorange"
+                              : "slategray",
+                          transition: "background-color 0.3s ease-in-out",
                           maxWidth: "100%",
                           maxHeight: "100%",
                           paddingBottom: ".5rem",
@@ -242,23 +252,21 @@ const Today = () => {
                           alignText: "right",
                           overflow: "hidden",
                           justifyContent: "space-between",
-                        }}
-                      >
+                        }}>
                         <Button
                           variant="outline"
                           style={{
-                            color: "white",
                             border: "none",
                             fontSize: "32px",
                           }}
-                          onClick={() => handleAddEvents(event.id)}
-                        >
-                          {!clickedEvents.includes(event.id) &&
-                          !userEvents.includes(event.id) ? (
-                            <FontAwesomeIcon icon={outlineStar} />
-                          ) : (
-                            <FontAwesomeIcon icon={solidStar} />
-                          )}
+                          onClick={() => handleAddEvents(event.id)}>
+                          <FontAwesomeIcon
+                            icon={
+                              userEvents.includes(event.id)
+                                ? solidStar
+                                : outlineStar
+                            }
+                          />
                         </Button>
                         <LinkContainer to={`/events/${event.id}`}>
                           <Nav.Link>
@@ -268,8 +276,7 @@ const Today = () => {
                                 color: "white",
                                 alignText: "right",
                               }}
-                              id="event-name"
-                            >
+                              id="event-name">
                               {event.title}
                             </h4>
                           </Nav.Link>
@@ -287,8 +294,7 @@ const Today = () => {
       </Container>
       <Container
         className="d-flex justify-content-center"
-        style={{ marginTop: "2rem" }}
-      >
+        style={{ marginTop: "2rem" }}>
         <PrevNext
           currentPage={page}
           totalPages={totalPages}
