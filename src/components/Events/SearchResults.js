@@ -12,7 +12,6 @@ import {
   Button,
   Col,
   Form,
-  FloatingLabel,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,7 +21,7 @@ import { useState } from "react";
 import { getSearchResults, setDateRange } from "../../store/searchSlice";
 import DatePicker from "../NavBar/SearchComponents/DatePicker";
 import PrevNext from "./PrevNext";
-import { TestMap, NewCarousel, Carousel } from "../";
+import { TestMap} from "../";
 import "../style/index.css";
 
 const SearchResults = () => {

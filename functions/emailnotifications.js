@@ -52,4 +52,4 @@ exports.sendEventNotification = functions.firestore
 
         // If no event was added or removed, simply return without doing anything
         return null;
-
+    })

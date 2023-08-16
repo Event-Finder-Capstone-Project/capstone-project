@@ -86,6 +86,7 @@ const Today = () => {
       fetchEventData();
     }
   }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
+  
   useEffect(() => {
     const fetchEventsData = async () => {
       try {
