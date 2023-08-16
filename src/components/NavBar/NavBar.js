@@ -29,7 +29,7 @@ const NavBar = () => {
         <Navbar bg="dark" className="bg-body-tertiary">
           <Container>
             <Navbar.Brand href="/" >
-            <Image src="/favicon.ico" />
+            <Image src="/eventpulse.png"/>
             </Navbar.Brand>
             <Nav.Link href="/" className="navlink">
               Home
