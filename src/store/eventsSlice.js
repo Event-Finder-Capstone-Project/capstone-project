@@ -46,6 +46,12 @@ const eventsSlice = createSlice({
         return updatedEvents;
       }
     },
+    hoveredEventId: (state, action) => {
+      state.selectedEventId = action.payload;
+    },
+    clearHoveredEventId: (state) => {
+      state.selectedEventId = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(handleEventAsync.fulfilled, (state, action) => {
@@ -61,6 +67,6 @@ const eventsSlice = createSlice({
   },
 });
 
-export const { handleEvents } = eventsSlice.actions;
+export const { handleEvents,hoveredEventId, clearHoveredEventId } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

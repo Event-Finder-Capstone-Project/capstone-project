@@ -17,7 +17,10 @@ export default function TestMap() {
   });
 
   const events = useSelector(selectEvents);
+  const selectedEventId = useSelector((state) => state.hoverId);
+
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [keyCounter, setKeyCounter] = useState(0);
 
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
@@ -31,12 +34,16 @@ export default function TestMap() {
   localStorage.setItem("mapCenterLat", lat);
   localStorage.setItem("mapCenterLng", lng);
 
+  useEffect(() => {
+    setKeyCounter((prevCounter) => prevCounter + 1);
+  }, [selectedEventId]);
+
   function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');  // January is 0!
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // January is 0!
     const year = date.getFullYear();
-  
+
     return `${month}/${day}/${year}`;
   }
 
@@ -50,17 +57,26 @@ export default function TestMap() {
   return (
     <Container>
       <GoogleMap
-        zoom={11}
+        zoom={10}
         center={{ lat: lat, lng: lng }}
-        mapContainerClassName="google-map-container"
-      >
+        mapContainerClassName="google-map-container">
         {events.map((marker) => (
           <MarkerF
-            key={marker.id}
+            key={`${marker.id}-${keyCounter}`}
             position={{
               lat: marker.venue.location.lat,
               lng: marker.venue.location.lon,
             }}
+            icon={
+              marker.id === selectedEventId
+                ? {
+                    url: marker.performers[0].image,
+                    scaledSize: new window.google.maps.Size(32, 32), // Set the desired size
+                    anchor: new window.google.maps.Point(16, 32),
+                    className: "customMarker",
+                  }
+                : null
+            }
             onClick={() => setSelectedEvent(marker)}
           />
         ))}
@@ -71,7 +87,7 @@ export default function TestMap() {
               lng: selectedEvent.venue.location.lon,
             }}
             onCloseClick={() => setSelectedEvent(null)}
-          >
+            >
             <div className="custom-infowindow-content">
               <h6>{selectedEvent.title}</h6>
               <p>{selectedEvent.venue.name}</p>
@@ -85,8 +101,7 @@ export default function TestMap() {
               <a
                 href={`https://www.google.com/maps/dir/?api=1&destination=${selectedEvent.venue.location.lat},${selectedEvent.venue.location.lon}`}
                 target="_blank"
-                rel="noopener noreferrer"
-              >
+                rel="noopener noreferrer">
                 Get Directions
               </a>
             </div>

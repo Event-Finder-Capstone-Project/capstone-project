@@ -5,6 +5,7 @@ import singleEventSlice from "./store/singleEventSlice";
 import locationSlice from "./store/locationSlice";
 import eventsSlice from "./store/eventsSlice";
 import searchSlice from "./store/searchSlice";
+import hoverSlice from "./store/hoverSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     location: locationSlice,
     events: eventsSlice,
     search: searchSlice,
+    hoverId: hoverSlice,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });
