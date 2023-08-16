@@ -6,8 +6,8 @@ export const getSingleEvent = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const params = {
-        client_id: "MzUzMjU4MjV8MTY5MDgzNjc1MC41OTkwOTEz",
-        client_secret: "5204ee3ff5c3c6a060a1e4f6f50552c8e6afa2ba5d638fac32cf2cf5509c9aea",
+        client_id: process.env.REACT_APP_ALL_EVENTS_USERNAME,
+        client_secret: process.env.REACT_APP_ALL_EVENTS_PASSWORD,
         id: id,
       };
       const response = await axios.get("https://api.seatgeek.com/2/events", {

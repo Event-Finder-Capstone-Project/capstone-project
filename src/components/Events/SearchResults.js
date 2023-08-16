@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { getAllEvents } from "../../store/allEventsSlice";
-
+import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import {
   Nav,
@@ -30,7 +30,7 @@ const SearchResults = () => {
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
-  const [clickedEvents, setClickedEvents] = useState([]);
+  const [hoveredEventId, setHoveredEventId] = useState(null);
   const searchState = useSelector((state) => state.search);
   const events = useSelector((state) => state.search.events);
   const savedEventIds = useSelector((state) => state.events);
@@ -128,6 +128,16 @@ const SearchResults = () => {
     dispatch(setDateRange(dateRange));
   };
 
+  const handleMouseEnter = (eventId) => {
+    setHoveredEventId(eventId);
+    dispatch(selectedHoveredEventId(eventId));
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredEventId(null);
+    dispatch(clearHoveredEventId());
+  };
+
   return (
     <>
       <h1>Search Results</h1>
@@ -182,6 +192,8 @@ const SearchResults = () => {
                   <Row
                     xs={1}
                     md={2}
+                    onMouseEnter={() => handleMouseEnter(event.id)}
+                    onMouseLeave={handleMouseLeave}
                     style={{
                       marginBottom: "2rem",
                       minWidth: "100%",
@@ -205,7 +217,11 @@ const SearchResults = () => {
 
                     <Col
                       style={{
-                        backgroundColor: "slateGrey",
+                        backgroundColor:
+                            hoveredEventId === event.id
+                              ? "darkorange"
+                              : "slategray",
+                          transition: "background-color 0.3s ease-in-out",
                         maxWidth: "100%",
                         maxHeight: "100%",
                         paddingBottom: ".5rem",
@@ -218,22 +234,21 @@ const SearchResults = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      <Button
-                        variant="outline"
-                        style={{
-                          color: "white",
-                          border: "none",
-                          fontSize: "32px",
-                        }}
-                        onClick={() => handleAddEvents(event.id)}
-                      >
-                        {!clickedEvents.includes(event.id) &&
-                        !userEvents.includes(event.id) ? (
-                          <FontAwesomeIcon icon={outlineStar} />
-                        ) : (
-                          <FontAwesomeIcon icon={solidStar} />
-                        )}
-                      </Button>
+                       <Button
+                          variant="outline"
+                          style={{
+                            border: "none",
+                            fontSize: "32px",
+                          }}
+                          onClick={() => handleAddEvents(event.id)}>
+                          <FontAwesomeIcon
+                            icon={
+                              userEvents.includes(event.id)
+                                ? solidStar
+                                : outlineStar
+                            }
+                          />
+                        </Button>
                       <LinkContainer to={`/events/${event.id}`}>
                         <Nav.Link>
                           <h4
