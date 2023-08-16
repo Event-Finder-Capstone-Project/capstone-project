@@ -7,18 +7,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-import { Nav, Row, Col, Container, Button } from "react-bootstrap";
+import {
+  Nav,
+  Row,
+  Col,
+  Form,
+  FloatingLabel,
+  Container,
+  Button,
+} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
+
 const AllEventsNew = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
-  const [clickedEvents, setClickedEvents] = useState([]);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
   const savedEventIds = useSelector((state) => state.events);
@@ -120,21 +128,22 @@ const AllEventsNew = () => {
     }
   };
 
-  // const handleFilter = () => {
-  //   setPage(1);
-  //   dispatch(getAllEvents({ type: filter, page: 1 }));
-  // };
-
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
+    const eventsContainer = document.getElementById("all-events-container");
+    eventsContainer.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
+    const eventsContainer = document.getElementById("all-events-container");
+    eventsContainer.scrollIntoView({ behavior: "smooth" });
   };
 
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
+    const eventsContainer = document.getElementById("all-events-container");
+    eventsContainer.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -146,31 +155,16 @@ const AllEventsNew = () => {
       <Container
         class="text-center"
         className="all-events-container"
+        id="all-events-container"
         style={{
           marginTop: "3rem",
           minWidth: "100%",
         }}
       >
-        <div className="filter-container">
-          <Container
-            style={{
-              marginTop: ".5rem",
-              marginBottom: "1rem",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <h5
-              style={{
-                paddingTop: ".3rem",
-                marginRight: "1rem",
-              }}
-            >
-              Event Type
-            </h5>
-            <select
-              style={{ height: "35px" }}
+        <Container style={{ width: "15%" }}>
+          <FloatingLabel label="Event Type" className="filter-container">
+            <Form.Select
+              style={{}}
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             >
@@ -180,9 +174,9 @@ const AllEventsNew = () => {
                   {eventType}
                 </option>
               ))}
-            </select>
-          </Container>
-        </div>
+            </Form.Select>
+          </FloatingLabel>
+        </Container>
 
         <Container>
           <Row xs={1} sm={1} md={2}>
@@ -191,79 +185,84 @@ const AllEventsNew = () => {
             </Col>
             <Col style={{ position: "relative" }}>
               <Container>
-                {events?.length
-                  ? events.map((event) => (
-                      <Row
-                        xs={1}
-                        md={2}
+                {events?.length ? (
+                  events.map((event) => (
+                    <Row
+                      xs={1}
+                      md={2}
+                      style={{
+                        marginBottom: "2rem",
+                        minWidth: "100%",
+                        backgroundColor: "slategray",
+                      }}
+                    >
+                      <LinkContainer to={`/events/${event.id}`}>
+                        <Nav.Link>
+                          <Col>
+                            <img
+                              style={{
+                                minWidth: "100%",
+                                minHeight: "100%",
+                              }}
+                              src={event.performers[0].image}
+                              alt={event.name}
+                            />
+                          </Col>
+                        </Nav.Link>
+                      </LinkContainer>
+
+                      <Col
                         style={{
-                          marginBottom: "2rem",
-                          minWidth: "100%",
-                          backgroundColor: "slategray",
+                          backgroundColor: "slateGrey",
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          paddingBottom: ".5rem",
+
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "flex-end",
+                          alignText: "right",
+                          overflow: "hidden",
+                          justifyContent: "space-between",
                         }}
                       >
+                        <Button
+                          variant="outline"
+                          style={{
+                            border: "none",
+                            fontSize: "32px",
+                          }}
+                          onClick={() => handleAddEvents(event.id)}
+                        >
+                          <FontAwesomeIcon
+                            icon={
+                              userEvents.includes(event.id)
+                                ? solidStar
+                                : outlineStar
+                            }
+                          />
+                        </Button>
+
                         <LinkContainer to={`/events/${event.id}`}>
                           <Nav.Link>
-                            <Col>
-                              <img
-                                style={{
-                                  minWidth: "100%",
-                                  minHeight: "100%",
-                                }}
-                                src={event.performers[0].image}
-                                alt={event.name}
-                              />
-                            </Col>
+                            <h4
+                              style={{
+                                fontSize: "20px",
+                                color: "white",
+                                alignText: "right",
+                              }}
+                              id="event-name"
+                            >
+                              {event.title}
+                            </h4>
                           </Nav.Link>
                         </LinkContainer>
-
-                        <Col
-                          style={{
-                            backgroundColor: "slateGrey",
-                            maxWidth: "100%",
-                            maxHeight: "100%",
-                            paddingBottom: ".5rem",
-                            overflow: "hidden",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Button
-                            variant="outline"
-                            style={{
-                              color: "white",
-                              border: "none",
-                              fontSize: "32px",
-                            }}
-                            onClick={() => handleAddEvents(event.id)}
-                          >
-                            {!clickedEvents.includes(event.id) &&
-                            !userEvents.includes(event.id) ? (
-                              <FontAwesomeIcon icon={outlineStar} />
-                            ) : (
-                              <FontAwesomeIcon icon={solidStar} />
-                            )}
-                          </Button>
-                          <LinkContainer to={`/events/${event.id}`}>
-                            <Nav.Link>
-                              <h4
-                                style={{
-                                  fontSize: "20px",
-                                  color: "white",
-                                }}
-                                id="event-name"
-                              >
-                                {event.title}
-                              </h4>
-                            </Nav.Link>
-                          </LinkContainer>
-                        </Col>
-                      </Row>
-                    ))
-                  : // <p>{!events?.length ? "No events found!" : ""}</p>
-                    null}
+                      </Col>
+                    </Row>
+                  ))
+                ) : (
+                  <p>{!events?.length ? "No events found!" : ""}</p>
+                )}
               </Container>
             </Col>
           </Row>

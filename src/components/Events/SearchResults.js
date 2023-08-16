@@ -1,11 +1,19 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { auth,db } from "../../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { getAllEvents } from "../../store/allEventsSlice";
 
-import { handleEvents,handleEventAsync } from "../../store/eventsSlice";
-import { Nav, Row, Container, Button, Card } from "react-bootstrap";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
+import {
+  Nav,
+  Row,
+  Container,
+  Button,
+  Col,
+  Form,
+  FloatingLabel,
+} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
@@ -14,35 +22,43 @@ import { useState } from "react";
 import { getSearchResults, setDateRange } from "../../store/searchSlice";
 import DatePicker from "../NavBar/SearchComponents/DatePicker";
 import PrevNext from "./PrevNext";
+import { TestMap, NewCarousel, Carousel } from "../";
+import "../style/index.css";
 
 const SearchResults = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
+  const [clickedEvents, setClickedEvents] = useState([]);
   const searchState = useSelector((state) => state.search);
   const events = useSelector((state) => state.search.events);
   const savedEventIds = useSelector((state) => state.events);
   const dispatch = useDispatch();
-    const totalEvents = useSelector((state) => state.search.totalEvents);
+  const totalEvents = useSelector((state) => state.search.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
 
   useEffect(() => {
     dispatch(
       getSearchResults({
         query: searchState.query,
-        postalCode: searchState.postalCode,
         dateRange: searchState.dateRange,
         page: page,
+        type: filter
       })
     );
   }, [
     dispatch,
     searchState.query,
-    searchState.postalCode,
     searchState.dateRange,
-    page
+    page,
+    filter
   ]);
+  useEffect(() => {
+    if (filter === "") {
+      dispatch(getAllEvents({ type: filter }));
+    }
+  }, [dispatch, filter]);
 
   useEffect(() => {
     const fetchUserEvents = async () => {
@@ -59,6 +75,22 @@ const SearchResults = () => {
     };
     fetchUserEvents();
   }, []);
+
+  useEffect(() => {
+    const fetchEventsData = async () => {
+      try {
+        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
+        const eventsData = eventsQuerySnapshot.docs.map(
+          (doc) => doc.data().type
+        );
+        setEventsData(eventsData);
+      } catch (error) {
+        console.error("Error fetching events data:", error);
+      }
+    };
+    fetchEventsData();
+  }, []);
+
 
   //handle add and remove event use icon
   const handleAddEvents = (eventId) => {
@@ -98,62 +130,134 @@ const SearchResults = () => {
 
   return (
     <>
-      <DatePicker onSelectDateRange={handleSelectDateRange} />
-
-      <div className="filter-container">
-        <div>
-          <label>Event Type</label>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+      <h1>Search Results</h1>
+      <Container className="resultsContainer">
+        <Container>
+          <DatePicker onSelectDateRange={handleSelectDateRange} />
+        </Container>
+        <Container
+          className="filter"
+          style={{
+            marginTop: ".3rem",
+            marginBottom: "1rem",
+            marginLeft: ".5rem",
+          }}
+        >
+          <Form.Label
+            style={{
+              width: "100px",
+              fontSize: "18px",
+              paddingTop: "7px",
+              whiteSpace: "nowrap",
+              marginRight: ".7rem",
+            }}
+          >
+            Event Type
+          </Form.Label>
+          <Form.Select
+            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
+            variant="light"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
             <option value="">None</option>
             {eventsData.map((eventType) => (
               <option key={eventType} value={eventType}>
                 {eventType}
               </option>
             ))}
-          </select>
-        </div>
-        <Button onClick={handleFilter}>Filter</Button>
-      </div>
+          </Form.Select>
+        </Container>
+      </Container>
 
-      <div className="all-events-container">
-        {events?.length ? (
-          events.map((event) => (
-            <Card
-              style={{ width: "18rem", textDecoration: "none" }}
-              class="card"
-              className="event-container"
-              key={event.id}>
-              <LinkContainer to={`/events/${event.id}`}>
-                <Nav.Link>
-                  <Card.Img
-                    variant="top"
-                    src={event.performers[0].image}
-                    alt={event.name}
-                  />
-                  <Card.Body style={{ background: "grey" }}>
-                    <Card.Title style={{}} id="event-name">
-                      {event.title}
-                    </Card.Title>
-                  </Card.Body>
-                </Nav.Link>
-              </LinkContainer>
-              <Button
-                variant="outline"
-                style={{
-                  border: "none",
-                  fontSize: "32px",
-                }}
-                onClick={() => handleAddEvents(event.id)}>
-                <FontAwesomeIcon
-                  icon={userEvents.includes(event.id) ? solidStar : outlineStar}
-                />
-              </Button>
-            </Card>
-          ))
-        ) : (
-          <p>{filter === "" ? "Loading events..." : "Events not found 😢"}</p>
-        )}
-      </div>
+      <Container>
+        <Row xs={1} sm={1} md={2}>
+          <Col style={{ marginBottom: "2rem" }} className="stickyMaps">
+            <TestMap />
+          </Col>
+          <Col style={{ position: "relative" }}>
+            <Container>
+              {events?.length ? (
+                events.map((event) => (
+                  <Row
+                    xs={1}
+                    md={2}
+                    style={{
+                      marginBottom: "2rem",
+                      minWidth: "100%",
+                      backgroundColor: "slategray",
+                    }}
+                  >
+                    <LinkContainer to={`/events/${event.id}`}>
+                      <Nav.Link>
+                        <Col>
+                          <img
+                            style={{
+                              minWidth: "100%",
+                              minHeight: "100%",
+                            }}
+                            src={event.performers[0].image}
+                            alt={event.name}
+                          />
+                        </Col>
+                      </Nav.Link>
+                    </LinkContainer>
+
+                    <Col
+                      style={{
+                        backgroundColor: "slateGrey",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        paddingBottom: ".5rem",
+
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        alignText: "right",
+                        overflow: "hidden",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Button
+                        variant="outline"
+                        style={{
+                          color: "white",
+                          border: "none",
+                          fontSize: "32px",
+                        }}
+                        onClick={() => handleAddEvents(event.id)}
+                      >
+                        {!clickedEvents.includes(event.id) &&
+                        !userEvents.includes(event.id) ? (
+                          <FontAwesomeIcon icon={outlineStar} />
+                        ) : (
+                          <FontAwesomeIcon icon={solidStar} />
+                        )}
+                      </Button>
+                      <LinkContainer to={`/events/${event.id}`}>
+                        <Nav.Link>
+                          <h4
+                            style={{
+                              fontSize: "20px",
+                              color: "white",
+                              alignText: "right",
+                            }}
+                            id="event-name"
+                          >
+                            {event.title}
+                          </h4>
+                        </Nav.Link>
+                      </LinkContainer>
+                    </Col>
+                  </Row>
+                ))
+              ) : (
+                <p>{!events?.length ? "No events found!" : ""}</p>
+              )}
+            </Container>
+          </Col>
+        </Row>
+      </Container>
 
       {events?.length > 0 && (
         <Container
