@@ -26,7 +26,7 @@ const ShareEvent = (props) => {
         marginTop: "2.3rem",
       }}
     >
-      <h5 style={{ paddingLeft: "3.8rem" }}>Share This Event </h5>
+      <h5 style={{ paddingLeft: "3.8rem" }}>Share This Event</h5>
       <FacebookShareButton
         style={{ marginLeft: "-.7rem", marginRight: "1rem" }}
         url={shareUrl}
