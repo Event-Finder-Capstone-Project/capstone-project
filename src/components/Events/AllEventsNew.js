@@ -21,10 +21,9 @@ import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
-const AllEventsNew = () => {
-  const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState("");
+const AllEventsNew = () => { 
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
@@ -32,14 +31,35 @@ const AllEventsNew = () => {
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
   const savedEventIds = useSelector((state) => state.events);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const filterParam = queryParams.get("filter");
+  const pageParam = queryParams.get("page");
+  const [filter, setFilter] = useState(filterParam || ""); 
+  const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
+  const navigate = useNavigate();
+  const [scrollToEvents, setScrollToEvents] = useState(false);
 
   const dispatch = useDispatch();
   const totalEvents = useSelector((state) => state.allEvents.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
 
   useEffect(() => {
+    const handleScroll = () => {
+      localStorage.setItem("scrollPosition", window.scrollY);
+    };
+  
+    window.addEventListener("scroll", handleScroll);
+  
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  
+
+  useEffect(() => {
     if (filter === "") {
-      dispatch(getAllEvents({ type: filter }));
+      dispatch(getAllEvents({ type: filter, page: 1 }));
     }
   }, [dispatch, filter]);
   useEffect(() => {
@@ -51,18 +71,12 @@ const AllEventsNew = () => {
       eventEmitter.off("cityChanged", cityChangedListener);
     };
   }, [rerender]);
-  useEffect(() => {
-    const handleScroll = () => {
-      sessionStorage.setItem("scrollPosition", window.scrollY);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+ 
   const events = useSelector(selectEvents);
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
+  const scrollPosition = localStorage.getItem("scrollPosition"); 
+
   useEffect(() => {
     if (storedCity && storedState) {
       const venue = {
@@ -76,6 +90,8 @@ const AllEventsNew = () => {
           venue: venue,
         })
       );
+      if (scrollPosition) {
+        window.scrollTo(0, scrollPosition);}
     } else {
       dispatch(
         getAllEvents({
@@ -85,8 +101,11 @@ const AllEventsNew = () => {
           longitude: longitude,
         })
       );
+      if (scrollPosition) {
+        window.scrollTo(0, scrollPosition);}
     }
   }, [dispatch, filter, page, latitude, longitude, storedCity, storedState]);
+
   useEffect(() => {
     const fetchEventsData = async () => {
       try {
@@ -99,6 +118,7 @@ const AllEventsNew = () => {
         console.error("Error fetching events data:", error);
       }
     };
+
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
         const userDocRef = doc(db, "users", auth.currentUser.uid);
@@ -130,22 +150,35 @@ const AllEventsNew = () => {
     }
   };
 
+  useEffect(() => {
+    if (scrollToEvents) {
+      const eventsContainer = document.getElementById("all-events-container");
+      eventsContainer.scrollIntoView({ behavior: "smooth" });
+      setScrollToEvents(false); 
+    }
+  }, [scrollToEvents]);
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setPage(1); 
+  };
+
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
-    const eventsContainer = document.getElementById("all-events-container");
-    eventsContainer.scrollIntoView({ behavior: "smooth" });
+    navigate(`/?filter=${filter}&page=${page}`);
+    setScrollToEvents(true);
   };
 
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
-    const eventsContainer = document.getElementById("all-events-container");
-    eventsContainer.scrollIntoView({ behavior: "smooth" });
+    navigate(`/?filter=${filter}&page=${page}`);
+    setScrollToEvents(true);
   };
 
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
-    const eventsContainer = document.getElementById("all-events-container");
-    eventsContainer.scrollIntoView({ behavior: "smooth" });
+    navigate(`/?filter=${filter}&page=${pageNumber}`);
+    setScrollToEvents(true);
   };
 
   const handleMouseEnter = (eventId) => {
@@ -178,7 +211,10 @@ const AllEventsNew = () => {
             <Form.Select
               style={{}}
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}
+              onChange={(e) => {
+                handleFilterChange(e.target.value);
+                navigate(`/?filter=${e.target.value}&page=1`);
+              }}
             >
               <option value="">None</option>
               {eventsData.map((eventType) => (
@@ -209,8 +245,15 @@ const AllEventsNew = () => {
                         marginBottom: "2rem",
                         minWidth: "100%",
                         backgroundColor: "slategray",
-                      }}>
-                      <LinkContainer to={`/events/${event.id}`}>
+                      }}
+                    >
+                     <LinkContainer
+  to={{
+    pathname: `/events/${event.id}`,
+    search: `?filter=${filter}&page=${page}`
+  }}
+>
+
                         <Nav.Link>
                           <Col>
                             <img
