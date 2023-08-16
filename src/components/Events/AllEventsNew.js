@@ -20,6 +20,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
+import "../style/index.css";
 
 const AllEventsNew = () => {
   const [page, setPage] = useState(1);
@@ -161,21 +162,38 @@ const AllEventsNew = () => {
           minWidth: "100%",
         }}
       >
-        <Container style={{ width: "15%" }}>
-          <FloatingLabel label="Event Type" className="filter-container">
-            <Form.Select
-              style={{}}
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            >
-              <option value="">None</option>
-              {eventsData.map((eventType) => (
-                <option key={eventType} value={eventType}>
-                  {eventType}
-                </option>
-              ))}
-            </Form.Select>
-          </FloatingLabel>
+        <Container
+          className="filter"
+          style={{
+            marginTop: ".3rem",
+            marginBottom: "1rem",
+            marginLeft: ".5rem",
+          }}
+        >
+          <Form.Label
+            style={{
+              width: "100px",
+              fontSize: "18px",
+              paddingTop: "7px",
+              whiteSpace: "nowrap",
+              marginRight: ".7rem",
+            }}
+          >
+            Event Type
+          </Form.Label>
+          <Form.Select
+            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
+            variant="light"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="">None</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
+          </Form.Select>
         </Container>
 
         <Container>

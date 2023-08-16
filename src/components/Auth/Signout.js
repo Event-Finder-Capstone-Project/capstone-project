@@ -16,16 +16,15 @@ const Signout = () => {
   };
 
   return (
-    <div className="form-container">
-      <div>
-        <Button
-          variant="secondary"
-          onClick={logOut}
-          style={{ fontSize: "15px" }}
-        >
-          Log Out
-        </Button>
-      </div>
+    <div className="form-container" style={{ marginTop: "1rem" }}>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={logOut}
+        style={{ fontSize: "15px", width: "100px" }}
+      >
+        Log Out
+      </Button>
     </div>
   );
 };

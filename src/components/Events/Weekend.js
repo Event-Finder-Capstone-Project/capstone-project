@@ -8,7 +8,7 @@ import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 
-import { Nav, Row, Container, Button, Col } from "react-bootstrap";
+import { Nav, Row, Container, Button, Col, Form } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel, Carousel } from "../";
 import { eventEmitter } from "../App";
@@ -176,38 +176,39 @@ const Weekend = () => {
         className="all-events-container"
         style={{ marginTop: "3rem" }}
       >
-        <div className="filter-container">
-          <Container
+        <Container
+          className="filter"
+          style={{
+            marginTop: ".3rem",
+            marginBottom: "1rem",
+            marginLeft: ".5rem",
+          }}
+        >
+          <Form.Label
             style={{
-              marginTop: ".5rem",
-              marginBottom: "1rem",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
+              width: "100px",
+              fontSize: "18px",
+              paddingTop: "7px",
+              whiteSpace: "nowrap",
+              marginRight: ".7rem",
             }}
           >
-            <h5
-              style={{
-                paddingTop: ".3rem",
-                marginRight: "1rem",
-              }}
-            >
-              Event Type
-            </h5>
-            <select
-              style={{ height: "35px" }}
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            >
-              <option value="">None</option>
-              {eventsData.map((eventType) => (
-                <option key={eventType} value={eventType}>
-                  {eventType}
-                </option>
-              ))}
-            </select>
-          </Container>
-        </div>
+            Event Type
+          </Form.Label>
+          <Form.Select
+            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
+            variant="light"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="">None</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
+          </Form.Select>
+        </Container>
 
         <Container>
           <Row xs={1} sm={1} md={2}>
