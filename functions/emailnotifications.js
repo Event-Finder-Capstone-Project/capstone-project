@@ -7,7 +7,7 @@ admin.initializeApp();
 // SendGrid API key here
 sgMail.setApiKey(functions.config().sendgrid.key);
 
-exports.sendEventNotification = functions.firestore
+exports.sendEventEmail = functions.firestore
     .document("users/{userId}")
     .onUpdate((change, context) => {
       const beforeData = change.before.data();
@@ -21,7 +21,7 @@ exports.sendEventNotification = functions.firestore
 
             const msg = {
                 to: afterData.email,
-                from: 'richiepchavez@gmail.com',
+                from: 'eventpulse2@gmail.com',
                 templateId: 'd-aede448302fe4cae8ad9101568ab688b',
                 dynamicTemplateData: {
                     name: afterData.name,
@@ -36,7 +36,7 @@ exports.sendEventNotification = functions.firestore
 
             const msg = {
                 to: afterData.email,
-                from: 'richiepchavez@gmail.com',
+                from: 'eventpulse2@gmail.com',
                 templateId: 'd-c73ec11d87e74b81a70c3fa9ee4cfcac',
                 dynamicTemplateData: {
                     name: afterData.name,
@@ -52,4 +52,5 @@ exports.sendEventNotification = functions.firestore
 
         // If no event was added or removed, simply return without doing anything
         return null;
-    })
+
+    });
