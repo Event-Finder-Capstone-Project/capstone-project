@@ -123,7 +123,7 @@ const SingleEvent = () => {
                   Buy Tickets Here
                 </Button>
                 <BackButton />
-                <ShareEvent />
+                <ShareEvent eventId={event.id}/>
               </div>
             </Col>
           ) : null}
