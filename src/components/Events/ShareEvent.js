@@ -5,13 +5,11 @@ import {
   RedditShareButton,
   TwitterShareButton,
   EmailShareButton,
-  PinterestShareButton,
   WhatsappIcon,
   FacebookIcon,
   EmailIcon,
   RedditIcon,
   TwitterIcon,
-  PinterestIcon,
 } from "react-share";
 import { Container } from "react-bootstrap";
 
