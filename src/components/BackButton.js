@@ -1,13 +1,17 @@
 import React from "react";
 import { Button } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 
 const BackButton = () => {
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const filter = queryParams.get("filter");
+  const page = queryParams.get("page");
+
   const handleBack = () => {
-    const scrollPosition = sessionStorage.getItem("scrollPosition");
-    if (scrollPosition) {
-      window.scrollTo(0, parseInt(scrollPosition));
-    }
-    window.history.back();
+    const backUrl = `/?filter=${filter}&page=${page}`;
+    window.location.href = backUrl;
   };
 
   return (

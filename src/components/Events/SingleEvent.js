@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { getSingleEvent } from "../../store/singleEventSlice";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import BackButton from "../BackButton";
@@ -15,6 +15,11 @@ const SingleEvent = () => {
   const [userEvents, setUserEvents] = useState([]);
   const savedEventIds = useSelector((state) => state.events);
   const eventContainer = document.getElementById("single-event-container");
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const filter = queryParams.get("filter");
+  const page = queryParams.get("page");
 
   useEffect(() => {
     dispatch(getSingleEvent(id));
@@ -153,7 +158,7 @@ const SingleEvent = () => {
                   onClick={handleLink}>
                   Buy Tickets Here
                 </Button>
-                <BackButton />
+                <BackButton page={page} filter={filter}/>
                 <ShareEvent eventId={event.id}/>
               </div>
             </Col>
