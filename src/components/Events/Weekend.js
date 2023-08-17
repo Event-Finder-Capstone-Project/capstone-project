@@ -190,6 +190,17 @@ const Weekend = () => {
     dispatch(clearHoveredEventId());
   };
 
+  const eventsContainer = document.getElementById("all-events-container");
+
+  useEffect(() => {
+    if (scrollToEvents) {
+      if (eventsContainer) {
+        eventsContainer.scrollIntoView({ behavior: "smooth" });
+      }
+      setScrollToEvents(false);
+    }
+  }, [scrollToEvents, eventsContainer]);
+
   return (
     <>
       <h1 style={{ marginTop: "1rem" }}>
@@ -246,7 +257,8 @@ const Weekend = () => {
               <TestMap />
             </Col>
             <Col style={{ position: "relative" }}>
-              <Container>
+              <Container
+              id="all-events-container">
                 {events?.length ? (
                   events.map((event) => (
                     <Row
