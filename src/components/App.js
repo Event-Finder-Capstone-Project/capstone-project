@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 import {
   Signup,
   Login,
   SingleEvent,
-  AllEvents,
   AllEventsNew,
   NavBar,
   Home,
@@ -28,7 +28,24 @@ export const eventEmitter = mitt();
 function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [eventsData, setEventsData] = useState([]);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // fetch events data from firebase
+    const fetchEventsData = async () => {
+      try {
+        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
+        const eventsData = eventsQuerySnapshot.docs.map(
+          (doc) => doc.data().type
+        );
+        setEventsData(eventsData);
+      } catch (error) {
+        console.error("Error fetching events data:", error);
+      }
+    };
+    fetchEventsData();
+  }, []);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -65,8 +82,11 @@ function App() {
           <div className="w-100 mb-3">
             <Routes>
               <Route path="/events/:id" element={<SingleEvent />} />
-              <Route path="/events" element={<AllEventsNew />} />
-              <Route path="/" element={<Home />} />
+              <Route
+                path="/events"
+                element={<AllEventsNew eventsData={eventsData} />}
+              />
+              <Route path="/" element={<Home eventsData={eventsData} />} />
               <Route path="/user-profile" element={<UserProfile />} />
               <Route path="/thisweekend" element={<Weekend />} />
               <Route path="/myevents" element={<UserEventsTwo />} />
@@ -75,7 +95,10 @@ function App() {
                 path="/user-details"
                 element={<UserDetails user={user} />}
               />
-              <Route path="/searchresults" element={<SearchResults />} />
+              <Route
+                path="/searchresults"
+                element={<SearchResults eventsData={eventsData} />}
+              />
             </Routes>
           </div>
         ) : (
@@ -84,8 +107,14 @@ function App() {
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/today" element={<Today />} />
-                <Route path="/events" element={<AllEventsNew />} />
+                <Route
+                  path="/today"
+                  element={<Today eventsData={eventsData} />}
+                />
+                <Route
+                  path="/events"
+                  element={<AllEventsNew eventsData={eventsData} />}
+                />
                 <Route path="/events/:id" element={<SingleEvent />} />
                 <Route path="/myevents" element={<UserEventsTwo />} />
                 <Route path="/thisweekend" element={<Weekend />} />
