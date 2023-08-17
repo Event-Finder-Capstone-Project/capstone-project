@@ -88,9 +88,15 @@ function App() {
               />
               <Route path="/" element={<Home eventsData={eventsData} />} />
               <Route path="/user-profile" element={<UserProfile />} />
-              <Route path="/thisweekend" element={<Weekend />} />
+              <Route
+                path="/thisweekend"
+                element={<Weekend eventsData={eventsData} />}
+              />
               <Route path="/myevents" element={<UserEventsTwo />} />
-              <Route path="/today" element={<Today />} />
+              <Route
+                path="/today"
+                element={<Today eventsData={eventsData} />}
+              />
               <Route
                 path="/user-details"
                 element={<UserDetails user={user} />}
@@ -117,9 +123,15 @@ function App() {
                 />
                 <Route path="/events/:id" element={<SingleEvent />} />
                 <Route path="/myevents" element={<UserEventsTwo />} />
-                <Route path="/thisweekend" element={<Weekend />} />
+                <Route
+                  path="/thisweekend"
+                  element={<Weekend eventsData={eventsData} />}
+                />
                 <Route path="/" element={<Home eventsData={eventsData} />} />
-                <Route path="/searchresults" element={<SearchResults />} />
+                <Route
+                  path="/searchresults"
+                  element={<SearchResults eventsData={eventsData} />}
+                />
               </Routes>
             </div>
           </div>
