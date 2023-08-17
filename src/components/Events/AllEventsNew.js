@@ -11,6 +11,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { LinkContainer } from "react-router-bootstrap";
+import { TestMap, NewCarousel } from "../";
+import { eventEmitter } from "../App";
+import PrevNext from "./PrevNext";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Nav,
   Row,
@@ -20,12 +25,6 @@ import {
   Container,
   Button,
 } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
-import { TestMap, NewCarousel, Carousel } from "../";
-import { eventEmitter } from "../App";
-import PrevNext from "./PrevNext";
-import "../style/index.css";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 const AllEventsNew = () => {
   const [eventsData, setEventsData] = useState([]);
@@ -41,30 +40,22 @@ const AllEventsNew = () => {
   const pageParam = queryParams.get("page");
   const [filter, setFilter] = useState(filterParam || "");
   const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
-  const navigate = useNavigate();
   const [scrollToEvents, setScrollToEvents] = useState(false);
-
-  const dispatch = useDispatch();
   const totalEvents = useSelector((state) => state.allEvents.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      localStorage.setItem("scrollPosition", window.scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const events = useSelector(selectEvents);
+  const latitude = useSelector((state) => state.location.latitude);
+  const longitude = useSelector((state) => state.location.longitude);
+  const scrollPosition = localStorage.getItem("scrollPosition");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (filter === "") {
-      dispatch(getAllEvents({ type: filter, page: 1 }));
+      dispatch(getAllEvents({ type: filter }));
     }
   }, [dispatch, filter]);
+
   useEffect(() => {
     const cityChangedListener = (data) => {
       setRerender(!rerender);
@@ -74,11 +65,6 @@ const AllEventsNew = () => {
       eventEmitter.off("cityChanged", cityChangedListener);
     };
   }, [rerender]);
-
-  const events = useSelector(selectEvents);
-  const latitude = useSelector((state) => state.location.latitude);
-  const longitude = useSelector((state) => state.location.longitude);
-  const scrollPosition = localStorage.getItem("scrollPosition");
 
   useEffect(() => {
     if (storedCity && storedState) {
@@ -156,6 +142,16 @@ const AllEventsNew = () => {
   };
 
   useEffect(() => {
+    const handleScroll = () => {
+      localStorage.setItem("scrollPosition", window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
     if (scrollToEvents) {
       const eventsContainer = document.getElementById("all-events-container");
       eventsContainer.scrollIntoView({ behavior: "smooth" });
@@ -169,14 +165,16 @@ const AllEventsNew = () => {
   };
 
   const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
-    navigate(`/?filter=${filter}&page=${page}`);
+    const newPage = Math.max(page - 1, 1);
+    setPage(newPage);
+    navigate(`/?filter=${filter}&page=${newPage}`);
     setScrollToEvents(true);
   };
 
   const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
-    navigate(`/?filter=${filter}&page=${page}`);
+    const newPage = page + 1;
+    setPage(newPage);
+    navigate(`/?filter=${filter}&page=${newPage}`);
     setScrollToEvents(true);
   };
 
@@ -198,7 +196,7 @@ const AllEventsNew = () => {
 
   return (
     <>
-      <h1> Popular in your area </h1>
+      <h1> Popular {storedCity ? `in ${storedCity}` : "in your area"}</h1>
       <Container>
         <NewCarousel />
       </Container>
