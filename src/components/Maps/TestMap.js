@@ -17,8 +17,7 @@ export default function TestMap() {
   });
 
   const events = useSelector(selectEvents);
-  const searchEvents= useSelector((state) => state.search.events);
-
+  const searchEvents = useSelector((state) => state.search.events);
   const selectedEventId = useSelector((state) => state.hoverId);
 
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -56,13 +55,17 @@ export default function TestMap() {
       </Container>
     );
 
+    const eventsToMap = searchEvents.length ? searchEvents : events;
+    const mapCenter = searchEvents.length ? { lat: 40.05, lng: -96.21 } : { lat: lat, lng: lng };
+    const mapZoom = searchEvents.length ? 4 : 10;
+
   return (
     <Container>
       <GoogleMap
-        zoom={10}
-        center={{ lat: lat, lng: lng }}
+        zoom={mapZoom}
+        center={mapCenter}
         mapContainerClassName="google-map-container">
-        {events.map((marker) => (
+        {eventsToMap.map((marker) => (
           <MarkerF
             key={`${marker.id}-${keyCounter}`}
             position={{
