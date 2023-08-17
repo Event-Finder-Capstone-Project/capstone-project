@@ -3,7 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
-import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
+import {
+  selectedHoveredEventId,
+  clearHoveredEventId,
+} from "../../store/hoverSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
@@ -185,7 +188,7 @@ const Weekend = () => {
         fluid="lg"
         class="text-center"
         className="all-events-container"
-        style={{ marginTop: "3rem" }}
+        style={{ marginTop: "1rem" }}
       >
         <Container
           className="filter"
@@ -281,7 +284,8 @@ const Weekend = () => {
                             border: "none",
                             fontSize: "32px",
                           }}
-                          onClick={() => handleAddEvents(event.id)}>
+                          onClick={() => handleAddEvents(event.id)}
+                        >
                           <FontAwesomeIcon
                             icon={
                               userEvents.includes(event.id)

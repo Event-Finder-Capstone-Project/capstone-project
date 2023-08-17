@@ -168,7 +168,7 @@ const Today = () => {
         fluid="lg"
         class="text-center"
         className="all-events-container"
-        style={{ marginTop: "3rem" }}
+        style={{ marginTop: "1rem" }}
       >
         <div className="filter-container">
           <Container

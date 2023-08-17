@@ -207,7 +207,7 @@ const AllEventsNew = () => {
         className="all-events-container"
         id="all-events-container"
         style={{
-          marginTop: "3rem",
+          marginTop: "1rem",
           minWidth: "100%",
         }}
       >
@@ -223,7 +223,7 @@ const AllEventsNew = () => {
             style={{
               width: "100px",
               fontSize: "18px",
-              paddingTop: "7px",
+              paddingTop: "5px",
               whiteSpace: "nowrap",
               marginRight: ".7rem",
             }}
