@@ -24,13 +24,20 @@ import DatePicker from "../NavBar/SearchComponents/DatePicker";
 import PrevNext from "./PrevNext";
 import { TestMap, NewCarousel, Carousel } from "../";
 import "../style/index.css";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SearchResults = () => {
-  const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+  const filterParam = queryParams.get("filter");
+  const pageParam = queryParams.get("page");
+  const [filter, setFilter] = useState(filterParam || "");
+  const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [hoveredEventId, setHoveredEventId] = useState(null);
+  const [scrollToEvents, setScrollToEvents] = useState(false);
   const searchState = useSelector((state) => state.search);
   const events = useSelector((state) => state.search.events);
   const savedEventIds = useSelector((state) => state.events);
@@ -91,7 +98,17 @@ const SearchResults = () => {
     fetchEventsData();
   }, []);
 
+  const eventsContainer = document.getElementById("resultsContainer");
 
+  useEffect(() => {
+    if (scrollToEvents) {
+      if (eventsContainer) {
+        eventsContainer.scrollIntoView({ behavior: "smooth" });
+      }
+      setScrollToEvents(false);
+    }
+  }, [scrollToEvents, eventsContainer]);
+  
   //handle add and remove event use icon
   const handleAddEvents = (eventId) => {
     if (auth.currentUser) {
@@ -107,21 +124,29 @@ const SearchResults = () => {
     }
   };
 
-  const handleFilter = () => {
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
     setPage(1);
-    dispatch(getAllEvents({ type: filter, page: 1 }));
+  };
+
+  const handlePreviousPage = () => {
+    const newPage = Math.max(page - 1, 1);
+    setPage(newPage);
+    navigate(`/searchresults?filter=${filter}&page=${newPage}`);
+    setScrollToEvents(true);
+  };
+
+  const handleNextPage = () => {
+    const newPage = page + 1;
+    setPage(newPage);
+    navigate(`/searchresults?filter=${filter}&page=${newPage}`);
+    setScrollToEvents(true);
   };
 
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
-  };
-
-  const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
+    navigate(`/searchresults?filter=${filter}&page=${pageNumber}`);
+    setScrollToEvents(true);
   };
 
   const handleSelectDateRange = (dateRange) => {
@@ -141,7 +166,7 @@ const SearchResults = () => {
   return (
     <>
       <h1>Search Results</h1>
-      <Container className="resultsContainer">
+      <Container className="resultsContainer" id="resultsContainer">
         <Container>
           <DatePicker onSelectDateRange={handleSelectDateRange} />
         </Container>
@@ -168,7 +193,10 @@ const SearchResults = () => {
             style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
             variant="light"
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(e) => {
+              handleFilterChange(e.target.value);
+              navigate(`/searchresults?filter=${e.target.value}&page=1`);
+            }}
           >
             <option value="">None</option>
             {eventsData.map((eventType) => (
