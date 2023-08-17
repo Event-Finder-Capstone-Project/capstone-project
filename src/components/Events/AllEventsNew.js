@@ -2,12 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-import { handleEvents, handleEventAsync} from "../../store/eventsSlice";
-import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
+import {
+  selectedHoveredEventId,
+  clearHoveredEventId,
+} from "../../store/hoverSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { LinkContainer } from "react-router-bootstrap";
+import { TestMap, NewCarousel } from "../";
+import { eventEmitter } from "../App";
+import PrevNext from "./PrevNext";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Nav,
   Row,
@@ -17,13 +25,8 @@ import {
   Container,
   Button,
 } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
-import { TestMap, NewCarousel, Carousel } from "../";
-import { eventEmitter } from "../App";
-import PrevNext from "./PrevNext";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
-const AllEventsNew = () => { 
+const AllEventsNew = () => {
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
@@ -35,33 +38,24 @@ const AllEventsNew = () => {
   const queryParams = new URLSearchParams(location.search);
   const filterParam = queryParams.get("filter");
   const pageParam = queryParams.get("page");
-  const [filter, setFilter] = useState(filterParam || ""); 
+  const [filter, setFilter] = useState(filterParam || "");
   const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
-  const navigate = useNavigate();
   const [scrollToEvents, setScrollToEvents] = useState(false);
-
-  const dispatch = useDispatch();
   const totalEvents = useSelector((state) => state.allEvents.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      localStorage.setItem("scrollPosition", window.scrollY);
-    };
-  
-    window.addEventListener("scroll", handleScroll);
-  
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-  
+  const events = useSelector(selectEvents);
+  const latitude = useSelector((state) => state.location.latitude);
+  const longitude = useSelector((state) => state.location.longitude);
+  const scrollPosition = localStorage.getItem("scrollPosition");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (filter === "") {
-      dispatch(getAllEvents({ type: filter, page: 1 }));
+      dispatch(getAllEvents({ type: filter }));
     }
   }, [dispatch, filter]);
+
   useEffect(() => {
     const cityChangedListener = (data) => {
       setRerender(!rerender);
@@ -71,11 +65,6 @@ const AllEventsNew = () => {
       eventEmitter.off("cityChanged", cityChangedListener);
     };
   }, [rerender]);
- 
-  const events = useSelector(selectEvents);
-  const latitude = useSelector((state) => state.location.latitude);
-  const longitude = useSelector((state) => state.location.longitude);
-  const scrollPosition = localStorage.getItem("scrollPosition"); 
 
   useEffect(() => {
     if (storedCity && storedState) {
@@ -91,7 +80,8 @@ const AllEventsNew = () => {
         })
       );
       if (scrollPosition) {
-        window.scrollTo(0, scrollPosition);}
+        window.scrollTo(0, scrollPosition);
+      }
     } else {
       dispatch(
         getAllEvents({
@@ -102,7 +92,8 @@ const AllEventsNew = () => {
         })
       );
       if (scrollPosition) {
-        window.scrollTo(0, scrollPosition);}
+        window.scrollTo(0, scrollPosition);
+      }
     }
   }, [dispatch, filter, page, latitude, longitude, storedCity, storedState]);
 
@@ -151,27 +142,39 @@ const AllEventsNew = () => {
   };
 
   useEffect(() => {
+    const handleScroll = () => {
+      localStorage.setItem("scrollPosition", window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
     if (scrollToEvents) {
       const eventsContainer = document.getElementById("all-events-container");
       eventsContainer.scrollIntoView({ behavior: "smooth" });
-      setScrollToEvents(false); 
+      setScrollToEvents(false);
     }
   }, [scrollToEvents]);
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
-    setPage(1); 
+    setPage(1);
   };
 
   const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
-    navigate(`/?filter=${filter}&page=${page}`);
+    const newPage = Math.max(page - 1, 1);
+    setPage(newPage);
+    navigate(`/?filter=${filter}&page=${newPage}`);
     setScrollToEvents(true);
   };
 
   const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
-    navigate(`/?filter=${filter}&page=${page}`);
+    const newPage = page + 1;
+    setPage(newPage);
+    navigate(`/?filter=${filter}&page=${newPage}`);
     setScrollToEvents(true);
   };
 
@@ -193,7 +196,7 @@ const AllEventsNew = () => {
 
   return (
     <>
-      <h1> Popular in your area </h1>
+      <h1> Popular {storedCity ? `in ${storedCity}` : "in your area"}</h1>
       <Container>
         <NewCarousel />
       </Container>
@@ -202,28 +205,42 @@ const AllEventsNew = () => {
         className="all-events-container"
         id="all-events-container"
         style={{
-          marginTop: "3rem",
+          marginTop: "1rem",
           minWidth: "100%",
         }}
       >
-        <Container style={{ width: "15%" }}>
-          <FloatingLabel label="Event Type" className="filter-container">
-            <Form.Select
-              style={{}}
-              value={filter}
-              onChange={(e) => {
-                handleFilterChange(e.target.value);
-                navigate(`/?filter=${e.target.value}&page=1`);
-              }}
-            >
-              <option value="">None</option>
-              {eventsData.map((eventType) => (
-                <option key={eventType} value={eventType}>
-                  {eventType}
-                </option>
-              ))}
-            </Form.Select>
-          </FloatingLabel>
+        <Container
+          className="filter"
+          style={{
+            marginTop: ".3rem",
+            marginBottom: "1rem",
+            marginLeft: ".5rem",
+          }}
+        >
+          <Form.Label
+            style={{
+              width: "100px",
+              fontSize: "18px",
+              paddingTop: "5px",
+              whiteSpace: "nowrap",
+              marginRight: ".7rem",
+            }}
+          >
+            Event Type
+          </Form.Label>
+          <Form.Select
+            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
+            variant="light"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="">None</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
+          </Form.Select>
         </Container>
 
         <Container>
@@ -247,13 +264,12 @@ const AllEventsNew = () => {
                         backgroundColor: "slategray",
                       }}
                     >
-                     <LinkContainer
-  to={{
-    pathname: `/events/${event.id}`,
-    search: `?filter=${filter}&page=${page}`
-  }}
->
-
+                      <LinkContainer
+                        to={{
+                          pathname: `/events/${event.id}`,
+                          search: `?filter=${filter}&page=${page}`,
+                        }}
+                      >
                         <Nav.Link>
                           <Col>
                             <img
@@ -285,14 +301,16 @@ const AllEventsNew = () => {
                           alignText: "right",
                           overflow: "hidden",
                           justifyContent: "space-between",
-                        }}>
+                        }}
+                      >
                         <Button
                           variant="outline"
                           style={{
                             border: "none",
                             fontSize: "32px",
                           }}
-                          onClick={() => handleAddEvents(event.id)}>
+                          onClick={() => handleAddEvents(event.id)}
+                        >
                           <FontAwesomeIcon
                             icon={
                               userEvents.includes(event.id)
@@ -310,7 +328,8 @@ const AllEventsNew = () => {
                                 color: "white",
                                 alignText: "right",
                               }}
-                              id="event-name">
+                              id="event-name"
+                            >
                               {event.title}
                             </h4>
                           </Nav.Link>

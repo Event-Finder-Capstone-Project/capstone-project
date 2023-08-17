@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const BackButton = () => {
   const location = useLocation();
@@ -8,10 +8,11 @@ const BackButton = () => {
   const queryParams = new URLSearchParams(location.search);
   const filter = queryParams.get("filter");
   const page = queryParams.get("page");
+  const navigate = useNavigate();
+
 
   const handleBack = () => {
-    const backUrl = `/?filter=${filter}&page=${page}`;
-    window.location.href = backUrl;
+      navigate(-1);
   };
 
   return (
