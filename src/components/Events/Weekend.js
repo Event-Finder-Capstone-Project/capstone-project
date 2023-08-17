@@ -20,14 +20,13 @@ import PrevNext from "./PrevNext";
 import "../style/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const Weekend = () => {
+const Weekend = ({eventsData}) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const filterParam = queryParams.get("filter");
   const pageParam = queryParams.get("page");
   const [filter, setFilter] = useState(filterParam || "");
   const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
-  const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [hoveredEventId, setHoveredEventId] = useState(null);
   const [rerender, setRerender] = useState(false);
@@ -113,17 +112,6 @@ const Weekend = () => {
   }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
 
   useEffect(() => {
-    const fetchEventsData = async () => {
-      try {
-        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
-        const eventsData = eventsQuerySnapshot.docs.map(
-          (doc) => doc.data().type
-        );
-        setEventsData(eventsData);
-      } catch (error) {
-        console.error("Error fetching events data:", error);
-      }
-    };
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
         const userDocRef = doc(db, "users", auth.currentUser.uid);
@@ -136,7 +124,6 @@ const Weekend = () => {
         setUserEvents(savedEventIds || []);
       }
     };
-    fetchEventsData();
     fetchUserEvents();
   }, []);
 

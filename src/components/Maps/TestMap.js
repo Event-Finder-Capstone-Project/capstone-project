@@ -17,7 +17,8 @@ export default function TestMap() {
   });
 
   const events = useSelector(selectEvents);
-  const searchEvents = useSelector((state) => state.search.events);
+  const searchEvents= useSelector((state) => state.search.events);
+
   const selectedEventId = useSelector((state) => state.hoverId);
 
   const [selectedEvent, setSelectedEvent] = useState(null);
