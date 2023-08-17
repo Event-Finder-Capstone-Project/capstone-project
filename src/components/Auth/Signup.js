@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
-import { auth, googleProvider, db } from "../../firebase";
-import { doc, setDoc } from "firebase/firestore";
-
+import { auth, googleProvider,db } from "../../firebase";
+import { doc, setDoc ,getDoc} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
+  GoogleAuthProvider
 } from "firebase/auth";
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 
@@ -67,9 +67,18 @@ export default function Signup() {
   }
 
   const signInWithGoogle = async () => {
+    const googleProvider = new GoogleAuthProvider();
     try {
       const { user } = await signInWithPopup(auth, googleProvider);
 
+    // You can customize the behavior after successful login here
+    console.log("Successfully signed in with Google:", user);
+
+    // If you want to check if the user is new or existing and perform additional actions, you can do so here
+    const userRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(userRef);
+
+    if (!docSnap.exists()) {
       const name = user.displayName || "No Name";
 
       // Update the user's profile with their name (regardless of whether it's a new user)
@@ -80,13 +89,16 @@ export default function Signup() {
         id: user.uid,
         name: name,
         email: user.email,
-        // Add any additional user data you want to store in the collection
       };
 
       // Use setDoc to explicitly specify the document ID (user's uid) in the "users" collection
       await setDoc(doc(db, "users", user.uid), userData);
-
       navigate("/user-details");
+    } else {
+      // User is existing, perform any necessary actions for existing users
+      console.log("Existing user, performing login...");
+      navigate("/");
+    }
     } catch (err) {
       setError("Failed to sign in with Google: " + err.message);
     }
