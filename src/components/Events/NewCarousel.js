@@ -11,7 +11,15 @@ const NewCarousel = () => {
     .slice(0, 4);
 
   return (
-    <Container style={{ width: "100%", height: "40%" }}>
+    <Container
+      style={{
+        width: "97%",
+        height: "40%",
+        backgroundColor: "slategray",
+        opacity: "80%",
+        marginRight: "1%",
+      }}
+    >
       <Carousel data-bs-theme="dark" className="d-none d-md-block">
         {sortedEvents.map((event, index) => (
           <Carousel.Item key={index}>

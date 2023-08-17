@@ -12,12 +12,7 @@ const BackButton = () => {
 
 
   const handleBack = () => {
-    if (filter && page) {
-    const backUrl = `/?filter=${filter}&page=${page}` 
-    window.location.href = backUrl; }
-    else  {
-      navigate(-1); 
-    }
+      navigate(-1);
   };
 
   return (
