@@ -3,7 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
-import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
+import {
+  selectedHoveredEventId,
+  clearHoveredEventId,
+} from "../../store/hoverSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
@@ -202,28 +205,42 @@ const AllEventsNew = () => {
         className="all-events-container"
         id="all-events-container"
         style={{
-          marginTop: "3rem",
+          marginTop: "1rem",
           minWidth: "100%",
         }}
       >
-        <Container style={{ width: "15%" }}>
-          <FloatingLabel label="Event Type" className="filter-container">
-            <Form.Select
-              style={{}}
-              value={filter}
-              onChange={(e) => {
-                handleFilterChange(e.target.value);
-                navigate(`/?filter=${e.target.value}`);
-              }}
-            >
-              <option value="">None</option>
-              {eventsData.map((eventType) => (
-                <option key={eventType} value={eventType}>
-                  {eventType}
-                </option>
-              ))}
-            </Form.Select>
-          </FloatingLabel>
+        <Container
+          className="filter"
+          style={{
+            marginTop: ".3rem",
+            marginBottom: "1rem",
+            marginLeft: ".5rem",
+          }}
+        >
+          <Form.Label
+            style={{
+              width: "100px",
+              fontSize: "18px",
+              paddingTop: "5px",
+              whiteSpace: "nowrap",
+              marginRight: ".7rem",
+            }}
+          >
+            Event Type
+          </Form.Label>
+          <Form.Select
+            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
+            variant="light"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="">None</option>
+            {eventsData.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
+          </Form.Select>
         </Container>
 
         <Container>

@@ -17,6 +17,7 @@ import {
   SearchResults,
   Today,
   Weekend,
+  NavBarTwo,
 } from "./";
 import { setCityState, setLocation } from "../store/locationSlice";
 import mitt from "mitt";
@@ -57,7 +58,7 @@ function App() {
 
   return (
     <Router>
-      <NavBar />
+      <NavBarTwo />
       <Container>
         {userLoggedIn ? (
           <div className="w-100 mb-3">

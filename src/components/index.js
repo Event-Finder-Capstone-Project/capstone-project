@@ -5,6 +5,7 @@ export { default as UserEvents } from "./Users/UserEvents";
 export { default as UserProfile } from "./Users/UserProfile";
 export { default as Search } from "./NavBar/Search";
 export { default as NavBar } from "./NavBar/NavBar";
+export { default as NavBarTwo } from "./NavBar/NavBarTwo";
 export { default as DatePicker } from "./NavBar/SearchComponents/DatePicker";
 export { default as PostalCode } from "./NavBar/SearchComponents/PostalCode";
 export { default as SearchBar } from "./NavBar/SearchComponents/SearchBar";
