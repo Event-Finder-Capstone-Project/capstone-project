@@ -5,9 +5,9 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import { getSingleEvent } from "../../store/singleEventSlice";
 import BigCalendar from "./BigCalendar";
-import { Button, Image, Container, Row, Col } from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
 
-const UserEvents = () => {
+const UserEventsTwo = () => {
   const user = auth.currentUser;
   const savedEventIds = useSelector((state) => state.events);
   const dispatch = useDispatch();
@@ -122,33 +122,75 @@ const UserEvents = () => {
 
   return (
     <div>
-      <h1>Your Saved Events</h1>
-      <ul>
-        {user
-          ? loginUserEvents.map((event) => (
-              <li key={event.id}>
-                <h3>{event.title}</h3>
-                <p>Date: {event.datetime_utc}</p>
-                <p>Venue: {event.venue?.name_v2}</p>
-                <button onClick={() => handleDeleteLoginUserEvent(event.id)}>
-                  Remove
-                </button>
-              </li>
-            ))
-          : savedEvents.map((event) => (
-              <li key={event.id}>
-                <h3>{event.title}</h3>
-                <p>Date: {event.datetime_utc}</p>
-                <p>Venue: {event.venue?.name_v2}</p>
-                <button onClick={() => handleDeleteEvent(event.id)}>
-                  Remove
-                </button>
-              </li>
-            ))}
-      </ul>
-      <BigCalendar savedEvents={user ? loginUserEvents : savedEvents} />
+      <h1 style={{ marginBottom: "2rem", marginTop: "1rem" }}>
+        Your NEW Saved Events
+      </h1>
+      <Container>
+        <Row xs={1} md={1} lg={1} xl={2} className="user-events-container">
+          <Row xs={2} md={2} lg={2} xl={1}>
+            {user
+              ? loginUserEvents.map((event) => (
+                  <div style={{ display: "flex", alignItems: "stretch" }}>
+                    <Container
+                      style={{
+                        marginBottom: "1rem",
+                        columnGap: "1rem",
+                        backgroundColor: "slategray",
+                      }}
+                      key={event.id}
+                    >
+                      <h3>{event.title}</h3>
+                      <h5>Date: {event.datetime_utc}</h5>
+                      <h6>Venue: {event.venue?.name_v2}</h6>
+
+                      <Button
+                        style={{
+                          backgroundColor: "darkorange",
+                          color: "black",
+                          border: "none",
+                          marginBottom: ".5rem",
+                        }}
+                        onClick={() => handleDeleteLoginUserEvent(event.id)}
+                      >
+                        Remove
+                      </Button>
+                    </Container>{" "}
+                  </div>
+                ))
+              : savedEvents.map((event) => (
+                  <div style={{ display: "flex", alignItems: "stretch" }}>
+                    <Container
+                      style={{
+                        marginBottom: "1rem",
+                        columnGap: "1rem",
+                        backgroundColor: "slategray",
+                      }}
+                      key={event.id}
+                    >
+                      <h3>{event.title}</h3>
+                      <h5>Date: {event.datetime_utc}</h5>
+                      <h6>Venue: {event.venue?.name_v2}</h6>
+
+                      <Button
+                        style={{
+                          backgroundColor: "darkorange",
+                          color: "black",
+                          border: "none",
+                          marginBottom: ".5rem",
+                        }}
+                        onClick={() => handleDeleteEvent(event.id)}
+                      >
+                        Remove
+                      </Button>
+                    </Container>{" "}
+                  </div>
+                ))}
+          </Row>
+          <BigCalendar savedEvents={user ? loginUserEvents : savedEvents} />
+        </Row>
+      </Container>
     </div>
   );
 };
 
-export default UserEvents;
+export default UserEventsTwo;

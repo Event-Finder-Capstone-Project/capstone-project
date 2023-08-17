@@ -5,9 +5,8 @@ import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "../style/BigCalendar.css"
+import "../style/BigCalendar.css";
 
 const locales = {
   "en-US": require("date-fns/locale/en-US"),
@@ -21,8 +20,8 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-
 const BigCalendar = ({ savedEvents }) => {
+
     const [allEvents, setAllEvents] = useState([]);
   
     useEffect(() => {
@@ -54,16 +53,17 @@ const BigCalendar = ({ savedEvents }) => {
       localStorage.setItem("calendar", JSON.stringify(allEvents));
     }, [allEvents]);
   
-  
+ 
   return (
     <div className="App">
-      <h1>Event Calendar</h1>
+      {/* <h3>Event Calendar</h3> */}
       <Calendar
         localizer={localizer}
         events={allEvents}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: 500, margin: "50px" }}
+        className="stickyCalendar"
+        style={{ height: 500 }}
       />
     </div>
   );
