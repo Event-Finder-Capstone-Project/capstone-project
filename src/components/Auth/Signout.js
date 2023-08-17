@@ -16,7 +16,7 @@ const Signout = () => {
   };
 
   return (
-    <div className="form-container" style={{ marginTop: "1rem" }}>
+    <div className="form-container" style={{ marginRight: "1rem" }}>
       <Button
         variant="secondary"
         size="sm"

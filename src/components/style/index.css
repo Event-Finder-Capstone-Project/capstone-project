@@ -116,7 +116,7 @@
   }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 675px) {
   .navbar {
     display: flex;
     flex-direction: column;
@@ -131,7 +131,7 @@
   }
 }
 
-@media (min-width: 651px) {
+@media (min-width: 676px) {
   .searchBars {
     display: flex;
     flex-direction: row;
@@ -139,6 +139,24 @@
 
   .navBrand {
     margin-left: 2rem;
-    margin-right: 0.5rem;
+    margin-right: 2rem;
+  }
+  .navbar-links {
+    display: flex;
+    flex-direction: row;
+    margin-right: 2rem;
+  }
+  .navlink {
+    margin-right: 1rem;
+  }
+  .entire-nabvar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
   }
 }
