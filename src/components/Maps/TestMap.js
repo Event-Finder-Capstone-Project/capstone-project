@@ -56,13 +56,15 @@ export default function TestMap() {
       </Container>
     );
 
+    const eventsToMap = searchEvents.length ? searchEvents : events;
+
   return (
     <Container>
       <GoogleMap
         zoom={10}
         center={{ lat: lat, lng: lng }}
         mapContainerClassName="google-map-container">
-        {events.map((marker) => (
+        {eventsToMap.map((marker) => (
           <MarkerF
             key={`${marker.id}-${keyCounter}`}
             position={{
