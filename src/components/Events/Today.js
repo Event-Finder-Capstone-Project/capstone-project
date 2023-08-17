@@ -22,10 +22,9 @@ import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
 import "../style/index.css";
 
-const Today = () => {
+const Today = ({eventsData}) => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
-  const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [hoveredEventId, setHoveredEventId] = useState(null);
   const [rerender, setRerender] = useState(false);
@@ -88,17 +87,6 @@ const Today = () => {
   }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
   
   useEffect(() => {
-    const fetchEventsData = async () => {
-      try {
-        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
-        const eventsData = eventsQuerySnapshot.docs.map(
-          (doc) => doc.data().type
-        );
-        setEventsData(eventsData);
-      } catch (error) {
-        console.error("Error fetching events data:", error);
-      }
-    };
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
         const userDocRef = doc(db, "users", auth.currentUser.uid);
@@ -111,7 +99,6 @@ const Today = () => {
         setUserEvents(savedEventIds || []);
       }
     };
-    fetchEventsData();
     fetchUserEvents();
   }, []);
 

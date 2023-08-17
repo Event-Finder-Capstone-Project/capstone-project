@@ -1,6 +1,5 @@
 import React from "react";
 
-
 const SearchBar = ({ onSubmit} ) => {
  const handleQueryChange = (e) => {
     onSubmit(e.target.value);

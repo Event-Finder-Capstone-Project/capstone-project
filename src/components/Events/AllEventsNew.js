@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
-import { handleEvents, handleEventAsync} from "../../store/eventsSlice";
-import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
+import {
+  selectedHoveredEventId,
+  clearHoveredEventId,
+} from "../../store/hoverSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
@@ -23,8 +26,8 @@ import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
-const AllEventsNew = () => { 
-  const [eventsData, setEventsData] = useState([]);
+const AllEventsNew = ({eventsData}) => {
+  // const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
   const [hoveredEventId, setHoveredEventId] = useState(null);
@@ -35,7 +38,7 @@ const AllEventsNew = () => {
   const queryParams = new URLSearchParams(location.search);
   const filterParam = queryParams.get("filter");
   const pageParam = queryParams.get("page");
-  const [filter, setFilter] = useState(filterParam || ""); 
+  const [filter, setFilter] = useState(filterParam || "");
   const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
   const navigate = useNavigate();
   const [scrollToEvents, setScrollToEvents] = useState(false);
@@ -48,14 +51,13 @@ const AllEventsNew = () => {
     const handleScroll = () => {
       localStorage.setItem("scrollPosition", window.scrollY);
     };
-  
+
     window.addEventListener("scroll", handleScroll);
-  
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  
 
   useEffect(() => {
     if (filter === "") {
@@ -71,11 +73,11 @@ const AllEventsNew = () => {
       eventEmitter.off("cityChanged", cityChangedListener);
     };
   }, [rerender]);
- 
+
   const events = useSelector(selectEvents);
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
-  const scrollPosition = localStorage.getItem("scrollPosition"); 
+  const scrollPosition = localStorage.getItem("scrollPosition");
 
   useEffect(() => {
     if (storedCity && storedState) {
@@ -91,7 +93,8 @@ const AllEventsNew = () => {
         })
       );
       if (scrollPosition) {
-        window.scrollTo(0, scrollPosition);}
+        window.scrollTo(0, scrollPosition);
+      }
     } else {
       dispatch(
         getAllEvents({
@@ -102,23 +105,27 @@ const AllEventsNew = () => {
         })
       );
       if (scrollPosition) {
-        window.scrollTo(0, scrollPosition);}
+        window.scrollTo(0, scrollPosition);
+      }
     }
   }, [dispatch, filter, page, latitude, longitude, storedCity, storedState]);
 
-  useEffect(() => {
-    const fetchEventsData = async () => {
-      try {
-        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
-        const eventsData = eventsQuerySnapshot.docs.map(
-          (doc) => doc.data().type
-        );
-        setEventsData(eventsData);
-      } catch (error) {
-        console.error("Error fetching events data:", error);
-      }
-    };
 
+  useEffect(() => {
+    // // fetch events data from firebase
+    // const fetchEventsData = async () => {
+    //   try {
+    //     const eventsQuerySnapshot = await getDocs(collection(db, "events"));
+    //     const eventsData = eventsQuerySnapshot.docs.map(
+    //       (doc) => doc.data().type
+    //     );
+    //     setEventsData(eventsData);
+    //   } catch (error) {
+    //     console.error("Error fetching events data:", error);
+    //   }
+    // };
+
+    //login user fetch data from firebase, and guest fetch from local storage
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
         const userDocRef = doc(db, "users", auth.currentUser.uid);
@@ -131,7 +138,7 @@ const AllEventsNew = () => {
         setUserEvents(savedEventIds || []);
       }
     };
-    fetchEventsData();
+    // fetchEventsData();
     fetchUserEvents();
   }, []);
 
@@ -154,13 +161,13 @@ const AllEventsNew = () => {
     if (scrollToEvents) {
       const eventsContainer = document.getElementById("all-events-container");
       eventsContainer.scrollIntoView({ behavior: "smooth" });
-      setScrollToEvents(false); 
+      setScrollToEvents(false);
     }
   }, [scrollToEvents]);
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
-    setPage(1); 
+    setPage(1);
   };
 
   const handlePreviousPage = () => {
@@ -181,11 +188,12 @@ const AllEventsNew = () => {
     setScrollToEvents(true);
   };
 
+  // set state when hover on event card
   const handleMouseEnter = (eventId) => {
     setHoveredEventId(eventId);
     dispatch(selectedHoveredEventId(eventId));
   };
-
+// set state when hover off event card
   const handleMouseLeave = () => {
     setHoveredEventId(null);
     dispatch(clearHoveredEventId());
@@ -204,8 +212,7 @@ const AllEventsNew = () => {
         style={{
           marginTop: "3rem",
           minWidth: "100%",
-        }}
-      >
+        }}>
         <Container style={{ width: "15%" }}>
           <FloatingLabel label="Event Type" className="filter-container">
             <Form.Select
@@ -214,8 +221,7 @@ const AllEventsNew = () => {
               onChange={(e) => {
                 handleFilterChange(e.target.value);
                 navigate(`/?filter=${e.target.value}&page=1`);
-              }}
-            >
+              }}>
               <option value="">None</option>
               {eventsData.map((eventType) => (
                 <option key={eventType} value={eventType}>
@@ -245,15 +251,12 @@ const AllEventsNew = () => {
                         marginBottom: "2rem",
                         minWidth: "100%",
                         backgroundColor: "slategray",
-                      }}
-                    >
-                     <LinkContainer
-  to={{
-    pathname: `/events/${event.id}`,
-    search: `?filter=${filter}&page=${page}`
-  }}
->
-
+                      }}>
+                      <LinkContainer
+                        to={{
+                          pathname: `/events/${event.id}`,
+                          search: `?filter=${filter}&page=${page}`,
+                        }}>
                         <Nav.Link>
                           <Col>
                             <img
@@ -328,8 +331,7 @@ const AllEventsNew = () => {
 
         <Container
           className="d-flex justify-content-center"
-          style={{ alignContent: "center", marginTop: "2rem" }}
-        >
+          style={{ alignContent: "center", marginTop: "2rem" }}>
           <PrevNext
             currentPage={page}
             totalPages={totalPages}

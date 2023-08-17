@@ -9,23 +9,25 @@ const Search = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+
   const handleSetQuery = (query) => {
     setLocalQuery(query);
   };
 
+
   const handleSearchSubmit = () => {
     dispatch(setQuery(localQuery));
-    navigate("/searchresults");
-  };
-
-  return (
-    <>
-      <div>
-        <SearchBar onSubmit={handleSetQuery} />
-        <button onClick={handleSearchSubmit}>Submit</button>
-      </div>
-    </>
-  );
-};
+        navigate("/searchresults");
+    };
+  
+    return (
+        <>
+        <div>
+        <SearchBar onSubmit={handleSetQuery}/>
+          <button onClick={handleSearchSubmit}>Submit</button>
+          </div>
+        </>
+      );
+    }
 
 export default Search;

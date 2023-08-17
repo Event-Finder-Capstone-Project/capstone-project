@@ -24,10 +24,9 @@ import PrevNext from "./PrevNext";
 import { TestMap} from "../";
 import "../style/index.css";
 
-const SearchResults = () => {
+const SearchResults = ({eventsData}) => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
-  const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [hoveredEventId, setHoveredEventId] = useState(null);
   const searchState = useSelector((state) => state.search);
@@ -74,22 +73,6 @@ const SearchResults = () => {
     };
     fetchUserEvents();
   }, []);
-
-  useEffect(() => {
-    const fetchEventsData = async () => {
-      try {
-        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
-        const eventsData = eventsQuerySnapshot.docs.map(
-          (doc) => doc.data().type
-        );
-        setEventsData(eventsData);
-      } catch (error) {
-        console.error("Error fetching events data:", error);
-      }
-    };
-    fetchEventsData();
-  }, []);
-
 
   //handle add and remove event use icon
   const handleAddEvents = (eventId) => {
