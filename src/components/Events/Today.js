@@ -3,53 +3,55 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { getAllEvents, selectEvents } from "../../store/allEventsSlice";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
-import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
+import {
+  selectedHoveredEventId,
+  clearHoveredEventId,
+} from "../../store/hoverSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import { useLoadScript } from "@react-google-maps/api";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-import {
-  Nav,
-  Row,
-  Container,
-  Button,
-  Col,
-} from "react-bootstrap";
+import { Nav, Row, Container, Button, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
 import "../style/index.css";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Today = ({eventsData}) => {
-  const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState("");
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const filterParam = queryParams.get("filter");
+  const pageParam = queryParams.get("page");
+  const [filter, setFilter] = useState(filterParam || "");
+  const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
   const [userEvents, setUserEvents] = useState([]);
   const [hoveredEventId, setHoveredEventId] = useState(null);
   const [rerender, setRerender] = useState(false);
   const savedEventIds = useSelector((state) => state.events);
-  const dispatch = useDispatch();
   const totalEvents = useSelector((state) => state.allEvents.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
-
-  useEffect(() => {
-    const cityChangedListener = (data) => {
-      setRerender(!rerender);
-    };
-
-    eventEmitter.on("cityChanged", cityChangedListener);
-
-    return () => {
-      eventEmitter.off("cityChanged", cityChangedListener);
-    };
-  }, [rerender]);
-
+  const [scrollToEvents, setScrollToEvents] = useState(false);
   const events = useSelector(selectEvents);
   const latitude = useSelector((state) => state.location.latitude);
   const longitude = useSelector((state) => state.location.longitude);
   const storedCity = localStorage.getItem("userCity");
   const storedState = localStorage.getItem("userState");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const cityChangedListener = (data) => {
+      setRerender(!rerender);
+    };
+    eventEmitter.on("cityChanged", cityChangedListener);
+    return () => {
+      eventEmitter.off("cityChanged", cityChangedListener);
+    };
+  }, [rerender]);
+
   useEffect(() => {
     if ((storedCity && storedState) || (latitude && longitude)) {
       const startDate = new Date();
@@ -79,7 +81,6 @@ const Today = ({eventsData}) => {
             longitude: longitude,
           };
         }
-        console.log("event data: ", eventDataParams);
         dispatch(getAllEvents(eventDataParams));
       };
       fetchEventData();
@@ -100,7 +101,7 @@ const Today = ({eventsData}) => {
       }
     };
     fetchUserEvents();
-  }, []);
+  }, [filter, page]);
 
   //handle add and remove event use icon
   const handleAddEvents = (eventId) => {
@@ -117,37 +118,51 @@ const Today = ({eventsData}) => {
     }
   };
 
-  const handleFilter = () => {
-    setPage(1);
-    dispatch(getAllEvents({ type: filter, page: 1 }));
-  };
-
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
+    navigate(`/today?filter=${filter}&page=${pageNumber}`);
+    setScrollToEvents(true);
   };
 
   const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
+    const newPage = Math.max(page - 1, 1);
+    setPage(newPage);
+    navigate(`/today?filter=${filter}&page=${newPage}`);
+    setScrollToEvents(true);
   };
 
   const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
+    const newPage = page + 1;
+    setPage(newPage);
+    navigate(`/today?filter=${filter}&page=${newPage}`);
+    setScrollToEvents(true);
   };
-
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: ["places"],
-  });
 
   const handleMouseEnter = (eventId) => {
     setHoveredEventId(eventId);
     dispatch(selectedHoveredEventId(eventId));
   };
 
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setPage(1);
+  };
+
   const handleMouseLeave = () => {
     setHoveredEventId(null);
     dispatch(clearHoveredEventId());
   };
+
+  const eventsContainer = document.getElementById("all-events-container");
+
+  useEffect(() => {
+    if (scrollToEvents) {
+      if (eventsContainer) {
+        eventsContainer.scrollIntoView({ behavior: "smooth" });
+      }
+      setScrollToEvents(false);
+    }
+  }, [scrollToEvents, eventsContainer]);
 
   return (
     <>
@@ -159,7 +174,8 @@ const Today = ({eventsData}) => {
         fluid="lg"
         class="text-center"
         className="all-events-container"
-        style={{ marginTop: "3rem" }}>
+        style={{ marginTop: "1rem" }}
+      >
         <div className="filter-container">
           <Container
             style={{
@@ -168,18 +184,24 @@ const Today = ({eventsData}) => {
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
-            }}>
+            }}
+          >
             <h5
               style={{
                 paddingTop: ".3rem",
                 marginRight: "1rem",
-              }}>
+              }}
+            >
               Event Type
             </h5>
             <select
               style={{ height: "35px" }}
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}>
+              onChange={(e) => {
+                handleFilterChange(e.target.value);
+                navigate(`/today?filter=${e.target.value}&page=1`);
+              }}
+            >
               <option value="">None</option>
               {eventsData.map((eventType) => (
                 <option key={eventType} value={eventType}>
@@ -195,7 +217,9 @@ const Today = ({eventsData}) => {
               <TestMap />
             </Col>
             <Col style={{ position: "relative" }}>
-              <Container>
+              <Container
+               id="all-events-container"
+               >
                 {events?.length ? (
                   events.map((event) => (
                     <Row
@@ -207,8 +231,14 @@ const Today = ({eventsData}) => {
                         marginBottom: "2rem",
                         minWidth: "100%",
                         backgroundColor: "slategray",
-                      }}>
-                      <LinkContainer to={`/events/${event.id}`}>
+                      }}
+                    >
+                      <LinkContainer
+                        to={{
+                          pathname: `/events/${event.id}`,
+                          search: `?filter=${filter}&page=${page}`,
+                        }}
+                      >
                         <Nav.Link>
                           <Col>
                             <img
@@ -240,14 +270,16 @@ const Today = ({eventsData}) => {
                           alignText: "right",
                           overflow: "hidden",
                           justifyContent: "space-between",
-                        }}>
+                        }}
+                      >
                         <Button
                           variant="outline"
                           style={{
                             border: "none",
                             fontSize: "32px",
                           }}
-                          onClick={() => handleAddEvents(event.id)}>
+                          onClick={() => handleAddEvents(event.id)}
+                        >
                           <FontAwesomeIcon
                             icon={
                               userEvents.includes(event.id)
@@ -264,7 +296,8 @@ const Today = ({eventsData}) => {
                                 color: "white",
                                 alignText: "right",
                               }}
-                              id="event-name">
+                              id="event-name"
+                            >
                               {event.title}
                             </h4>
                           </Nav.Link>
@@ -282,7 +315,8 @@ const Today = ({eventsData}) => {
       </Container>
       <Container
         className="d-flex justify-content-center"
-        style={{ marginTop: "2rem" }}>
+        style={{ marginTop: "2rem" }}
+      >
         <PrevNext
           currentPage={page}
           totalPages={totalPages}

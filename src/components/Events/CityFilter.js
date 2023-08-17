@@ -5,6 +5,8 @@ import { setCity, setCoords } from "../../store/searchSlice";
 import { eventEmitter } from "../App";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { InputGroup, Form, Button } from "react-bootstrap";
+import "../style/index.css";
 
 const CityFilter = () => {
   const [selectedPlace, setSelectedPlace] = useState(null);
@@ -90,7 +92,7 @@ const CityFilter = () => {
 
   return (
     <>
-      <div>
+      <div style={{ width: "200px", marginTop: "1rem", marginRight: ".5rem" }}>
         <Autocomplete
           apiKey={process.env.REACT_APP_FIREBASE_API_KEY}
           onPlaceSelected={handlePlaceSelected}
@@ -101,9 +103,14 @@ const CityFilter = () => {
           }}
         />
 
-        <button onClick={askForLocation}>
+        <Button
+          variant="secondary"
+          size="sm"
+          style={{ width: "189px" }}
+          onClick={askForLocation}
+        >
           <FontAwesomeIcon icon={faLocationDot} /> Use Current Location
-        </button>
+        </Button>
       </div>
     </>
   );
