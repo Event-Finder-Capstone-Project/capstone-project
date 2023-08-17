@@ -21,6 +21,7 @@ import "../style/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Today = () => {
+  const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const filterParam = queryParams.get("filter");
   const pageParam = queryParams.get("page");
@@ -41,7 +42,6 @@ const Today = () => {
   const storedState = localStorage.getItem("userState");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation();
 
   useEffect(() => {
     const cityChangedListener = (data) => {
