@@ -112,20 +112,6 @@ const AllEventsNew = ({eventsData}) => {
 
 
   useEffect(() => {
-    // // fetch events data from firebase
-    // const fetchEventsData = async () => {
-    //   try {
-    //     const eventsQuerySnapshot = await getDocs(collection(db, "events"));
-    //     const eventsData = eventsQuerySnapshot.docs.map(
-    //       (doc) => doc.data().type
-    //     );
-    //     setEventsData(eventsData);
-    //   } catch (error) {
-    //     console.error("Error fetching events data:", error);
-    //   }
-    // };
-
-    //login user fetch data from firebase, and guest fetch from local storage
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
         const userDocRef = doc(db, "users", auth.currentUser.uid);
