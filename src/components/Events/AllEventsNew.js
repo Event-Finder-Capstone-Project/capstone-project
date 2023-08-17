@@ -232,7 +232,10 @@ const AllEventsNew = () => {
             style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
             variant="light"
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(e) => {
+              handleFilterChange(e.target.value);
+              navigate(`/?filter=${e.target.value}`);
+            }}
           >
             <option value="">None</option>
             {eventsData.map((eventType) => (
