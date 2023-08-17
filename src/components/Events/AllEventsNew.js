@@ -26,8 +26,7 @@ import {
   Button,
 } from "react-bootstrap";
 
-
-const AllEventsNew = ({eventsData}) => {
+const AllEventsNew = ({ eventsData }) => {
   const [userEvents, setUserEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
   const [hoveredEventId, setHoveredEventId] = useState(null);
@@ -49,7 +48,7 @@ const AllEventsNew = ({eventsData}) => {
   const scrollPosition = localStorage.getItem("scrollPosition");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     if (filter === "") {
       dispatch(getAllEvents({ type: filter }));
@@ -96,7 +95,6 @@ const AllEventsNew = ({eventsData}) => {
       }
     }
   }, [dispatch, filter, page, latitude, longitude, storedCity, storedState]);
-
 
   useEffect(() => {
     const fetchUserEvents = async () => {
@@ -178,7 +176,7 @@ const AllEventsNew = ({eventsData}) => {
     setHoveredEventId(eventId);
     dispatch(selectedHoveredEventId(eventId));
   };
-// set state when hover off event card
+  // set state when hover off event card
   const handleMouseLeave = () => {
     setHoveredEventId(null);
     dispatch(clearHoveredEventId());
@@ -340,7 +338,8 @@ const AllEventsNew = ({eventsData}) => {
 
         <Container
           className="d-flex justify-content-center"
-          style={{ alignContent: "center", marginTop: "2rem" }}>
+          style={{ alignContent: "center" }}
+        >
           <PrevNext
             currentPage={page}
             totalPages={totalPages}
