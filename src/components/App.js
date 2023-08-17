@@ -118,7 +118,7 @@ function App() {
                 <Route path="/events/:id" element={<SingleEvent />} />
                 <Route path="/myevents" element={<UserEventsTwo />} />
                 <Route path="/thisweekend" element={<Weekend />} />
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Home eventsData={eventsData} />} />
                 <Route path="/searchresults" element={<SearchResults />} />
               </Routes>
             </div>
