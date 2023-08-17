@@ -30,7 +30,7 @@ const BigCalendar = ({ savedEvents }) => {
         .filter(event => event !== undefined && event.status !== 400)
         .map(event => {
       const startDate = new Date(event.datetime_utc);
-      const endDate = new Date(startDate.getTime() + (2 * 60 * 60 * 1000)); // add 2 hours in milliseconds
+      const endDate = new Date(startDate.getTime() + (2 * 60 * 60 * 1000));
 
       return {
         id: event.id,
