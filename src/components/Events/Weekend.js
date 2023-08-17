@@ -8,10 +8,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-
 import { Nav, Row, Container, Button, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { TestMap, NewCarousel, Carousel } from "../";
+import { TestMap } from "../";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
 import "../style/index.css";
@@ -22,7 +21,7 @@ const Weekend = () => {
   const queryParams = new URLSearchParams(location.search);
   const filterParam = queryParams.get("filter");
   const pageParam = queryParams.get("page");
-  const [filter, setFilter] = useState(filterParam || ""); 
+  const [filter, setFilter] = useState(filterParam || "");
   const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
@@ -34,8 +33,10 @@ const Weekend = () => {
   const totalPages = Math.ceil(totalEvents / 8);
   const savedEventIds = useSelector((state) => state.events);
   const [scrollToEvents, setScrollToEvents] = useState(false);
+  const events = useSelector(selectEvents);
+  const latitude = useSelector((state) => state.location.latitude);
+  const longitude = useSelector((state) => state.location.longitude);
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -59,18 +60,6 @@ const Weekend = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const events = useSelector(selectEvents);
-  const latitude = useSelector((state) => state.location.latitude);
-  const longitude = useSelector((state) => state.location.longitude);
-
-  /* useEffect(() => {
-    if (scrollToEvents) {
-      const eventsContainer = document.getElementById("all-events-container");
-      eventsContainer.scrollIntoView({ behavior: "smooth" });
-      setScrollToEvents(false); 
-    }
-  }, [scrollToEvents]); */
 
   useEffect(() => {
     if ((storedCity && storedState) || (latitude && longitude)) {
@@ -167,7 +156,6 @@ const Weekend = () => {
     navigate(`/?thisweekend=${filter}&page=${pageNumber}`);
     setScrollToEvents(true);
   };
-  
 
   const handlePreviousPage = () => {
     const newPage = Math.max(page - 1, 1);
@@ -178,14 +166,14 @@ const Weekend = () => {
 
   const handleNextPage = () => {
     const newPage = page + 1;
-  setPage(newPage);
-  navigate(`/thisweekend?filter=${filter}&page=${newPage}`);
-  setScrollToEvents(true);
+    setPage(newPage);
+    navigate(`/thisweekend?filter=${filter}&page=${newPage}`);
+    setScrollToEvents(true);
   };
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
-    setPage(1); 
+    setPage(1);
   };
 
   const handleMouseEnter = (eventId) => {
@@ -307,7 +295,8 @@ const Weekend = () => {
                             border: "none",
                             fontSize: "32px",
                           }}
-                          onClick={() => handleAddEvents(event.id)}>
+                          onClick={() => handleAddEvents(event.id)}
+                        >
                           <FontAwesomeIcon
                             icon={
                               userEvents.includes(event.id)
