@@ -13,6 +13,7 @@ import {
   Home,
   UserDetails,
   UserEvents,
+  UserEventsTwo,
   UserProfile,
   SearchResults,
   Today,
@@ -68,7 +69,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />
               <Route path="/thisweekend" element={<Weekend />} />
-              <Route path="/myevents" element={<UserEvents />} />
+              <Route path="/myevents" element={<UserEventsTwo />} />
               <Route path="/today" element={<Today />} />
               <Route
                 path="/user-details"

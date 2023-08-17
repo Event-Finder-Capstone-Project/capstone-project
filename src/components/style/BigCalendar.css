@@ -1,13 +1,19 @@
 /* Change the text color of the month header */
 .rbc-off-range-bg {
-   background: #535253;
+  background: #535253;
 }
 
-
 .rbc-today {
-    background-color: rgb(148, 145, 145)
+  background-color: rgb(148, 145, 145);
 }
 
 .rbc-event {
-    background-color: #ff914D;
+  background-color: #ff914d;
+}
+
+@media (min-width: 770px) {
+  .stickyCalendar {
+    position: sticky;
+    top: 0;
+  }
 }
