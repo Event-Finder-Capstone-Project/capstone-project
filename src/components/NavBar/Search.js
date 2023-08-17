@@ -11,9 +11,11 @@ const Search = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+
   const handleSetQuery = (query) => {
     setLocalQuery(query);
   };
+
 
   const handleSearchSubmit = () => {
     dispatch(setQuery(localQuery));
