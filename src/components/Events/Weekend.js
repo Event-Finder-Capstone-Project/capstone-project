@@ -8,17 +8,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-
 import { Nav, Row, Container, Button, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { TestMap, NewCarousel, Carousel } from "../";
+import { TestMap } from "../";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
 import "../style/index.css";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Weekend = () => {
-  const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState("");
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const filterParam = queryParams.get("filter");
+  const pageParam = queryParams.get("page");
+  const [filter, setFilter] = useState(filterParam || "");
+  const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [hoveredEventId, setHoveredEventId] = useState(null);
@@ -28,7 +32,11 @@ const Weekend = () => {
   const totalEvents = useSelector((state) => state.allEvents.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
   const savedEventIds = useSelector((state) => state.events);
-
+  const [scrollToEvents, setScrollToEvents] = useState(false);
+  const events = useSelector(selectEvents);
+  const latitude = useSelector((state) => state.location.latitude);
+  const longitude = useSelector((state) => state.location.longitude);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -52,10 +60,6 @@ const Weekend = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const events = useSelector(selectEvents);
-  const latitude = useSelector((state) => state.location.latitude);
-  const longitude = useSelector((state) => state.location.longitude);
 
   useEffect(() => {
     if ((storedCity && storedState) || (latitude && longitude)) {
@@ -147,21 +151,29 @@ const Weekend = () => {
     }
   };
 
-  const handleFilter = () => {
-    setPage(1);
-    dispatch(getAllEvents({ type: filter, page: 1 }));
-  };
-
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
+    navigate(`/?thisweekend=${filter}&page=${pageNumber}`);
+    setScrollToEvents(true);
   };
 
   const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
+    const newPage = Math.max(page - 1, 1);
+    setPage(newPage);
+    navigate(`/thisweekend?filter=${filter}&page=${newPage}`);
+    setScrollToEvents(true);
   };
 
   const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
+    const newPage = page + 1;
+    setPage(newPage);
+    navigate(`/thisweekend?filter=${filter}&page=${newPage}`);
+    setScrollToEvents(true);
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setPage(1);
   };
 
   const handleMouseEnter = (eventId) => {
@@ -208,7 +220,10 @@ const Weekend = () => {
             <select
               style={{ height: "35px" }}
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}
+              onChange={(e) => {
+                handleFilterChange(e.target.value);
+                navigate(`/thisweekend?filter=${e.target.value}`);
+              }}
             >
               <option value="">None</option>
               {eventsData.map((eventType) => (
@@ -280,7 +295,8 @@ const Weekend = () => {
                             border: "none",
                             fontSize: "32px",
                           }}
-                          onClick={() => handleAddEvents(event.id)}>
+                          onClick={() => handleAddEvents(event.id)}
+                        >
                           <FontAwesomeIcon
                             icon={
                               userEvents.includes(event.id)
