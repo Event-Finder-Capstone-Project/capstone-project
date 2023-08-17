@@ -28,3 +28,22 @@
 .rbc-toolbar button.rbc-active {
   color: black;
 }
+
+.rbc-toolbar-label {
+  font-weight: bold;
+}
+
+@media (min-width: 770px) {
+  .stickyCalendar {
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (max-width: 770px) {
+  .rbc-toolbar {
+    justify-content: center;
+    flex-direction: column;
+    padding: 0%;
+  }
+}

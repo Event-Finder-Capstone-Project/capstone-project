@@ -5,7 +5,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import { getSingleEvent } from "../../store/singleEventSlice";
 import BigCalendar from "./BigCalendar";
-import { Button, Image, Container, Row, Col } from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
 
 const UserEventsTwo = () => {
   const user = auth.currentUser;
@@ -158,17 +158,32 @@ const UserEventsTwo = () => {
                   </div>
                 ))
               : savedEvents.map((event) => (
-                  <li key={event.id}>
-                    <h3>{event.title}</h3>
-                    <p>Date: {event.datetime_utc}</p>
-                    <p>Venue: {event.venue?.name_v2}</p>
-                    <Button
-                      variant="secondary"
-                      onClick={() => handleDeleteEvent(event.id)}
+                  <div style={{ display: "flex", alignItems: "stretch" }}>
+                    <Container
+                      style={{
+                        marginBottom: "1rem",
+                        columnGap: "1rem",
+                        backgroundColor: "slategray",
+                      }}
+                      key={event.id}
                     >
-                      Remove
-                    </Button>
-                  </li>
+                      <h3>{event.title}</h3>
+                      <h5>Date: {event.datetime_utc}</h5>
+                      <h6>Venue: {event.venue?.name_v2}</h6>
+
+                      <Button
+                        style={{
+                          backgroundColor: "darkorange",
+                          color: "black",
+                          border: "none",
+                          marginBottom: ".5rem",
+                        }}
+                        onClick={() => handleDeleteEvent(event.id)}
+                      >
+                        Remove
+                      </Button>
+                    </Container>{" "}
+                  </div>
                 ))}
           </Row>
           <BigCalendar savedEvents={user ? loginUserEvents : savedEvents} />
