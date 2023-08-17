@@ -21,33 +21,39 @@ const localizer = dateFnsLocalizer({
 });
 
 const BigCalendar = ({ savedEvents }) => {
-  const [allEvents, setAllEvents] = useState([]);
 
-  useEffect(() => {
-    const initialEvents = savedEvents
-      .filter((event) => event !== undefined && event.status !== 400)
-      .map((event) => ({
-        id: event.id, // assuming each savedEvent has a unique id
+    const [allEvents, setAllEvents] = useState([]);
+  
+    useEffect(() => {
+      const initialEvents = savedEvents
+        .filter(event => event !== undefined && event.status !== 400)
+        .map(event => {
+      const startDate = new Date(event.datetime_utc);
+      const endDate = new Date(startDate.getTime() + (2 * 60 * 60 * 1000));
+
+      return {
+        id: event.id,
         title: event.title,
-        start: new Date(event.datetime_utc),
-        end: new Date(event.datetime_utc),
-        allDay: true,
-      }));
+        start: startDate,
+        end: endDate,
+      };
+    });
 
-    setAllEvents(initialEvents);
-  }, [savedEvents]);
-
-  useEffect(() => {
-    const storedEvents = JSON.parse(localStorage.getItem("calendar"));
-    if (storedEvents) {
-      setAllEvents(storedEvents);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("calendar", JSON.stringify(allEvents));
-  }, [allEvents]);
-
+  setAllEvents(initialEvents);
+}, [savedEvents]);
+  
+    useEffect(() => {
+      const storedEvents = JSON.parse(localStorage.getItem("calendar"));
+      if (storedEvents) {
+        setAllEvents(storedEvents);
+      }
+    }, []);
+  
+    useEffect(() => {
+      localStorage.setItem("calendar", JSON.stringify(allEvents));
+    }, [allEvents]);
+  
+ 
   return (
     <div className="App">
       {/* <h3>Event Calendar</h3> */}
