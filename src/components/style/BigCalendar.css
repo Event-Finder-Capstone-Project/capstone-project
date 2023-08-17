@@ -11,3 +11,19 @@
 .rbc-event {
     background-color: #ff914D;
 }
+
+.rbc-show-more {
+    color: #ff914D;
+}
+
+.rbc-show-more:hover, .rbc-show-more:focus {
+    color: #ba5618;
+  }
+
+  .rbc-toolbar button {
+    color: white;
+  }
+
+  .rbc-toolbar button:active, .rbc-toolbar button.rbc-active {
+  color: black;
+  }
