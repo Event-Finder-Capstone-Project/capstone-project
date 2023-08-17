@@ -21,11 +21,18 @@ const Search = () => {
   };
 
   return (
-    <div style={{ marginTop: "1rem" }}>
+    <div
+      style={{
+        marginTop: "1rem",
+        marginRight: ".5rem",
+        marginLeft: ".5rem",
+        width: "200px",
+      }}
+    >
       <SearchBar onSubmit={handleSetQuery} />
       <Button
         size="sm"
-        style={{ width: "200px" }}
+        style={{ width: "189px" }}
         variant="secondary"
         onClick={handleSearchSubmit}
       >

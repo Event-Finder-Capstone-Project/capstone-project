@@ -12,7 +12,6 @@ import {
 import Signout from "../Auth/Signout";
 import { useLoadScript } from "@react-google-maps/api";
 import CityFilter from "../Events/CityFilter";
-
 import "../style/index.css";
 
 const NavBarTwo = () => {
@@ -36,16 +35,18 @@ const NavBarTwo = () => {
     <>
       {userLoggedIn ? (
         <>
-          <Navbar
-            bg="dark"
-            key={"xl"}
-            expand={"xl"}
-            className="bg-body-tertiary mb-3 justify-content-end flex-grow-1 pe-3"
-          >
-            <Container fluid>
-              <Navbar.Brand href="/">
-                <Image src="/favicon.ico" />
+          <Navbar bg="dark" key={"xl"} expand={"xl"}>
+            <Container fluid className="navbar">
+              <Navbar.Brand href="/" className="navBrand">
+                <Image
+                  style={{ width: "120%", height: "120%" }}
+                  src="/eventpulse.png"
+                />
               </Navbar.Brand>
+              <div className="searchBars">
+                <Search />
+                {isLoaded && <CityFilter />}
+              </div>
 
               <Navbar.Toggle aria-controls="offcanvasNavbar-expand-xl" />
               <Navbar.Offcanvas
@@ -76,9 +77,8 @@ const NavBarTwo = () => {
                     <NavDropdown.Item href="/today" className="navlink">
                       Today
                     </NavDropdown.Item>
-                    <Search />
-                    {isLoaded && <CityFilter />}
-                    <Signout lgs={{ width: "3rem" }} />
+
+                    <Signout lgs={{ width: "150px" }} />
                   </Nav>
                 </Offcanvas.Body>
               </Navbar.Offcanvas>
@@ -87,16 +87,13 @@ const NavBarTwo = () => {
         </>
       ) : (
         <>
-          <Navbar
-            bg="dark"
-            key={"xl"}
-            expand={"xl"}
-            className="bg-body-tertiary mb-3 justify-content-end flex-grow-1 pe-3"
-          >
+          <Navbar bg="dark" key={"xl"} expand={"xl"}>
             <Container fluid>
               <Navbar.Brand href="/">
-                <Image src="/favicon.ico" />
+                <Image src="/eventpulse.png" />
               </Navbar.Brand>
+              <Search />
+              {isLoaded && <CityFilter />}
 
               <Navbar.Toggle aria-controls="offcanvasNavbar-expand-xl" />
               <Navbar.Offcanvas
@@ -130,9 +127,6 @@ const NavBarTwo = () => {
                     <NavDropdown.Item href="/signup" className="navlink">
                       Signup
                     </NavDropdown.Item>
-                    <Search />
-                    {isLoaded && <CityFilter />}
-                    <Signout lgs={{ width: "3rem" }} />
                   </Nav>
                 </Offcanvas.Body>
               </Navbar.Offcanvas>

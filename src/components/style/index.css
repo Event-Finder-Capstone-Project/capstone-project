@@ -115,3 +115,30 @@
     justify-content: center;
   }
 }
+
+@media (max-width: 650px) {
+  .navbar {
+    display: flex;
+    flex-direction: column;
+  }
+  .searchBars {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+  }
+  .navBrand {
+    margin-left: 0rem;
+  }
+}
+
+@media (min-width: 651px) {
+  .searchBars {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .navBrand {
+    margin-left: 2rem;
+    margin-right: 0.5rem;
+  }
+}

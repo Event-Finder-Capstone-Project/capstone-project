@@ -92,7 +92,7 @@ const CityFilter = () => {
 
   return (
     <>
-      <div style={{ width: "200px", marginTop: "1rem" }}>
+      <div style={{ width: "200px", marginTop: "1rem", marginRight: ".5rem" }}>
         <Autocomplete
           apiKey={process.env.REACT_APP_FIREBASE_API_KEY}
           onPlaceSelected={handlePlaceSelected}
@@ -106,7 +106,7 @@ const CityFilter = () => {
         <Button
           variant="secondary"
           size="sm"
-          style={{ width: "100%" }}
+          style={{ width: "189px" }}
           onClick={askForLocation}
         >
           <FontAwesomeIcon icon={faLocationDot} /> Use Current Location

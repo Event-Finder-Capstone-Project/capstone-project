@@ -8,8 +8,8 @@ const SearchBar = ({ onSubmit }) => {
   };
 
   return (
-    <InputGroup style={{ width: "200px" }}>
-      <Form.Control
+    <InputGroup>
+      <input
         type="text"
         onChange={handleQueryChange}
         placeholder="Search events"
