@@ -21,10 +21,15 @@ import TestMap from "../Maps/TestMap";
 import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
 import "../style/index.css";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Today = () => {
-  const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState("");
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const filterParam = queryParams.get("filter");
+  const pageParam = queryParams.get("page");
+  const [filter, setFilter] = useState(filterParam || ""); 
+  const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
   const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [hoveredEventId, setHoveredEventId] = useState(null);
@@ -33,6 +38,8 @@ const Today = () => {
   const dispatch = useDispatch();
   const totalEvents = useSelector((state) => state.allEvents.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
+  const [scrollToEvents, setScrollToEvents] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const cityChangedListener = (data) => {
@@ -112,7 +119,7 @@ const Today = () => {
     };
     fetchEventsData();
     fetchUserEvents();
-  }, []);
+  }, [filter, page]);
 
   //handle add and remove event use icon
   const handleAddEvents = (eventId) => {
@@ -129,21 +136,32 @@ const Today = () => {
     }
   };
 
-  const handleFilter = () => {
-    setPage(1);
-    dispatch(getAllEvents({ type: filter, page: 1 }));
-  };
+/*   useEffect(() => {
+    if (scrollToEvents && events) {
+      const eventsContainer = document.getElementById("all-events-container");
+      eventsContainer.scrollIntoView({ behavior: "smooth" });
+      setScrollToEvents(false); 
+    }
+  }, [scrollToEvents, events]); */
 
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
+       navigate(`/today?filter=${filter}&page=${pageNumber}`);
+      setScrollToEvents(true);
   };
 
   const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
+    const newPage = Math.max(page - 1, 1);
+    setPage(newPage);
+     navigate(`/today?filter=${filter}&page=${newPage}`);
+      setScrollToEvents(true);
   };
 
   const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
+    const newPage = page + 1;
+  setPage(newPage);
+      navigate(`/today?filter=${filter}&page=${newPage}`);
+      setScrollToEvents(true);
   };
 
   const { isLoaded } = useLoadScript({
@@ -154,6 +172,11 @@ const Today = () => {
   const handleMouseEnter = (eventId) => {
     setHoveredEventId(eventId);
     dispatch(selectedHoveredEventId(eventId));
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setPage(1); 
   };
 
   const handleMouseLeave = () => {
@@ -191,7 +214,10 @@ const Today = () => {
             <select
               style={{ height: "35px" }}
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}>
+              onChange={(e) => {
+                handleFilterChange(e.target.value);
+                navigate(`/today?filter=${e.target.value}&page=1`);
+              }}>
               <option value="">None</option>
               {eventsData.map((eventType) => (
                 <option key={eventType} value={eventType}>
@@ -220,7 +246,12 @@ const Today = () => {
                         minWidth: "100%",
                         backgroundColor: "slategray",
                       }}>
-                      <LinkContainer to={`/events/${event.id}`}>
+                        <LinkContainer
+  to={{
+    pathname: `/events/${event.id}`,
+    search: `?filter=${filter}&page=${page}`
+  }}
+>
                         <Nav.Link>
                           <Col>
                             <img

@@ -59,7 +59,7 @@ const AllEventsNew = () => {
 
   useEffect(() => {
     if (filter === "") {
-      dispatch(getAllEvents({ type: filter, page: 1 }));
+      dispatch(getAllEvents({ type: filter }));
     }
   }, [dispatch, filter]);
   useEffect(() => {
@@ -164,15 +164,17 @@ const AllEventsNew = () => {
   };
 
   const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
-    navigate(`/?filter=${filter}&page=${page}`);
+    const newPage = Math.max(page - 1, 1);
+    setPage(newPage);
+    navigate(`/?filter=${filter}&page=${newPage}`);
     setScrollToEvents(true);
   };
 
   const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
-    navigate(`/?filter=${filter}&page=${page}`);
-    setScrollToEvents(true);
+    const newPage = page + 1;
+  setPage(newPage);
+  navigate(`/?filter=${filter}&page=${newPage}`);
+  setScrollToEvents(true);
   };
 
   const handlePageClick = (pageNumber) => {
@@ -213,7 +215,7 @@ const AllEventsNew = () => {
               value={filter}
               onChange={(e) => {
                 handleFilterChange(e.target.value);
-                navigate(`/?filter=${e.target.value}&page=1`);
+                navigate(`/?filter=${e.target.value}`);
               }}
             >
               <option value="">None</option>
