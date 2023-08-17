@@ -155,7 +155,7 @@ const AllEventsNew = () => {
       setScrollToEvents(false);
     }
   }, [scrollToEvents]);
-  
+
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
     setPage(1);
@@ -193,7 +193,7 @@ const AllEventsNew = () => {
 
   return (
     <>
-      <h1> Popular in your area </h1>
+      <h1> Popular {storedCity ? `in ${storedCity}` : "in your area"}</h1>
       <Container>
         <NewCarousel />
       </Container>
