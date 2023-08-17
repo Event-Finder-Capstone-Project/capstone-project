@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
-import { auth ,db} from "../firebase";
-import { collection, getDocs} from "firebase/firestore";
+import { auth, db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 import {
   Signup,
   Login,
@@ -13,6 +13,7 @@ import {
   Home,
   UserDetails,
   UserEvents,
+  UserEventsTwo,
   UserProfile,
   SearchResults,
   Today,
@@ -81,17 +82,29 @@ function App() {
           <div className="w-100 mb-3">
             <Routes>
               <Route path="/events/:id" element={<SingleEvent />} />
-              <Route path="/events" element={<AllEventsNew eventsData={eventsData}/>} />
-              <Route path="/" element={<Home eventsData={eventsData}/>} />
+              <Route
+                path="/events"
+                element={<AllEventsNew eventsData={eventsData} />}
+              />
+              <Route path="/" element={<Home eventsData={eventsData} />} />
               <Route path="/user-profile" element={<UserProfile />} />
-              <Route path="/thisweekend" element={<Weekend eventsData={eventsData}/>} />
-              <Route path="/myevents" element={<UserEvents />} />
-              <Route path="/today" element={<Today eventsData={eventsData}/>} />
+              <Route
+                path="/thisweekend"
+                element={<Weekend eventsData={eventsData} />}
+              />
+              <Route path="/myevents" element={<UserEventsTwo />} />
+              <Route
+                path="/today"
+                element={<Today eventsData={eventsData} />}
+              />
               <Route
                 path="/user-details"
                 element={<UserDetails user={user} />}
               />
-              <Route path="/searchresults" element={<SearchResults eventsData={eventsData}/>} />
+              <Route
+                path="/searchresults"
+                element={<SearchResults eventsData={eventsData} />}
+              />
             </Routes>
           </div>
         ) : (
@@ -100,13 +113,25 @@ function App() {
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/today" element={<Today eventsData={eventsData}/>} />
-                <Route path="/events" element={<AllEventsNew eventsData={eventsData}/>} />
+                <Route
+                  path="/today"
+                  element={<Today eventsData={eventsData} />}
+                />
+                <Route
+                  path="/events"
+                  element={<AllEventsNew eventsData={eventsData} />}
+                />
                 <Route path="/events/:id" element={<SingleEvent />} />
-                <Route path="/myevents" element={<UserEvents />} />
-                <Route path="/thisweekend" element={<Weekend eventsData={eventsData}/>} />
-                <Route path="/" element={<Home eventsData={eventsData}/>} />
-                <Route path="/searchresults" element={<SearchResults eventsData={eventsData}/>} />
+                <Route path="/myevents" element={<UserEventsTwo />} />
+                <Route
+                  path="/thisweekend"
+                  element={<Weekend eventsData={eventsData} />}
+                />
+                <Route path="/" element={<Home eventsData={eventsData} />} />
+                <Route
+                  path="/searchresults"
+                  element={<SearchResults eventsData={eventsData} />}
+                />
               </Routes>
             </div>
           </div>
