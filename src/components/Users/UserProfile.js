@@ -5,27 +5,40 @@ import { Link } from "react-router-dom";
 import { Container, Col,} from "react-bootstrap";
 
 const UserProfile = () => {
+  // Using useState hook to store and manage user profile data
   const [userProfile, setUserProfile] = useState(null);
 
+  // useEffect hook for performing side effects, in this case, fetching user data once the component mounts
   useEffect(() => {
-    // Function to fetch user data from Firestore based on UID
+    
+    // Asynchronous function to fetch user data from Firestore based on their UID
     const fetchUserProfile = async () => {
       try {
+        // Getting the currently authenticated user's UID
         const userId = auth.currentUser.uid;
+
+        // Referencing the Firestore document based on user ID
         const docRef = doc(db, "users", userId);
+        
+        // Fetching the document snapshot for the given reference
         const docSnap = await getDoc(docRef);
-        // console.log(docSnap.data());
+
+        // Checking if the document exists and setting the user profile data
         if (docSnap.exists()) {
           setUserProfile(docSnap.data());
         } else {
           console.log("Document does not exist");
         }
       } catch (error) {
+        // Handling and logging errors in case fetching fails
         console.error("Error fetching user profile:", error);
       }
     };
 
+    // Invoking the user profile fetching function
     fetchUserProfile();
+
+  // Empty dependency array ensures that the effect runs only once, similar to componentDidMount lifecycle method
   }, []);
 
     return (

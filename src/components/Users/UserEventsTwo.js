@@ -8,18 +8,25 @@ import BigCalendar from "./BigCalendar";
 import { Button, Container, Row, Col, Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
+// Define the UserEventsTwo component
 const UserEventsTwo = () => {
+  // Get the currently logged-in user
   const user = auth.currentUser;
+
+  // Get saved event IDs from the Redux state
   const savedEventIds = useSelector((state) => state.events);
   const dispatch = useDispatch();
 
+  // Local state to keep track of events for both logged-in users and guests
   const [savedEvents, setSavedEvents] = useState([]);
   const [loginUserEvents, setLoginUserEvents] = useState([]);
 
+  // Fetch user data if a user is logged in
   useEffect(() => {
     if (user) {
       const fetchUserData = async () => {
         try {
+          // Fetching user's saved events from Firestore
           const userId = auth.currentUser.uid;
           const docRef = doc(db, "users", userId);
           const docSnap = await getDoc(docRef);
@@ -31,6 +38,8 @@ const UserEventsTwo = () => {
                 return eventDetails.payload;
               })
             );
+
+            // Filter out any undefined events or events with status 400
             setLoginUserEvents(
               userEventData.filter(
                 (event) => event !== undefined && event.status !== 400
@@ -48,6 +57,7 @@ const UserEventsTwo = () => {
     }
   }, []);
 
+  // Fetch saved events for guests (non-logged-in users)
   useEffect(() => {
     if (!user) {
       const fetchSavedEvents = async () => {
@@ -57,6 +67,8 @@ const UserEventsTwo = () => {
             return eventDetails.payload;
           })
         );
+
+        // Filter out any undefined events or events with status 400
         setSavedEvents(
           eventsData.filter(
             (event) => event !== undefined && event.status !== 400
@@ -68,10 +80,12 @@ const UserEventsTwo = () => {
     }
   }, [dispatch, savedEventIds, user]);
 
+  // Handle deleting an event for guests
   const handleDeleteEvent = (eventId) => {
     dispatch(handleEvents(eventId));
   };
 
+  // Handle deleting an event for a logged-in user
   const handleDeleteLoginUserEvent = async (eventId) => {
     await dispatch(handleEventAsync(eventId));
     const userId = auth.currentUser.uid;
@@ -81,55 +95,14 @@ const UserEventsTwo = () => {
       (event) => event.id !== eventId
     );
 
+    // Update the user's saved events in Firestore
     await updateDoc(userDocRef, {
       events: updatedEvents.map((event) => event.id),
     });
 
+    // Update the local state to reflect the removal
     setLoginUserEvents(updatedEvents);
   };
-
-  const checkEventsOneDayAway = (events) => {
-    const currentTime = new Date().getTime();
-    events.forEach((event) => {
-      const eventTime = new Date(event.datetime_local).getTime();
-      const timeDifference = eventTime - currentTime;
-
-      if (
-        timeDifference <= 24 * 60 * 60 * 1000 &&
-        timeDifference > 23.5 * 60 * 60 * 1000
-      ) {
-        // between 23.5 to 24 hours
-        new Notification(`Event Reminder: ${event.title} is tomorrow!`);
-      }
-    });
-  };
-
-  useEffect(() => {
-    if (user) {
-      checkEventsOneDayAway(loginUserEvents);
-    } else {
-      checkEventsOneDayAway(savedEvents);
-    }
-    const intervalId = setInterval(() => {
-      if (user) {
-        checkEventsOneDayAway(loginUserEvents);
-      } else {
-        checkEventsOneDayAway(savedEvents);
-      }
-    }, 60 * 60 * 1000);
-
-    return () => clearInterval(intervalId);
-  }, [loginUserEvents, savedEvents, user]);
-
-  function formatDate(dateString) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
-    
-    const optionsTime = { hour: 'numeric', minute: 'numeric', hour12: true };
-    const formattedTime = new Date(dateString).toLocaleTimeString(undefined, optionsTime);
-  
-    return `${formattedDate} at ${formattedTime}`;
-  }
 
   return (
     <div>
