@@ -256,11 +256,14 @@ const SearchResults = ({eventsData}) => {
                           }}
                           onClick={() => handleAddEvents(event.id)}>
                           <FontAwesomeIcon
-                            icon={
-                              userEvents.includes(event.id)
-                                ? solidStar
-                                : outlineStar
-                            }
+                               icon={
+                                userEvents.includes(event.id)
+                                  ? solidStar
+                                  : outlineStar
+                              }
+                              className={`star-icon ${
+                                userEvents.includes(event.id) ? "active" : ""
+                              }`}
                           />
                         </Button>
                       <LinkContainer to={`/events/${event.id}`}>
