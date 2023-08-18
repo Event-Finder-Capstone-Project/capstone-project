@@ -310,6 +310,9 @@ const AllEventsNew = ({ eventsData }) => {
                                 ? solidStar
                                 : outlineStar
                             }
+                            className={`star-icon ${
+                              userEvents.includes(event.id) ? "active" : ""
+                            }`}
                           />
                         </Button>
 
