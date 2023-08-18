@@ -167,3 +167,12 @@ h1 {
   justify-content: flex-start;
   margin-left: 2.25rem;
 }
+
+.star-icon {
+  font-size: 32px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.star-icon.active {
+  transform: scale(1.2); 
+}

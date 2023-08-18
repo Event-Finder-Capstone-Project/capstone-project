@@ -39,7 +39,7 @@ const PrevNext = ({
           style={{
             color: "white",
             border: "none",
-            fontSize: "24px",
+            fontSize: "17px",
           }}
           onClick={() => onPageClick(pageNumber)}
           className={currentPage === pageNumber ? "active" : ""}
@@ -63,7 +63,7 @@ const PrevNext = ({
     <div className="pagination-container" style={{ marginBottom: "5rem" }}>
       {totalEvents > 0 ? (
         <>
-          <p className="pagination-info" style={{ fontSize: "18px" }}>
+          <p className="pagination-info" style={{ fontSize: "16px" }}>
             Viewing results {startResult}-{endResult} of {totalEvents}
           </p>
           <div className="pagination-buttons">
@@ -71,9 +71,7 @@ const PrevNext = ({
               onClick={onPreviousClick}
               disabled={currentPage === 1}
               variant="outline-light"
-              style={{
-                fontSize: "24px",
-              }}
+              style={{}}
             >
               Previous
             </Button>
@@ -82,9 +80,7 @@ const PrevNext = ({
               onClick={onNextClick}
               disabled={currentPage === totalPages || totalPages === 0}
               variant="outline-light"
-              style={{
-                fontSize: "24px",
-              }}
+              style={{}}
             >
               Next
             </Button>

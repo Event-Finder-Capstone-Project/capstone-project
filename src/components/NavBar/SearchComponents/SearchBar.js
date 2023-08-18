@@ -8,13 +8,12 @@ const SearchBar = ({ onSubmit }) => {
   };
 
   return (
-    <InputGroup>
-      <input
-        type="text"
-        onChange={handleQueryChange}
-        placeholder="Search events"
-      />
-    </InputGroup>
+    <input
+      type="text"
+      onChange={handleQueryChange}
+      placeholder="Search events"
+      style={{ width: "150px", height: "2rem" }}
+    />
   );
 };
 

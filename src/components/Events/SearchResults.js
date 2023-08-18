@@ -24,6 +24,7 @@ import PrevNext from "./PrevNext";
 import { TestMap } from "../";
 import "../style/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import Aos from "aos";
 
 const SearchResults = ({eventsData}) => {
   const location = useLocation();
@@ -50,6 +51,7 @@ const SearchResults = ({eventsData}) => {
   const dispatch = useDispatch();
   const totalEvents = useSelector((state) => state.search.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
+  Aos.init();
 
   // Fetch search results based on query, date range, filter, and page
   useEffect(() => {
@@ -220,7 +222,7 @@ const SearchResults = ({eventsData}) => {
             <Container>
               {events?.length ? (
                 events.map((event) => (
-                  <Row
+                  <Row data-aos="zoom-in"
                     xs={1}
                     md={2}
                     onMouseEnter={() => handleMouseEnter(event.id)}
@@ -273,11 +275,14 @@ const SearchResults = ({eventsData}) => {
                           }}
                           onClick={() => handleAddEvents(event.id)}>
                           <FontAwesomeIcon
-                            icon={
-                              userEvents.includes(event.id)
-                                ? solidStar
-                                : outlineStar
-                            }
+                               icon={
+                                userEvents.includes(event.id)
+                                  ? solidStar
+                                  : outlineStar
+                              }
+                              className={`star-icon ${
+                                userEvents.includes(event.id) ? "active" : ""
+                              }`}
                           />
                         </Button>
                       <LinkContainer to={`/events/${event.id}`}>

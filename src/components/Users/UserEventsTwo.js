@@ -90,7 +90,7 @@ const UserEventsTwo = () => {
   const checkEventsOneDayAway = (events) => {
     const currentTime = new Date().getTime();
     events.forEach((event) => {
-      const eventTime = new Date(event.datetime_utc).getTime();
+      const eventTime = new Date(event.datetime_local).getTime();
       const timeDifference = eventTime - currentTime;
 
       if (
@@ -120,10 +120,20 @@ const UserEventsTwo = () => {
     return () => clearInterval(intervalId);
   }, [loginUserEvents, savedEvents, user]);
 
+  function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
+    
+    const optionsTime = { hour: 'numeric', minute: 'numeric', hour12: true };
+    const formattedTime = new Date(dateString).toLocaleTimeString(undefined, optionsTime);
+  
+    return `${formattedDate} at ${formattedTime}`;
+  }
+
   return (
     <div>
       <h1 style={{ marginBottom: "2rem", marginTop: "1rem" }}>
-        Your NEW Saved Events
+        Your Saved Events
       </h1>
       <Container>
         <Row xs={1} md={1} lg={1} xl={2} className="user-events-container">
@@ -140,7 +150,7 @@ const UserEventsTwo = () => {
                       key={event.id}
                     >
                       <h3>{event.title}</h3>
-                      <h5>Date: {event.datetime_utc}</h5>
+                      <h5>{formatDate(event.datetime_local)}</h5>
                       <h6>Venue: {event.venue?.name_v2}</h6>
 
                       <Button
@@ -168,7 +178,7 @@ const UserEventsTwo = () => {
                       key={event.id}
                     >
                       <h3>{event.title}</h3>
-                      <h5>Date: {event.datetime_utc}</h5>
+                      <h5>{formatDate(event.datetime_local)}</h5>
                       <h6>Venue: {event.venue?.name_v2}</h6>
 
                       <Button

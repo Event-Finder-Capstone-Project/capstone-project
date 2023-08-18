@@ -24,9 +24,9 @@ import {
   Container,
   Button,
 } from "react-bootstrap";
+import Aos from "aos";
 
-
-const AllEventsNew = ({eventsData}) => {
+const AllEventsNew = ({ eventsData }) => {
   const [userEvents, setUserEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
   const [hoveredEventId, setHoveredEventId] = useState(null);
@@ -48,6 +48,7 @@ const AllEventsNew = ({eventsData}) => {
   const scrollPosition = localStorage.getItem("scrollPosition");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  Aos.init();
   
   // Render when getting all events by event type
   useEffect(() => {
@@ -98,6 +99,7 @@ const AllEventsNew = ({eventsData}) => {
       }
     }
   }, [dispatch, filter, page, latitude, longitude, storedCity, storedState]);
+
 
   // Fetch user's saved events from Firebase or local storage
   useEffect(() => {
@@ -185,7 +187,7 @@ const AllEventsNew = ({eventsData}) => {
     setHoveredEventId(eventId);
     dispatch(selectedHoveredEventId(eventId));
   };
-  
+
 // Clear state when hovering off an event card
   const handleMouseLeave = () => {
     setHoveredEventId(null);
@@ -253,7 +255,7 @@ const AllEventsNew = ({eventsData}) => {
               <Container>
                 {events?.length ? (
                   events.map((event) => (
-                    <Row
+                    <Row data-aos="zoom-in"
                       xs={1}
                       md={2}
                       className="mb-4 bg-slategray transition"
@@ -265,7 +267,7 @@ const AllEventsNew = ({eventsData}) => {
                         backgroundColor: "slategray",
                       }}
                     >
-                      <LinkContainer
+                      <LinkContainer 
                         to={{
                           pathname: `/events/${event.id}`,
                           search: `?filter=${filter}&page=${page}`,
@@ -318,6 +320,9 @@ const AllEventsNew = ({eventsData}) => {
                                 ? solidStar
                                 : outlineStar
                             }
+                            className={`star-icon ${
+                              userEvents.includes(event.id) ? "active" : ""
+                            }`}
                           />
                         </Button>
 
@@ -348,7 +353,8 @@ const AllEventsNew = ({eventsData}) => {
 
         <Container
           className="d-flex justify-content-center"
-          style={{ alignContent: "center", marginTop: "2rem" }}>
+          style={{ alignContent: "center" }}
+        >
           <PrevNext
             currentPage={page}
             totalPages={totalPages}

@@ -35,6 +35,7 @@ const SingleEvent = () => {
   // Get single event details from Redux state
   const event = useSelector((state) => state.singleEvent.singleEvent);
 
+
   // Format the event date and time
   const formatDate = (datetime_utc) => {
     const eventDate = new Date(datetime_utc);
@@ -49,6 +50,7 @@ const SingleEvent = () => {
     return `${formattedDate} at ${formattedTime}`;
   };
   
+
   // Fetch user's saved events from Firebase or local storage
   useEffect(() => {
     const fetchUserEvents = async () => {

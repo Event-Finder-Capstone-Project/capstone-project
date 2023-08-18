@@ -71,15 +71,18 @@ const NavBarTwo = () => {
                         <NavDropdown.Item href="/" className="navlink">
                           Home
                         </NavDropdown.Item>
+
                         <NavDropdown.Item href="/myevents" className="navlink">
                           Your Events
                         </NavDropdown.Item>
+
                         <NavDropdown.Item
                           href="/thisweekend"
                           className="navlink"
                         >
                           This Weekend
                         </NavDropdown.Item>
+
                         <NavDropdown.Item href="/today" className="navlink">
                           Today
                         </NavDropdown.Item>
@@ -128,21 +131,26 @@ const NavBarTwo = () => {
                         <NavDropdown.Item href="/" className="navlink">
                           Home
                         </NavDropdown.Item>
+
                         <NavDropdown.Item href="/myevents" className="navlink">
                           Your Events
                         </NavDropdown.Item>
+
                         <NavDropdown.Item
                           href="/thisweekend"
                           className="navlink"
                         >
                           This Weekend
                         </NavDropdown.Item>
+
                         <NavDropdown.Item href="/today" className="navlink">
                           Today
                         </NavDropdown.Item>
+
                         <NavDropdown.Item href="/login" className="navlink">
                           Login
                         </NavDropdown.Item>
+
                         <NavDropdown.Item href="/today" className="navlink">
                           Signup
                         </NavDropdown.Item>

@@ -18,6 +18,7 @@ import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
 import "../style/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import Aos from "aos";
 
 const Today = ({eventsData}) => {
   const location = useLocation();
@@ -40,6 +41,7 @@ const Today = ({eventsData}) => {
   const storedState = localStorage.getItem("userState");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  Aos.init();
 
   // Listen for city change events and trigger rerender
 useEffect(() => {
@@ -233,7 +235,7 @@ useEffect(() => {
                >
                 {events?.length ? (
                   events.map((event) => (
-                    <Row
+                    <Row data-aos="zoom-in"
                       xs={1}
                       md={2}
                       onMouseEnter={() => handleMouseEnter(event.id)}
@@ -292,11 +294,14 @@ useEffect(() => {
                           onClick={() => handleAddEvents(event.id)}
                         >
                           <FontAwesomeIcon
-                            icon={
+                             icon={
                               userEvents.includes(event.id)
                                 ? solidStar
                                 : outlineStar
                             }
+                            className={`star-icon ${
+                              userEvents.includes(event.id) ? "active" : ""
+                            }`}
                           />
                         </Button>
                         <LinkContainer to={`/events/${event.id}`}>
