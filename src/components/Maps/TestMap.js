@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
+// importing google maps components
 import {
   GoogleMap,
   useLoadScript,
   MarkerF,
   InfoWindowF,
 } from "@react-google-maps/api";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container} from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { selectEvents } from "../../store/allEventsSlice";
 import "../style/index.css";
 
 export default function TestMap() {
+  // Load Google Maps script using API key from environment variables
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
@@ -32,8 +34,63 @@ export default function TestMap() {
   const lat = searchLAT === "" ? latitude : searchLAT;
   const lng = searchLNG === "" ? longitude : searchLNG;
 
-  localStorage.setItem("mapCenterLat", lat);
-  localStorage.setItem("mapCenterLng", lng);
+  const [mapCenter, setMapCenter] = useState(
+    searchEvents.length ? { lat: 40.05, lng: -96.21 } : { lat: lat, lng: lng }
+  );
+  const [mapZoom, setMapZoom] = useState(
+    searchEvents.length ? 4 : 10
+  );
+
+  useEffect(() => {
+    const savedCenterLat = localStorage.getItem('mapCenterLat');
+    const savedCenterLng = localStorage.getItem('mapCenterLng');
+    const savedZoom = localStorage.getItem('mapZoom');
+
+    if (savedCenterLat && savedCenterLng) {
+      setMapCenter({
+        lat: parseFloat(savedCenterLat),
+        lng: parseFloat(savedCenterLng),
+      });
+    }
+
+    if (savedZoom) {
+      setMapZoom(parseInt(savedZoom));
+    }
+  }, []); 
+
+
+  const handleMapLoad = (map) => {
+    const handleMapDragEnd = () => {
+      if (map) {
+        const center = map.getCenter();
+        setMapCenter({ lat: center.lat(), lng: center.lng() });
+        // save the current mapCenter to local storage
+        localStorage.setItem('mapCenterLat', center.lat());
+        localStorage.setItem('mapCenterLng', center.lng());
+      }
+    };
+
+    const handleZoomChanged = () => {
+      if (map) {
+        setMapZoom(map.getZoom());
+        // save the current mapZoom to local storage
+        localStorage.setItem('mapZoom', map.getZoom());
+      }
+    };
+
+    map.addListener('dragend', handleMapDragEnd);
+    map.addListener('zoom_changed', handleZoomChanged);
+  };
+
+  useEffect(() => {
+    const newLat = searchLAT === '' ? latitude : searchLAT;
+    const newLng = searchLNG === '' ? longitude : searchLNG;
+
+    if (newLat !== mapCenter.lat || newLng !== mapCenter.lng) {
+      setMapCenter({ lat: newLat, lng: newLng });
+      setMapZoom(10); 
+    }
+  }, [searchLAT, searchLNG]);
 
   useEffect(() => {
     setKeyCounter((prevCounter) => prevCounter + 1);
@@ -56,15 +113,15 @@ export default function TestMap() {
     );
 
     const eventsToMap = searchEvents.length ? searchEvents : events;
-    const mapCenter = searchEvents.length ? { lat: 40.05, lng: -96.21 } : { lat: lat, lng: lng };
-    const mapZoom = searchEvents.length ? 4 : 10;
 
   return (
     <Container>
       <GoogleMap
         zoom={mapZoom}
         center={mapCenter}
-        mapContainerClassName="google-map-container">
+        mapContainerClassName="google-map-container"
+        onLoad={handleMapLoad}
+        >
         {eventsToMap.map((marker) => (
           <MarkerF
             key={`${marker.id}-${keyCounter}`}
@@ -75,9 +132,10 @@ export default function TestMap() {
             icon={
               marker.id === selectedEventId
                 ? {
-                    url: marker.performers[0].image,
-                    scaledSize: new window.google.maps.Size(32, 32), // Set the desired size
+                    url: process.env.PUBLIC_URL + '/Location.png',
+                    scaledSize: new window.google.maps.Size(40, 40), // Set the desired size
                     anchor: new window.google.maps.Point(16, 32),
+                    zIndex: 1000,
                     className: "customMarker",
                   }
                 : null

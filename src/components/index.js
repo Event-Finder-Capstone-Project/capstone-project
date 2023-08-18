@@ -10,7 +10,6 @@ export { default as DatePicker } from "./NavBar/SearchComponents/DatePicker";
 export { default as PostalCode } from "./NavBar/SearchComponents/PostalCode";
 export { default as SearchBar } from "./NavBar/SearchComponents/SearchBar";
 export { default as TestMap } from "./Maps/TestMap";
-export { default as AllEvents } from "./Events/AllEvents";
 export { default as Carousel } from "./Events/Carousel";
 export { default as CityFilter } from "./Events/CityFilter";
 export { default as SearchResults } from "./Events/SearchResults";

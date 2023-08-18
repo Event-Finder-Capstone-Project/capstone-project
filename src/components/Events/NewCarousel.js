@@ -1,6 +1,6 @@
 import { Nav, Carousel, Container } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { selectEvents } from "../../store/allEventsSlice";
 
@@ -18,15 +18,13 @@ const NewCarousel = () => {
         backgroundColor: "slategray",
         opacity: "80%",
         marginRight: "1%",
-      }}
-    >
+      }}>
       <Carousel data-bs-theme="dark" className="d-none d-md-block">
         {sortedEvents.map((event, index) => (
           <Carousel.Item key={index}>
             <LinkContainer
               className="d-flex justify-content-center"
-              to={`/events/${event.id}`}
-            >
+              to={`/events/${event.id}`}>
               <Nav.Link>
                 <img
                   style={{ width: "40%", height: "40%" }}
@@ -35,8 +33,7 @@ const NewCarousel = () => {
                 />
                 <Carousel.Caption
                   sm={{ maxHeight: "20%", fontSize: "12px" }}
-                  style={{ paddingLeft: "15%", color: "white", width: "55%" }}
-                >
+                  style={{ paddingLeft: "15%", color: "white", width: "55%" }}>
                   <h4 style={{ maxHeight: "50%" }} className="legend">
                     {event.title}
                   </h4>

@@ -82,3 +82,12 @@
     margin-top: -0.5rem;
   }
 }
+
+.rbc-event.rbc-selected,
+.rbc-day-slot .rbc-selected.rbc-background-event {
+  background-color: rgb(163, 109, 7);
+}
+.rbc-event:focus,
+.rbc-day-slot .rbc-background-event:focus {
+  outline: 5px auto rgb(163, 109, 7);
+}
