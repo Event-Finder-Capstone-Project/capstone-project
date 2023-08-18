@@ -41,127 +41,139 @@ const Today = ({eventsData}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const cityChangedListener = (data) => {
-      setRerender(!rerender);
-    };
-    eventEmitter.on("cityChanged", cityChangedListener);
-    return () => {
-      eventEmitter.off("cityChanged", cityChangedListener);
-    };
-  }, [rerender]);
+  // Listen for city change events and trigger rerender
+useEffect(() => {
+  const cityChangedListener = (data) => {
+    setRerender(!rerender);
+  };
+  eventEmitter.on("cityChanged", cityChangedListener);
+  return () => {
+    eventEmitter.off("cityChanged", cityChangedListener);
+  };
+}, [rerender]);
 
-  useEffect(() => {
-    if ((storedCity && storedState) || (latitude && longitude)) {
-      const startDate = new Date();
-      const endDate = new Date();
-      endDate.setDate(startDate.getDate() + 1);
-      const fetchEventData = async () => {
-        let eventDataParams = {
-          type: filter,
-          page: page,
-          dateRange: {
-            startDate: startDate.toISOString().split("T")[0],
-            endDate: endDate.toISOString().split("T")[0],
+// Fetch and display event data based on location and filters
+useEffect(() => {
+  if ((storedCity && storedState) || (latitude && longitude)) {
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(startDate.getDate() + 1);
+    
+    const fetchEventData = async () => {
+      let eventDataParams = {
+        type: filter,
+        page: page,
+        dateRange: {
+          startDate: startDate.toISOString().split("T")[0],
+          endDate: endDate.toISOString().split("T")[0],
+        },
+      };
+      if (storedCity && storedState) {
+        eventDataParams = {
+          ...eventDataParams,
+          venue: {
+            city: storedCity,
+            state: storedState,
           },
         };
-        if (storedCity && storedState) {
-          eventDataParams = {
-            ...eventDataParams,
-            venue: {
-              city: storedCity,
-              state: storedState,
-            },
-          };
-        } else if (latitude && longitude) {
-          eventDataParams = {
-            ...eventDataParams,
-            latitude: latitude,
-            longitude: longitude,
-          };
-        }
-        dispatch(getAllEvents(eventDataParams));
-      };
-      fetchEventData();
-    }
-  }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
-  
-  useEffect(() => {
-    const fetchUserEvents = async () => {
-      if (auth.currentUser) {
-        const userDocRef = doc(db, "users", auth.currentUser.uid);
-        const userDocSnapshot = await getDoc(userDocRef);
-        if (userDocSnapshot.exists()) {
-          const userData = userDocSnapshot.data();
-          setUserEvents(userData.events || []);
-        }
-      } else {
-        setUserEvents(savedEventIds || []);
+      } else if (latitude && longitude) {
+        eventDataParams = {
+          ...eventDataParams,
+          latitude: latitude,
+          longitude: longitude,
+        };
       }
+      dispatch(getAllEvents(eventDataParams));
     };
-    fetchUserEvents();
-  }, [filter, page]);
+    fetchEventData();
+  }
+}, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
 
-  //handle add and remove event use icon
-  const handleAddEvents = (eventId) => {
+// Fetch user's saved events from Firebase or local storage
+useEffect(() => {
+  const fetchUserEvents = async () => {
     if (auth.currentUser) {
-      dispatch(handleEventAsync(eventId));
-    } else {
-      dispatch(handleEvents(eventId));
-    }
-    // Toggle the event in userEvents state
-    if (userEvents.includes(eventId)) {
-      setUserEvents(userEvents.filter((id) => id !== eventId));
-    } else {
-      setUserEvents([...userEvents, eventId]);
-    }
-  };
-
-  const handlePageClick = (pageNumber) => {
-    setPage(pageNumber);
-    navigate(`/today?filter=${filter}&page=${pageNumber}`);
-    setScrollToEvents(true);
-  };
-
-  const handlePreviousPage = () => {
-    const newPage = Math.max(page - 1, 1);
-    setPage(newPage);
-    navigate(`/today?filter=${filter}&page=${newPage}`);
-    setScrollToEvents(true);
-  };
-
-  const handleNextPage = () => {
-    const newPage = page + 1;
-    setPage(newPage);
-    navigate(`/today?filter=${filter}&page=${newPage}`);
-    setScrollToEvents(true);
-  };
-
-  const handleMouseEnter = (eventId) => {
-    setHoveredEventId(eventId);
-    dispatch(selectedHoveredEventId(eventId));
-  };
-
-  const handleFilterChange = (newFilter) => {
-    setFilter(newFilter);
-    setPage(1);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredEventId(null);
-    dispatch(clearHoveredEventId());
-  };
-
-  const eventsContainer = document.getElementById("all-events-container");
-
-  useEffect(() => {
-    if (scrollToEvents) {
-      if (eventsContainer) {
-        eventsContainer.scrollIntoView({ behavior: "smooth" });
+      const userDocRef = doc(db, "users", auth.currentUser.uid);
+      const userDocSnapshot = await getDoc(userDocRef);
+      if (userDocSnapshot.exists()) {
+        const userData = userDocSnapshot.data();
+        setUserEvents(userData.events || []);
       }
-      setScrollToEvents(false);
+    } else {
+      setUserEvents(savedEventIds || []);
     }
-  }, [scrollToEvents, eventsContainer]);
+  };
+  fetchUserEvents();
+}, [filter, page]);
+
+// Handle adding/removing an event to/from user's collection
+const handleAddEvents = (eventId) => {
+  if (auth.currentUser) {
+    dispatch(handleEventAsync(eventId));
+  } else {
+    dispatch(handleEvents(eventId));
+  }
+  // Toggle the event in userEvents state
+  if (userEvents.includes(eventId)) {
+    setUserEvents(userEvents.filter((id) => id !== eventId));
+  } else {
+    setUserEvents([...userEvents, eventId]);
+  }
+};
+
+// Handle clicking on a page number
+const handlePageClick = (pageNumber) => {
+  setPage(pageNumber);
+  navigate(`/today?filter=${filter}&page=${pageNumber}`);
+  setScrollToEvents(true);
+};
+
+// Handle clicking on the "Previous" page button
+const handlePreviousPage = () => {
+  const newPage = Math.max(page - 1, 1);
+  setPage(newPage);
+  navigate(`/today?filter=${filter}&page=${newPage}`);
+  setScrollToEvents(true);
+};
+
+// Handle clicking on the "Next" page button
+const handleNextPage = () => {
+  const newPage = page + 1;
+  setPage(newPage);
+  navigate(`/today?filter=${filter}&page=${newPage}`);
+  setScrollToEvents(true);
+};
+
+// Handle mouse entering an event card
+const handleMouseEnter = (eventId) => {
+  setHoveredEventId(eventId);
+  dispatch(selectedHoveredEventId(eventId));
+};
+
+// Handle changing the event filter
+const handleFilterChange = (newFilter) => {
+  setFilter(newFilter);
+  setPage(1);
+};
+
+// Handle mouse leaving an event card
+const handleMouseLeave = () => {
+  setHoveredEventId(null);
+  dispatch(clearHoveredEventId());
+};
+
+// Get reference to the events container element
+const eventsContainer = document.getElementById("all-events-container");
+
+// Scroll to the events container if scrollToEvents is true
+useEffect(() => {
+  if (scrollToEvents) {
+    if (eventsContainer) {
+      eventsContainer.scrollIntoView({ behavior: "smooth" });
+    }
+    setScrollToEvents(false);
+  }
+}, [scrollToEvents, eventsContainer]);
 
   return (
     <>

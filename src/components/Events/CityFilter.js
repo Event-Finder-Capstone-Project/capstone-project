@@ -5,13 +5,14 @@ import { setCity, setCoords } from "../../store/searchSlice";
 import { eventEmitter } from "../App";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { InputGroup, Form, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import "../style/index.css";
 
 const CityFilter = () => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const dispatch = useDispatch();
 
+   // Get user's location using geolocation API
   const askForLocation = async () => {
     if ("geolocation" in navigator) {
       try {
@@ -20,13 +21,14 @@ const CityFilter = () => {
         });
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-        console.log(latitude, longitude);
-
+        
+        // Reset user's selected city and state
         localStorage.setItem("userCity", "");
         localStorage.setItem("userState", "");
         localStorage.setItem("mapCenterLat", latitude);
         localStorage.setItem("mapCenterLng", longitude);
 
+         // Emit city change event and update Redux state
         eventEmitter.emit("cityChanged", { latitude, longitude });
         dispatch(
           setCoords({
@@ -42,16 +44,20 @@ const CityFilter = () => {
     }
   };
 
+  // Reset location based on user-selected place
   useEffect(() => {
     if (selectedPlace) {
       const placeId = selectedPlace.place_id;
 
+      // Use Google Places API to get place details
       const service = new window.google.maps.places.PlacesService(
         document.createElement("div")
       );
 
       service.getDetails({ placeId: placeId }, (place, status) => {
         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+
+          // Extract city and state from place information
           const city = place.address_components.find(
             (component) =>
               component.types.includes("locality") ||
@@ -65,6 +71,7 @@ const CityFilter = () => {
           const latitude = place.geometry.location.lat(city);
           const longitude = place.geometry.location.lng(city);
 
+          // Update Redux state and local storage
           dispatch(
             setCity({
               city: city || "",
@@ -80,11 +87,14 @@ const CityFilter = () => {
 
           localStorage.setItem("userCity", city || "");
           localStorage.setItem("userState", state || "");
+          // Emit city change event
           eventEmitter.emit("cityChanged", { city, state });
         }
       });
     }
   }, [dispatch, selectedPlace]);
+
+  // Handle user-selected place
   const handlePlaceSelected = (place) => {
     setSelectedPlace(place);
     console.log(selectedPlace);

@@ -4,12 +4,13 @@ import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { Button } from "react-bootstrap";
 
+// signout and navigate to home page
 const Signout = () => {
   const navigate = useNavigate();
   const logOut = async () => {
     try {
       await signOut(auth);
-      navigate("/signup");
+      navigate("/");
     } catch (err) {
       console.error("Failed to log out: ", err.message);
     }
