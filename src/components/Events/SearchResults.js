@@ -25,7 +25,7 @@ import { TestMap } from "../";
 import "../style/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const SearchResults = () => {
+const SearchResults = ({eventsData}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
@@ -33,7 +33,6 @@ const SearchResults = () => {
   const pageParam = queryParams.get("page");
   const [filter, setFilter] = useState(filterParam || "");
   const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
-  const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [hoveredEventId, setHoveredEventId] = useState(null);
   const [scrollToEvents, setScrollToEvents] = useState(false);
@@ -83,21 +82,6 @@ const SearchResults = () => {
     fetchUserEvents();
   }, []);
 
-  useEffect(() => {
-    const fetchEventsData = async () => {
-      try {
-        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
-        const eventsData = eventsQuerySnapshot.docs.map(
-          (doc) => doc.data().type
-        );
-        setEventsData(eventsData);
-      } catch (error) {
-        console.error("Error fetching events data:", error);
-      }
-    };
-    fetchEventsData();
-  }, []);
-
   const eventsContainer = document.getElementById("resultsContainer");
 
   useEffect(() => {
@@ -108,7 +92,7 @@ const SearchResults = () => {
       setScrollToEvents(false);
     }
   }, [scrollToEvents, eventsContainer]);
-  
+
   //handle add and remove event use icon
   const handleAddEvents = (eventId) => {
     if (auth.currentUser) {

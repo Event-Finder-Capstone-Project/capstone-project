@@ -10,8 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
-import { useLoadScript } from "@react-google-maps/api";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { Nav, Row, Container, Button, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import TestMap from "../Maps/TestMap";
@@ -20,14 +19,13 @@ import PrevNext from "./PrevNext";
 import "../style/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const Today = () => {
+const Today = ({eventsData}) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const filterParam = queryParams.get("filter");
   const pageParam = queryParams.get("page");
   const [filter, setFilter] = useState(filterParam || "");
   const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
-  const [eventsData, setEventsData] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [hoveredEventId, setHoveredEventId] = useState(null);
   const [rerender, setRerender] = useState(false);
@@ -87,20 +85,8 @@ const Today = () => {
       fetchEventData();
     }
   }, [dispatch, filter, page, storedCity, storedState, latitude, longitude]);
-
+  
   useEffect(() => {
-    const fetchEventsData = async () => {
-      try {
-        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
-        const eventsData = eventsQuerySnapshot.docs.map(
-          (doc) => doc.data().type
-        );
-        setEventsData(eventsData);
-      } catch (error) {
-        console.error("Error fetching events data:", error);
-      }
-    };
-
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
         const userDocRef = doc(db, "users", auth.currentUser.uid);
@@ -113,7 +99,6 @@ const Today = () => {
         setUserEvents(savedEventIds || []);
       }
     };
-    fetchEventsData();
     fetchUserEvents();
   }, [filter, page]);
 

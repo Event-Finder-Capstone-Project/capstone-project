@@ -1,32 +1,53 @@
 /* Change the text color of the month header */
 .rbc-off-range-bg {
-   background: #535253;
+  background: #535253;
 }
 
-
 .rbc-today {
-    background-color: rgb(148, 145, 145)
+  background-color: rgb(148, 145, 145);
 }
 
 .rbc-event {
-    background-color: #ff914D;
+  background-color: #ff914d;
 }
 
 .rbc-show-more {
-    color: #ff914D;
+  color: #ff914d;
 }
 
-.rbc-show-more:hover, .rbc-show-more:focus {
-    color: #ba5618;
-  }
+.rbc-show-more:hover,
+.rbc-show-more:focus {
+  color: #ba5618;
+}
 
-  .rbc-toolbar button {
-    color: white;
-  }
+.rbc-toolbar button {
+  color: white;
+}
 
-  .rbc-toolbar button:active, .rbc-toolbar button.rbc-active {
+.rbc-toolbar button:active,
+.rbc-toolbar button.rbc-active {
   color: black;
+}
+
+.rbc-toolbar-label {
+  font-weight: bold;
+}
+
+@media (min-width: 770px) {
+  .stickyCalendar {
+    position: sticky;
+    top: 0;
   }
+}
+
+@media (max-width: 770px) {
+  .rbc-toolbar {
+    justify-content: center;
+    flex-direction: column;
+    padding: 0%;
+  }
+}
+
   
   .rbc-event.rbc-selected, .rbc-day-slot .rbc-selected.rbc-background-event {
     background-color: rgb(163, 109, 7);

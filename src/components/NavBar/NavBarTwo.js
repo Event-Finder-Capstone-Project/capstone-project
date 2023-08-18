@@ -71,15 +71,18 @@ const NavBarTwo = () => {
                         <NavDropdown.Item href="/" className="navlink">
                           Home
                         </NavDropdown.Item>
+
                         <NavDropdown.Item href="/myevents" className="navlink">
                           Your Events
                         </NavDropdown.Item>
+
                         <NavDropdown.Item
                           href="/thisweekend"
                           className="navlink"
                         >
                           This Weekend
                         </NavDropdown.Item>
+
                         <NavDropdown.Item href="/today" className="navlink">
                           Today
                         </NavDropdown.Item>
@@ -93,51 +96,71 @@ const NavBarTwo = () => {
         </>
       ) : (
         <>
-          <Navbar bg="dark" key={"xl"} expand={"xl"}>
-            <Container fluid>
-              <Navbar.Brand href="/">
-                <Image src="/eventpulse.png" />
-              </Navbar.Brand>
-              <Search />
-              {isLoaded && <CityFilter />}
+          <div className="entire-navbar">
+            <Navbar bg="dark" key={"xl"} expand={"xl"}>
+              <div fluid className="navbar">
+                <Navbar.Brand href="/" className="navBrand">
+                  <Image
+                    style={{ width: "120%", height: "120%" }}
+                    src="/eventpulse.png"
+                  />
+                </Navbar.Brand>
+                <div className="searchBars">
+                  <Search />
+                  {isLoaded && <CityFilter />}
+                </div>
 
-              <Navbar.Toggle aria-controls="offcanvasNavbar-expand-xl" />
-              <Navbar.Offcanvas
-                id="offcanvasNavbar-expand-xl"
-                aria-labelledby="offcanvasNavbarLabel-expand-xl"
-                placement="end"
-              >
-                <Offcanvas.Header closeButton>
-                  <Offcanvas.Title id="offcanvasNavbarLabel-expand-xl">
-                    Navigation
-                  </Offcanvas.Title>
-                </Offcanvas.Header>
+                <div className="navbar-links">
+                  <Navbar.Toggle aria-controls="offcanvasNavbar-expand-xl" />
+                  <Navbar.Offcanvas
+                    id="offcanvasNavbar-expand-xl"
+                    aria-labelledby="offcanvasNavbarLabel-expand-xl"
+                    placement="end"
+                  >
+                    <Offcanvas.Header closeButton>
+                      <Offcanvas.Title
+                        id="offcanvasNavbarLabel-expand-xl"
+                        style={{ fontSize: "28px" }}
+                      >
+                        Navigation
+                      </Offcanvas.Title>
+                    </Offcanvas.Header>
 
-                <Offcanvas.Body>
-                  <Nav className="justify-content-end flex-grow-1 pe-3">
-                    <NavDropdown.Item href="/" className="navlink">
-                      Home
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/myevents" className="navlink">
-                      Your Events
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/thisweekend" className="navlink">
-                      This Weekend
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/today" className="navlink">
-                      Today
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/login" className="navlink">
-                      Login
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/signup" className="navlink">
-                      Signup
-                    </NavDropdown.Item>
-                  </Nav>
-                </Offcanvas.Body>
-              </Navbar.Offcanvas>
-            </Container>
-          </Navbar>
+                    <Offcanvas.Body>
+                      <Nav className="justify-content-end flex-grow-1 pe-3">
+                        <NavDropdown.Item href="/" className="navlink">
+                          Home
+                        </NavDropdown.Item>
+
+                        <NavDropdown.Item href="/myevents" className="navlink">
+                          Your Events
+                        </NavDropdown.Item>
+
+                        <NavDropdown.Item
+                          href="/thisweekend"
+                          className="navlink"
+                        >
+                          This Weekend
+                        </NavDropdown.Item>
+
+                        <NavDropdown.Item href="/today" className="navlink">
+                          Today
+                        </NavDropdown.Item>
+
+                        <NavDropdown.Item href="/login" className="navlink">
+                          Login
+                        </NavDropdown.Item>
+
+                        <NavDropdown.Item href="/today" className="navlink">
+                          Signup
+                        </NavDropdown.Item>
+                      </Nav>
+                    </Offcanvas.Body>
+                  </Navbar.Offcanvas>
+                </div>
+              </div>
+            </Navbar>
+          </div>
         </>
       )}
     </>

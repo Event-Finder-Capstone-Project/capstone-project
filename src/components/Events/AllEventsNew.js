@@ -26,8 +26,7 @@ import {
   Button,
 } from "react-bootstrap";
 
-const AllEventsNew = () => {
-  const [eventsData, setEventsData] = useState([]);
+const AllEventsNew = ({ eventsData }) => {
   const [userEvents, setUserEvents] = useState([]);
   const [rerender, setRerender] = useState(false);
   const [hoveredEventId, setHoveredEventId] = useState(null);
@@ -98,18 +97,6 @@ const AllEventsNew = () => {
   }, [dispatch, filter, page, latitude, longitude, storedCity, storedState]);
 
   useEffect(() => {
-    const fetchEventsData = async () => {
-      try {
-        const eventsQuerySnapshot = await getDocs(collection(db, "events"));
-        const eventsData = eventsQuerySnapshot.docs.map(
-          (doc) => doc.data().type
-        );
-        setEventsData(eventsData);
-      } catch (error) {
-        console.error("Error fetching events data:", error);
-      }
-    };
-
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
         const userDocRef = doc(db, "users", auth.currentUser.uid);
@@ -122,7 +109,7 @@ const AllEventsNew = () => {
         setUserEvents(savedEventIds || []);
       }
     };
-    fetchEventsData();
+    // fetchEventsData();
     fetchUserEvents();
   }, []);
 
@@ -184,11 +171,12 @@ const AllEventsNew = () => {
     setScrollToEvents(true);
   };
 
+  // set state when hover on event card
   const handleMouseEnter = (eventId) => {
     setHoveredEventId(eventId);
     dispatch(selectedHoveredEventId(eventId));
   };
-
+  // set state when hover off event card
   const handleMouseLeave = () => {
     setHoveredEventId(null);
     dispatch(clearHoveredEventId());
@@ -350,7 +338,7 @@ const AllEventsNew = () => {
 
         <Container
           className="d-flex justify-content-center"
-          style={{ alignContent: "center", marginTop: "2rem" }}
+          style={{ alignContent: "center" }}
         >
           <PrevNext
             currentPage={page}
