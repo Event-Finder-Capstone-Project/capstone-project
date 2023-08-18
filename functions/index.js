@@ -11,9 +11,15 @@
 // const logger = require("firebase-functions/logger");
 
 
+
+// Import the sendEventEmail function from the 'emailnotifications' module
 const { sendEventEmail } = require('./emailnotifications');
 
+// Export the imported sendEventEmail function, making it accessible to other modules
 exports.sendEventEmail = sendEventEmail;
+
+
+
 
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started
