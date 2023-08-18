@@ -3,16 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { getAllEvents } from "../../store/allEventsSlice";
-import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
-import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import {
-  Nav,
-  Row,
-  Container,
-  Button,
-  Col,
-  Form,
-} from "react-bootstrap";
+  selectedHoveredEventId,
+  clearHoveredEventId,
+} from "../../store/hoverSlice";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
+import { Nav, Row, Container, Button, Col, Form } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
@@ -25,7 +21,7 @@ import { TestMap } from "../";
 import "../style/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const SearchResults = ({eventsData}) => {
+const SearchResults = ({ eventsData }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
@@ -49,16 +45,10 @@ const SearchResults = ({eventsData}) => {
         query: searchState.query,
         dateRange: searchState.dateRange,
         page: page,
-        type: filter
+        type: filter,
       })
     );
-  }, [
-    dispatch,
-    searchState.query,
-    searchState.dateRange,
-    page,
-    filter
-  ]);
+  }, [dispatch, searchState.query, searchState.dateRange, page, filter]);
 
   useEffect(() => {
     if (filter === "") {
@@ -154,14 +144,7 @@ const SearchResults = ({eventsData}) => {
         <Container>
           <DatePicker onSelectDateRange={handleSelectDateRange} />
         </Container>
-        <Container
-          className="filter"
-          style={{
-            marginTop: ".3rem",
-            marginBottom: "1rem",
-            marginLeft: ".5rem",
-          }}
-        >
+        <Container className="filter">
           <Form.Label
             style={{
               width: "100px",
@@ -174,7 +157,8 @@ const SearchResults = ({eventsData}) => {
             Event Type
           </Form.Label>
           <Form.Select
-            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
+            style={{ height: "38px" }}
+            className="filterDropdown"
             variant="light"
             value={filter}
             onChange={(e) => {
@@ -230,10 +214,10 @@ const SearchResults = ({eventsData}) => {
                     <Col
                       style={{
                         backgroundColor:
-                            hoveredEventId === event.id
-                              ? "darkorange"
-                              : "slategray",
-                          transition: "background-color 0.3s ease-in-out",
+                          hoveredEventId === event.id
+                            ? "darkorange"
+                            : "slategray",
+                        transition: "background-color 0.3s ease-in-out",
                         maxWidth: "100%",
                         maxHeight: "100%",
                         paddingBottom: ".5rem",
@@ -246,21 +230,22 @@ const SearchResults = ({eventsData}) => {
                         justifyContent: "space-between",
                       }}
                     >
-                       <Button
-                          variant="outline"
-                          style={{
-                            border: "none",
-                            fontSize: "32px",
-                          }}
-                          onClick={() => handleAddEvents(event.id)}>
-                          <FontAwesomeIcon
-                            icon={
-                              userEvents.includes(event.id)
-                                ? solidStar
-                                : outlineStar
-                            }
-                          />
-                        </Button>
+                      <Button
+                        variant="outline"
+                        style={{
+                          border: "none",
+                          fontSize: "32px",
+                        }}
+                        onClick={() => handleAddEvents(event.id)}
+                      >
+                        <FontAwesomeIcon
+                          icon={
+                            userEvents.includes(event.id)
+                              ? solidStar
+                              : outlineStar
+                          }
+                        />
+                      </Button>
                       <LinkContainer to={`/events/${event.id}`}>
                         <Nav.Link>
                           <h4

@@ -75,15 +75,8 @@ const DatePicker = ({ onSelectDateRange }) => {
       }}
       ref={refContainer}
     >
-      <InputGroup
-        className="input-container"
-        style={{
-          marginTop: ".5rem",
-          marginBottom: "1.5rem",
-        }}
-      >
+      <InputGroup className="input-container">
         <Form.Control
-          style={{ width: "225px" }}
           className="calendarInput"
           value={
             range[0].endDate
@@ -112,7 +105,7 @@ const DatePicker = ({ onSelectDateRange }) => {
             dispatch(setDateRange({ startDate: null, endDate: null }));
           }}
         >
-          Clear Date Selection
+          Clear Dates
         </Button>
       </InputGroup>
       <div className="datepicker-popup">

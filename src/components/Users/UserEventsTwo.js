@@ -127,23 +127,29 @@ const UserEventsTwo = () => {
       </h1>
       <Container>
         <Row xs={1} md={1} lg={1} xl={2} className="user-events-container">
-          <Row xs={2} md={2} lg={2} xl={1}>
+          <Row className="userItems" xs={2} md={2} lg={2} xl={1}>
             {user
               ? loginUserEvents.map((event) => (
-                  <div style={{ display: "flex", alignItems: "stretch" }}>
+                  <div>
                     <Container
                       style={{
                         marginBottom: "1rem",
                         columnGap: "1rem",
                         backgroundColor: "slategray",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
                       }}
                       key={event.id}
                     >
-                      <h3>{event.title}</h3>
-                      <h5>Date: {event.datetime_utc}</h5>
-                      <h6>Venue: {event.venue?.name_v2}</h6>
+                      <div>
+                        <h3>{event.title}</h3>
+                        <h5>Date: {event.datetime_utc}</h5>
+                        <h6>Venue: {event.venue?.name_v2}</h6>
+                      </div>
 
                       <Button
+                        className="removeEventButton"
                         style={{
                           backgroundColor: "darkorange",
                           color: "black",
@@ -158,12 +164,15 @@ const UserEventsTwo = () => {
                   </div>
                 ))
               : savedEvents.map((event) => (
-                  <div style={{ display: "flex", alignItems: "stretch" }}>
+                  <div style={{ display: "flex" }}>
                     <Container
                       style={{
                         marginBottom: "1rem",
                         columnGap: "1rem",
                         backgroundColor: "slategray",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
                       }}
                       key={event.id}
                     >

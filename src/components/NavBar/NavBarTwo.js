@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../../firebase";
-import { Search, SingleEvent } from "../index";
+import { Search, SingleEvent, LightDark } from "../index";
 import {
   Container,
   Nav,
@@ -36,7 +36,7 @@ const NavBarTwo = () => {
       {userLoggedIn ? (
         <>
           <div className="entire-navbar">
-            <Navbar bg="dark" key={"xl"} expand={"xl"}>
+            <Navbar key={"xl"} expand={"xl"}>
               <div fluid className="navbar">
                 <Navbar.Brand href="/" className="navBrand">
                   <Image
@@ -44,10 +44,9 @@ const NavBarTwo = () => {
                     src="/eventpulse.png"
                   />
                 </Navbar.Brand>
-                <div className="searchBars">
-                  <Search />
-                  {isLoaded && <CityFilter />}
-                </div>
+
+                <Search />
+                {isLoaded && <CityFilter />}
 
                 <div className="navbar-links">
                   <Navbar.Toggle aria-controls="offcanvasNavbar-expand-xl" />
@@ -86,10 +85,12 @@ const NavBarTwo = () => {
                         <NavDropdown.Item href="/today" className="navlink">
                           Today
                         </NavDropdown.Item>
+                        <LightDark />
                       </Nav>
                     </Offcanvas.Body>
                   </Navbar.Offcanvas>
                 </div>
+                <div className="navbarBreak"></div>
               </div>
             </Navbar>
           </div>
@@ -97,7 +98,7 @@ const NavBarTwo = () => {
       ) : (
         <>
           <div className="entire-navbar">
-            <Navbar bg="dark" key={"xl"} expand={"xl"}>
+            <Navbar key={"xl"} expand={"xl"}>
               <div fluid className="navbar">
                 <Navbar.Brand href="/" className="navBrand">
                   <Image
@@ -105,10 +106,9 @@ const NavBarTwo = () => {
                     src="/eventpulse.png"
                   />
                 </Navbar.Brand>
-                <div className="searchBars">
-                  <Search />
-                  {isLoaded && <CityFilter />}
-                </div>
+
+                <Search />
+                {isLoaded && <CityFilter />}
 
                 <div className="navbar-links">
                   <Navbar.Toggle aria-controls="offcanvasNavbar-expand-xl" />
@@ -154,10 +154,12 @@ const NavBarTwo = () => {
                         <NavDropdown.Item href="/today" className="navlink">
                           Signup
                         </NavDropdown.Item>
+                        <LightDark />
                       </Nav>
                     </Offcanvas.Body>
                   </Navbar.Offcanvas>
                 </div>
+                <div className="navbarBreak"></div>
               </div>
             </Navbar>
           </div>

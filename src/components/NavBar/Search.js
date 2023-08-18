@@ -23,13 +23,7 @@ const Search = () => {
   };
 
   return (
-    <div
-      style={{
-        marginRight: ".5rem",
-        marginLeft: ".5rem",
-        width: "200px",
-      }}
-    >
+    <div className="searchComponent">
       <SearchBar onSubmit={handleSetQuery} />
       <Button
         size="sm"

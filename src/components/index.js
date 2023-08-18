@@ -25,3 +25,4 @@ export { default as NewCarousel } from "./Events/NewCarousel";
 export { default as AllEventsNew } from "./Events/AllEventsNew";
 export { default as BigCalendar } from "./Users/BigCalendar";
 export { default as UserEventsTwo } from "./Users/UserEventsTwo";
+export { default as LightDark } from "./NavBar/LightDark";

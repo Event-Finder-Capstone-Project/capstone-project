@@ -47,3 +47,38 @@
     padding: 0%;
   }
 }
+
+@media (max-width: 1398px) {
+  .rbc-btn-group {
+    order: 1;
+    margin-inline: 0.25rem;
+  }
+  .rbc-toolbar-label {
+    order: 0;
+    flex: 1 1 500px;
+    margin-bottom: 0.25rem;
+    font-size: 20px;
+  }
+  .rbc-toolbar {
+    justify-content: center;
+    flex-direction: row;
+    padding: 0%;
+  }
+  .stickyCalendar {
+    margin-top: -0.5rem;
+  }
+}
+@media (max-width: 1199px) {
+  .rbc-btn-group {
+    order: 1;
+  }
+  .rbc-toolbar-label {
+    order: 0;
+    flex: 1 1 800px;
+    margin-bottom: 0.25rem;
+    font-size: 20px;
+  }
+  .stickyCalendar {
+    margin-top: -0.5rem;
+  }
+}
