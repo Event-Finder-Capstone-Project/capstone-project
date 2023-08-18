@@ -19,6 +19,7 @@ import { eventEmitter } from "../App";
 import PrevNext from "./PrevNext";
 import "../style/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import Aos from "aos";
 
 const Weekend = ({eventsData}) => {
   const location = useLocation();
@@ -41,6 +42,7 @@ const Weekend = ({eventsData}) => {
   const longitude = useSelector((state) => state.location.longitude);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  Aos.init();
 
   useEffect(() => {
     const cityChangedListener = (data) => {
@@ -248,7 +250,7 @@ const Weekend = ({eventsData}) => {
               id="all-events-container">
                 {events?.length ? (
                   events.map((event) => (
-                    <Row
+                    <Row data-aos="zoom-in"
                       xs={1}
                       md={2}
                       onMouseEnter={() => handleMouseEnter(event.id)}

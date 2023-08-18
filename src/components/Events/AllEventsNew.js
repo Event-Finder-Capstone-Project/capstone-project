@@ -25,6 +25,7 @@ import {
   Container,
   Button,
 } from "react-bootstrap";
+import Aos from "aos";
 
 const AllEventsNew = ({ eventsData }) => {
   const [userEvents, setUserEvents] = useState([]);
@@ -48,6 +49,7 @@ const AllEventsNew = ({ eventsData }) => {
   const scrollPosition = localStorage.getItem("scrollPosition");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  Aos.init();
 
   useEffect(() => {
     if (filter === "") {
@@ -243,7 +245,7 @@ const AllEventsNew = ({ eventsData }) => {
               <Container>
                 {events?.length ? (
                   events.map((event) => (
-                    <Row
+                    <Row data-aos="zoom-in"
                       xs={1}
                       md={2}
                       className="mb-4 bg-slategray transition"
@@ -255,7 +257,7 @@ const AllEventsNew = ({ eventsData }) => {
                         backgroundColor: "slategray",
                       }}
                     >
-                      <LinkContainer
+                      <LinkContainer 
                         to={{
                           pathname: `/events/${event.id}`,
                           search: `?filter=${filter}&page=${page}`,
