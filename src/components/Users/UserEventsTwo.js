@@ -5,7 +5,8 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import { getSingleEvent } from "../../store/singleEventSlice";
 import BigCalendar from "./BigCalendar";
-import { Button, Container, Row, Col } from "react-bootstrap";
+import { Button, Container, Row, Col, Nav } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 
 const UserEventsTwo = () => {
   const user = auth.currentUser;
@@ -141,7 +142,7 @@ const UserEventsTwo = () => {
             {user
               ? loginUserEvents.map((event) => (
                   <div style={{ display: "flex", alignItems: "stretch" }}>
-                    <Container
+                    <Container to={`/events/${event.id}`}
                       style={{
                         marginBottom: "1rem",
                         columnGap: "1rem",
@@ -149,10 +150,13 @@ const UserEventsTwo = () => {
                       }}
                       key={event.id}
                     >
+                      <LinkContainer to={`/events/${event.id}`}>
+                      <Nav.Link>
                       <h3>{event.title}</h3>
                       <h5>{formatDate(event.datetime_local)}</h5>
                       <h6>Venue: {event.venue?.name_v2}</h6>
-
+                      </Nav.Link>
+                      </LinkContainer>
                       <Button
                         style={{
                           backgroundColor: "darkorange",
