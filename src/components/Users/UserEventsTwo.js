@@ -133,7 +133,7 @@ const UserEventsTwo = () => {
   return (
     <div>
       <h1 style={{ marginBottom: "2rem", marginTop: "1rem" }}>
-        Your NEW Saved Events
+        Your Saved Events
       </h1>
       <Container>
         <Row xs={1} md={1} lg={1} xl={2} className="user-events-container">
@@ -150,7 +150,7 @@ const UserEventsTwo = () => {
                       key={event.id}
                     >
                       <h3>{event.title}</h3>
-                      <h5>Date: {formatDate(event.datetime_local)}</h5>
+                      <h5>{formatDate(event.datetime_local)}</h5>
                       <h6>Venue: {event.venue?.name_v2}</h6>
 
                       <Button
@@ -178,7 +178,7 @@ const UserEventsTwo = () => {
                       key={event.id}
                     >
                       <h3>{event.title}</h3>
-                      <h5>Date: {formatDate(event.datetime_local)}</h5>
+                      <h5>{formatDate(event.datetime_local)}</h5>
                       <h6>Venue: {event.venue?.name_v2}</h6>
 
                       <Button
