@@ -13,10 +13,14 @@ import {
 } from "react-share";
 import { Container } from "react-bootstrap";
 
+// ShareEvent component to enable sharing of an event through different platforms
 const ShareEvent = (props) => {
+  // Base URL of the web app
   const baseUrl = "https://event-finder-test-56e2e.web.app/";
+  // Constructing the full URL for sharing, based on the provided eventId
   const shareUrl = `${baseUrl}event/${props.eventId}`;
 
+  // Rendering the share buttons
   return (
     <Container
       style={{

@@ -8,10 +8,12 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "../style/BigCalendar.css";
 
+// Localizing date functionality
 const locales = {
   "en-US": require("date-fns/locale/en-US"),
 };
 
+// Setting up the dateFns localizer for calendar
 const localizer = dateFnsLocalizer({
   format,
   parse,
@@ -24,6 +26,7 @@ const BigCalendar = ({ savedEvents }) => {
 
     const [allEvents, setAllEvents] = useState([]);
   
+    //initialize events from savedEvents prop
     useEffect(() => {
       const initialEvents = savedEvents
         .filter(event => event !== undefined && event.status !== 400)
@@ -41,22 +44,21 @@ const BigCalendar = ({ savedEvents }) => {
 
   setAllEvents(initialEvents);
 }, [savedEvents]);
-  
+   // Effect to load events from local storage on mount
     useEffect(() => {
       const storedEvents = JSON.parse(localStorage.getItem("calendar"));
       if (storedEvents) {
         setAllEvents(storedEvents);
       }
     }, []);
-  
+  // Effect to save events to local storage whenever they change
     useEffect(() => {
       localStorage.setItem("calendar", JSON.stringify(allEvents));
     }, [allEvents]);
   
- 
+ // Render the calendar component with the events
   return (
     <div className="App">
-      {/* <h3>Event Calendar</h3> */}
       <Calendar
         localizer={localizer}
         events={allEvents}
