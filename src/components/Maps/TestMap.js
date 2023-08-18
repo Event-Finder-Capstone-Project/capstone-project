@@ -75,9 +75,10 @@ export default function TestMap() {
             icon={
               marker.id === selectedEventId
                 ? {
-                    url: marker.performers[0].image,
-                    scaledSize: new window.google.maps.Size(32, 32), // Set the desired size
+                    url: process.env.PUBLIC_URL + '/Location.png',
+                    scaledSize: new window.google.maps.Size(40, 40), // Set the desired size
                     anchor: new window.google.maps.Point(16, 32),
+                    zIndex: 1000,
                     className: "customMarker",
                   }
                 : null
