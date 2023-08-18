@@ -30,8 +30,8 @@ const SingleEvent = () => {
 
   const event = useSelector((state) => state.singleEvent.singleEvent);
 
-  const formatDate = (datetime_utc) => {
-    const eventDate = new Date(datetime_utc);
+  const formatDate = (datetime) => {
+    const eventDate = new Date(datetime);
     const formattedDate = eventDate.toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
@@ -42,6 +42,7 @@ const SingleEvent = () => {
     });
     return `${formattedDate} at ${formattedTime}`;
   };
+  
   useEffect(() => {
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
