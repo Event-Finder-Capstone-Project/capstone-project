@@ -10,7 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as outlineStar } from "@fortawesome/free-regular-svg-icons";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { LinkContainer } from "react-router-bootstrap";
 import { TestMap, NewCarousel } from "../";
 import { eventEmitter } from "../App";
@@ -21,10 +21,10 @@ import {
   Row,
   Col,
   Form,
-  FloatingLabel,
   Container,
   Button,
 } from "react-bootstrap";
+import Aos from "aos";
 
 const AllEventsNew = ({ eventsData }) => {
   const [userEvents, setUserEvents] = useState([]);
@@ -48,13 +48,16 @@ const AllEventsNew = ({ eventsData }) => {
   const scrollPosition = localStorage.getItem("scrollPosition");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  Aos.init();
+  
+  // Render when getting all events by event type
   useEffect(() => {
     if (filter === "") {
       dispatch(getAllEvents({ type: filter }));
     }
   }, [dispatch, filter]);
 
+  // Render when the user's location is set or changed
   useEffect(() => {
     const cityChangedListener = (data) => {
       setRerender(!rerender);
@@ -65,6 +68,7 @@ const AllEventsNew = ({ eventsData }) => {
     };
   }, [rerender]);
 
+  // dispatch the type, page and location to alleventsSlice
   useEffect(() => {
     if (storedCity && storedState) {
       const venue = {
@@ -96,6 +100,8 @@ const AllEventsNew = ({ eventsData }) => {
     }
   }, [dispatch, filter, page, latitude, longitude, storedCity, storedState]);
 
+
+  // Fetch user's saved events from Firebase or local storage
   useEffect(() => {
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
@@ -109,11 +115,10 @@ const AllEventsNew = ({ eventsData }) => {
         setUserEvents(savedEventIds || []);
       }
     };
-    // fetchEventsData();
     fetchUserEvents();
   }, []);
 
-  //handle add and remove event use icon
+    //handle add and remove event use icon
   const handleAddEvents = (eventId) => {
     if (auth.currentUser) {
       dispatch(handleEventAsync(eventId));
@@ -128,6 +133,7 @@ const AllEventsNew = ({ eventsData }) => {
     }
   };
 
+  // Save scroll position to local storage on scroll
   useEffect(() => {
     const handleScroll = () => {
       localStorage.setItem("scrollPosition", window.scrollY);
@@ -138,6 +144,7 @@ const AllEventsNew = ({ eventsData }) => {
     };
   }, []);
 
+  // Scroll to events container if scrollToEvents is true
   useEffect(() => {
     if (scrollToEvents) {
       const eventsContainer = document.getElementById("all-events-container");
@@ -146,11 +153,13 @@ const AllEventsNew = ({ eventsData }) => {
     }
   }, [scrollToEvents]);
 
+  // Handle filter change
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
     setPage(1);
   };
 
+  // Handle previous page navigation
   const handlePreviousPage = () => {
     const newPage = Math.max(page - 1, 1);
     setPage(newPage);
@@ -158,6 +167,7 @@ const AllEventsNew = ({ eventsData }) => {
     setScrollToEvents(true);
   };
 
+  // Handle next page navigation
   const handleNextPage = () => {
     const newPage = page + 1;
     setPage(newPage);
@@ -165,6 +175,7 @@ const AllEventsNew = ({ eventsData }) => {
     setScrollToEvents(true);
   };
 
+  // Handle page click
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
     navigate(`/?filter=${filter}&page=${pageNumber}`);
@@ -176,7 +187,8 @@ const AllEventsNew = ({ eventsData }) => {
     setHoveredEventId(eventId);
     dispatch(selectedHoveredEventId(eventId));
   };
-  // set state when hover off event card
+
+// Clear state when hovering off an event card
   const handleMouseLeave = () => {
     setHoveredEventId(null);
     dispatch(clearHoveredEventId());
@@ -243,7 +255,7 @@ const AllEventsNew = ({ eventsData }) => {
               <Container>
                 {events?.length ? (
                   events.map((event) => (
-                    <Row
+                    <Row data-aos="zoom-in"
                       xs={1}
                       md={2}
                       className="mb-4 bg-slategray transition"
@@ -255,7 +267,7 @@ const AllEventsNew = ({ eventsData }) => {
                         backgroundColor: "slategray",
                       }}
                     >
-                      <LinkContainer
+                      <LinkContainer 
                         to={{
                           pathname: `/events/${event.id}`,
                           search: `?filter=${filter}&page=${page}`,
@@ -308,6 +320,9 @@ const AllEventsNew = ({ eventsData }) => {
                                 ? solidStar
                                 : outlineStar
                             }
+                            className={`star-icon ${
+                              userEvents.includes(event.id) ? "active" : ""
+                            }`}
                           />
                         </Button>
 

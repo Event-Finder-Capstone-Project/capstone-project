@@ -24,6 +24,7 @@ import PrevNext from "./PrevNext";
 import { TestMap } from "../";
 import "../style/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import Aos from "aos";
 
 const SearchResults = ({eventsData}) => {
   const location = useLocation();
@@ -31,18 +32,28 @@ const SearchResults = ({eventsData}) => {
   const queryParams = new URLSearchParams(location.search);
   const filterParam = queryParams.get("filter");
   const pageParam = queryParams.get("page");
+  
+  // State for filter and page parameters
   const [filter, setFilter] = useState(filterParam || "");
   const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
+  
+  // State for user events and hovered event
   const [userEvents, setUserEvents] = useState([]);
   const [hoveredEventId, setHoveredEventId] = useState(null);
+  
+  // State for scrolling to events container
   const [scrollToEvents, setScrollToEvents] = useState(false);
+  
+  // Redux state and dispatch
   const searchState = useSelector((state) => state.search);
   const events = useSelector((state) => state.search.events);
   const savedEventIds = useSelector((state) => state.events);
   const dispatch = useDispatch();
   const totalEvents = useSelector((state) => state.search.totalEvents);
   const totalPages = Math.ceil(totalEvents / 8);
+  Aos.init();
 
+  // Fetch search results based on query, date range, filter, and page
   useEffect(() => {
     dispatch(
       getSearchResults({
@@ -60,12 +71,14 @@ const SearchResults = ({eventsData}) => {
     filter
   ]);
 
+  // Fetch all events if filter is empty
   useEffect(() => {
     if (filter === "") {
       dispatch(getAllEvents({ type: filter }));
     }
   }, [dispatch, filter]);
 
+  // Fetch user events from Firebase or local storage
   useEffect(() => {
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
@@ -82,8 +95,8 @@ const SearchResults = ({eventsData}) => {
     fetchUserEvents();
   }, []);
 
+  // Scroll to events container when scrollToEvents is true
   const eventsContainer = document.getElementById("resultsContainer");
-
   useEffect(() => {
     if (scrollToEvents) {
       if (eventsContainer) {
@@ -108,11 +121,13 @@ const SearchResults = ({eventsData}) => {
     }
   };
 
+  // Handle filter change and reset page to 1
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
     setPage(1);
   };
 
+  // Handle navigation to previous page
   const handlePreviousPage = () => {
     const newPage = Math.max(page - 1, 1);
     setPage(newPage);
@@ -120,6 +135,7 @@ const SearchResults = ({eventsData}) => {
     setScrollToEvents(true);
   };
 
+  // Handle navigation to next page
   const handleNextPage = () => {
     const newPage = page + 1;
     setPage(newPage);
@@ -127,25 +143,30 @@ const SearchResults = ({eventsData}) => {
     setScrollToEvents(true);
   };
 
+  // Handle navigation to a specific page
   const handlePageClick = (pageNumber) => {
     setPage(pageNumber);
     navigate(`/searchresults?filter=${filter}&page=${pageNumber}`);
     setScrollToEvents(true);
   };
 
+  // Handle selection of date range
   const handleSelectDateRange = (dateRange) => {
     dispatch(setDateRange(dateRange));
   };
 
+  // Handle mouse enter event on event card
   const handleMouseEnter = (eventId) => {
     setHoveredEventId(eventId);
     dispatch(selectedHoveredEventId(eventId));
   };
 
+  // Handle mouse leave event on event card
   const handleMouseLeave = () => {
     setHoveredEventId(null);
     dispatch(clearHoveredEventId());
   };
+
 
   return (
     <>
@@ -201,7 +222,7 @@ const SearchResults = ({eventsData}) => {
             <Container>
               {events?.length ? (
                 events.map((event) => (
-                  <Row
+                  <Row data-aos="zoom-in"
                     xs={1}
                     md={2}
                     onMouseEnter={() => handleMouseEnter(event.id)}
@@ -254,11 +275,14 @@ const SearchResults = ({eventsData}) => {
                           }}
                           onClick={() => handleAddEvents(event.id)}>
                           <FontAwesomeIcon
-                            icon={
-                              userEvents.includes(event.id)
-                                ? solidStar
-                                : outlineStar
-                            }
+                               icon={
+                                userEvents.includes(event.id)
+                                  ? solidStar
+                                  : outlineStar
+                              }
+                              className={`star-icon ${
+                                userEvents.includes(event.id) ? "active" : ""
+                              }`}
                           />
                         </Button>
                       <LinkContainer to={`/events/${event.id}`}>

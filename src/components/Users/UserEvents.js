@@ -120,7 +120,7 @@ const UserEvents = () => {
           : savedEvents.map((event) => (
               <li key={event.id}>
                 <h3>{event.title}</h3>
-                <p>Date: {event.datetime_utc}</p>
+                <p>Date: {event.datetime_local}</p>
                 <p>Venue: {event.venue?.name_v2}</p>
                 <button onClick={() => handleDeleteEvent(event.id)}>
                   Remove
