@@ -102,13 +102,7 @@ const CityFilter = () => {
 
   return (
     <>
-      <div
-        style={{
-          marginRight: ".5rem",
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
+      <div className="cityFilter">
         <Autocomplete
           style={{ height: "2rem", width: "150px" }}
           apiKey={process.env.REACT_APP_FIREBASE_API_KEY}
@@ -122,8 +116,13 @@ const CityFilter = () => {
 
         <Button
           variant="secondary"
+          className="cityFilterButton"
           size="sm"
-          style={{ width: "2rem", height: "2rem", marginRight: "1rem" }}
+          style={{
+            width: "2rem",
+            height: "2rem",
+            marginRight: "1rem",
+          }}
           onClick={askForLocation}
         >
           <FontAwesomeIcon icon={faLocationDot} />

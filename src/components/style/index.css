@@ -12,6 +12,39 @@
   padding: 0.5rem;
   z-index: 1;
 }
+
+@media (max-width: 375px) {
+  .input-container {
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+  }
+
+  .datePicker {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    z-index: 1;
+    width: 120px;
+  }
+  .filter {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5rem;
+    margin-bottom: 0rem;
+  }
+  .calendarInput {
+    width: 150px;
+  }
+  .filterDropdown {
+    width: 150px;
+    margin-right: 1.35rem;
+  }
+  .clearButton {
+    width: 100%;
+  }
+}
+
 @media (min-width: 400px) {
   .google-map-container {
     height: 400px;
@@ -19,27 +52,35 @@
   }
 }
 
+@media (max-width: 454px) {
+  .removeEventButton {
+    width: 100px;
+  }
+  .searchComponent {
+    margin-left: 0rem;
+  }
+}
+@media (min-width: 455px) {
+  .removeEventButton {
+    width: 100px;
+  }
+  .searchComponent {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    width: 200px;
+  }
+}
+
+@media (min-width: 675px) {
+  .cityFilterButton {
+    margin-top: -0.25rem;
+  }
+}
+
 @media (min-width: 770px) {
   .google-map-container {
     height: 100vh;
     width: 100%;
-    position: sticky;
-    top: 0;
-  }
-}
-
-@media (min-width: 990px) {
-  .google-map-container {
-    height: 100vh;
-    width: 100%;
-    position: sticky;
-    top: 0;
-  }
-}
-
-@media (min-width: 770px) {
-  .stickyMaps {
-    height: 100vh;
     position: sticky;
     top: 0;
   }
@@ -51,15 +92,53 @@
   justify-content: center;
 }
 
-@media (min-width: 400px) {
+@media (max-width: 770px) {
+  .input-container {
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+  }
+  .datePicker {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    z-index: 1;
+    width: 303px;
+  }
+  .calendarInput {
+    display: flex;
+    flex-direction: row;
+    width: 175px;
+  }
   .filter {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    flex-direction: row;
+
+    margin-top: 3rem;
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+  }
+  .filterDropdown {
+    width: 200px;
+    margin-right: 1.35rem;
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 770px) {
+  .stickyMaps {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+  .input-container {
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+  }
+  .filterDropdown {
+    width: 150px;
+    margin-right: 1.35rem;
+  }
   .filter {
     display: flex;
     flex-direction: row;
@@ -67,19 +146,21 @@
   }
 }
 
-@media (min-width: 400px) {
-  .input-container {
-    display: flex;
-    flex-direction: column;
-    width: 200px;
+@media (min-width: 990px) {
+  .google-map-container {
+    height: 100vh;
+    width: 100%;
+    position: sticky;
+    top: 0;
   }
-}
-
-@media (min-width: 768px) {
   .input-container {
     display: flex;
     flex-direction: row;
     width: 400px;
+  }
+  .filterDropdown {
+    width: 150px;
+    margin-right: 1.35rem;
   }
 }
 
@@ -108,26 +189,74 @@
   font-size: 22px;
 }
 
-@media (min-width: 1198px) {
+@media (min-width: 1200px) {
   .searchContainer {
     display: flex;
     flex-direction: row;
     justify-content: center;
   }
+  .userItems {
+    align-items: flex-start;
+  }
 }
 
-@media (max-width: 675px) {
+@media (max-width: 490px) {
   .navbar {
     display: flex;
     flex-direction: column;
+  }
+  .searchComponent {
+    margin-left: 0rem;
+  }
+  .navBrand {
+    margin-left: 0rem;
+  }
+  .cityFilter {
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: row;
+  }
+  .navbar-links {
+    display: flex;
+    flex-direction: row;
+    margin-right: 1rem;
+  }
+  .userItems {
+    columns: 1;
+  }
+}
+
+@media (max-width: 675px) {
+  .cityFilter {
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: row;
+    order: 1;
+  }
+
+  .navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.5rem 1rem;
   }
   .searchBars {
     margin-bottom: 1rem;
     display: flex;
     flex-direction: row;
   }
+  .navbarBreak {
+    flex-basis: 100%;
+    height: 0;
+  }
   .navBrand {
     margin-left: 0rem;
+  }
+  .searchComponent {
+    margin-right: 0rem;
+    margin-left: 0.2rem;
+    width: 200px;
+    order: 1;
   }
 }
 
@@ -136,7 +265,11 @@
     display: flex;
     flex-direction: row;
   }
-
+  .searchComponent {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    width: 200px;
+  }
   .navBrand {
     margin-left: 2rem;
     margin-right: 2rem;

@@ -3,16 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { auth, db } from "../../firebase";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { getAllEvents } from "../../store/allEventsSlice";
-import { selectedHoveredEventId, clearHoveredEventId } from "../../store/hoverSlice";
-import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import {
-  Nav,
-  Row,
-  Container,
-  Button,
-  Col,
-  Form,
-} from "react-bootstrap";
+  selectedHoveredEventId,
+  clearHoveredEventId,
+} from "../../store/hoverSlice";
+import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
+import { Nav, Row, Container, Button, Col, Form } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
@@ -26,24 +22,24 @@ import "../style/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import Aos from "aos";
 
-const SearchResults = ({eventsData}) => {
+const SearchResults = ({ eventsData }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const filterParam = queryParams.get("filter");
   const pageParam = queryParams.get("page");
-  
+
   // State for filter and page parameters
   const [filter, setFilter] = useState(filterParam || "");
   const [page, setPage] = useState(pageParam ? parseInt(pageParam) : 1);
-  
+
   // State for user events and hovered event
   const [userEvents, setUserEvents] = useState([]);
   const [hoveredEventId, setHoveredEventId] = useState(null);
-  
+
   // State for scrolling to events container
   const [scrollToEvents, setScrollToEvents] = useState(false);
-  
+
   // Redux state and dispatch
   const searchState = useSelector((state) => state.search);
   const events = useSelector((state) => state.search.events);
@@ -60,16 +56,10 @@ const SearchResults = ({eventsData}) => {
         query: searchState.query,
         dateRange: searchState.dateRange,
         page: page,
-        type: filter
+        type: filter,
       })
     );
-  }, [
-    dispatch,
-    searchState.query,
-    searchState.dateRange,
-    page,
-    filter
-  ]);
+  }, [dispatch, searchState.query, searchState.dateRange, page, filter]);
 
   // Fetch all events if filter is empty
   useEffect(() => {
@@ -167,7 +157,6 @@ const SearchResults = ({eventsData}) => {
     dispatch(clearHoveredEventId());
   };
 
-
   return (
     <>
       <h1>Search Results</h1>
@@ -175,14 +164,7 @@ const SearchResults = ({eventsData}) => {
         <Container>
           <DatePicker onSelectDateRange={handleSelectDateRange} />
         </Container>
-        <Container
-          className="filter"
-          style={{
-            marginTop: ".3rem",
-            marginBottom: "1rem",
-            marginLeft: ".5rem",
-          }}
-        >
+        <Container className="filter">
           <Form.Label
             style={{
               width: "100px",
@@ -195,7 +177,8 @@ const SearchResults = ({eventsData}) => {
             Event Type
           </Form.Label>
           <Form.Select
-            style={{ height: "38px", minWidth: "100px", maxWidth: "200px" }}
+            style={{ height: "38px" }}
+            className="filterDropdown"
             variant="light"
             value={filter}
             onChange={(e) => {
@@ -222,7 +205,8 @@ const SearchResults = ({eventsData}) => {
             <Container>
               {events?.length ? (
                 events.map((event) => (
-                  <Row data-aos="zoom-in"
+                  <Row
+                    data-aos="zoom-in"
                     xs={1}
                     md={2}
                     onMouseEnter={() => handleMouseEnter(event.id)}
@@ -251,10 +235,10 @@ const SearchResults = ({eventsData}) => {
                     <Col
                       style={{
                         backgroundColor:
-                            hoveredEventId === event.id
-                              ? "darkorange"
-                              : "slategray",
-                          transition: "background-color 0.3s ease-in-out",
+                          hoveredEventId === event.id
+                            ? "darkorange"
+                            : "slategray",
+                        transition: "background-color 0.3s ease-in-out",
                         maxWidth: "100%",
                         maxHeight: "100%",
                         paddingBottom: ".5rem",
@@ -267,24 +251,25 @@ const SearchResults = ({eventsData}) => {
                         justifyContent: "space-between",
                       }}
                     >
-                       <Button
-                          variant="outline"
-                          style={{
-                            border: "none",
-                            fontSize: "32px",
-                          }}
-                          onClick={() => handleAddEvents(event.id)}>
-                          <FontAwesomeIcon
-                               icon={
-                                userEvents.includes(event.id)
-                                  ? solidStar
-                                  : outlineStar
-                              }
-                              className={`star-icon ${
-                                userEvents.includes(event.id) ? "active" : ""
-                              }`}
-                          />
-                        </Button>
+                      <Button
+                        variant="outline"
+                        style={{
+                          border: "none",
+                          fontSize: "32px",
+                        }}
+                        onClick={() => handleAddEvents(event.id)}
+                      >
+                        <FontAwesomeIcon
+                          icon={
+                            userEvents.includes(event.id)
+                              ? solidStar
+                              : outlineStar
+                          }
+                          className={`star-icon ${
+                            userEvents.includes(event.id) ? "active" : ""
+                          }`}
+                        />
+                      </Button>
                       <LinkContainer to={`/events/${event.id}`}>
                         <Nav.Link>
                           <h4

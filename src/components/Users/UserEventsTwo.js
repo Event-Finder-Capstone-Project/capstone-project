@@ -103,6 +103,19 @@ const UserEventsTwo = () => {
     // Update the local state to reflect the removal
     setLoginUserEvents(updatedEvents);
   };
+  function formatDate(dateString) {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    const formattedDate = new Date(dateString).toLocaleDateString(
+      undefined,
+      options
+    );
+    const optionsTime = { hour: "numeric", minute: "numeric", hour12: true };
+    const formattedTime = new Date(dateString).toLocaleTimeString(
+      undefined,
+      optionsTime
+    );
+    return `${formattedDate} at ${formattedTime}`;
+  }
 
   return (
     <div>
@@ -111,26 +124,31 @@ const UserEventsTwo = () => {
       </h1>
       <Container>
         <Row xs={1} md={1} lg={1} xl={2} className="user-events-container">
-          <Row xs={2} md={2} lg={2} xl={1}>
+          <Row className="userItems" xs={2} md={2} lg={2} xl={1}>
             {user
               ? loginUserEvents.map((event) => (
-                  <div style={{ display: "flex", alignItems: "stretch" }}>
-                    <Container to={`/events/${event.id}`}
+                  <div>
+                    <Container
+                      to={`/events/${event.id}`}
                       style={{
                         marginBottom: "1rem",
                         columnGap: "1rem",
                         backgroundColor: "slategray",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
                       }}
                       key={event.id}
                     >
                       <LinkContainer to={`/events/${event.id}`}>
-                      <Nav.Link>
-                      <h3>{event.title}</h3>
-                      <h5>{formatDate(event.datetime_local)}</h5>
-                      <h6>Venue: {event.venue?.name_v2}</h6>
-                      </Nav.Link>
+                        <Nav.Link>
+                          <h3>{event.title}</h3>
+                          <h5>{formatDate(event.datetime_local)}</h5>
+                          <h6>Venue: {event.venue?.name_v2}</h6>
+                        </Nav.Link>
                       </LinkContainer>
                       <Button
+                        className="removeEventButton"
                         style={{
                           backgroundColor: "darkorange",
                           color: "black",
@@ -145,12 +163,15 @@ const UserEventsTwo = () => {
                   </div>
                 ))
               : savedEvents.map((event) => (
-                  <div style={{ display: "flex", alignItems: "stretch" }}>
+                  <div style={{ display: "flex" }}>
                     <Container
                       style={{
                         marginBottom: "1rem",
                         columnGap: "1rem",
                         backgroundColor: "slategray",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
                       }}
                       key={event.id}
                     >
