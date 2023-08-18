@@ -14,24 +14,31 @@ const SingleEvent = () => {
   const { id } = useParams();
   const [userEvents, setUserEvents] = useState([]);
   const savedEventIds = useSelector((state) => state.events);
+  
+  // Get reference to the event container element
   const eventContainer = document.getElementById("single-event-container");
+  
+  // Get location and query parameters from URL
   const location = useLocation();
-
   const queryParams = new URLSearchParams(location.search);
   const filter = queryParams.get("filter");
   const page = queryParams.get("page");
 
+  // Fetch single event details and scroll to event container
   useEffect(() => {
     dispatch(getSingleEvent(id));
     if (eventContainer) {
-    eventContainer.scrollIntoView({ behavior: "smooth" });
+      eventContainer.scrollIntoView({ behavior: "smooth" });
     }
   }, [dispatch, id, eventContainer]);
 
+  // Get single event details from Redux state
   const event = useSelector((state) => state.singleEvent.singleEvent);
 
-  const formatDate = (datetime) => {
-    const eventDate = new Date(datetime);
+
+  // Format the event date and time
+  const formatDate = (datetime_utc) => {
+    const eventDate = new Date(datetime_utc);
     const formattedDate = eventDate.toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
@@ -43,6 +50,8 @@ const SingleEvent = () => {
     return `${formattedDate} at ${formattedTime}`;
   };
   
+
+  // Fetch user's saved events from Firebase or local storage
   useEffect(() => {
     const fetchUserEvents = async () => {
       if (auth.currentUser) {
@@ -59,6 +68,7 @@ const SingleEvent = () => {
     fetchUserEvents();
   }, []);
 
+  // Handle adding/removing an event to/from user's collection
   const handleAddEvents = async (eventId) => {
     if (event) {
       try {
@@ -80,6 +90,7 @@ const SingleEvent = () => {
     }
   };
 
+  // Handle clicking on a link to the event venue
   const handleLink = () => {
     window.open(event.venue.url);
   };
