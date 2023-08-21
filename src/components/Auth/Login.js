@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, googleProvider,db } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { signInWithEmailAndPassword, signInWithPopup ,updateProfile,GoogleAuthProvider} from "firebase/auth";
 import { doc, setDoc,getDoc } from "firebase/firestore";
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";

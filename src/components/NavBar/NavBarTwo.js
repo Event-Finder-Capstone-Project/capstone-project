@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../../firebase";
-import { Search, SingleEvent, LightDark } from "../index";
+import { Search, LightDark } from "../index";
 import {
-  Container,
   Nav,
   Navbar,
   Image,
