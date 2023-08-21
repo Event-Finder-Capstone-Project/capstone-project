@@ -17,7 +17,6 @@ import {
   Today,
   Weekend,
   NavBarTwo,
-  LightDark,
 } from "./";
 import { setCityState, setLocation } from "../store/locationSlice";
 import mitt from "mitt";
@@ -71,7 +70,7 @@ function App() {
     } else if (city) {
       dispatch(setCityState({ city, state }));
     }
-  }, [dispatch, city]);
+  }, [dispatch, city, state]);
 
   return (
     <Router>
