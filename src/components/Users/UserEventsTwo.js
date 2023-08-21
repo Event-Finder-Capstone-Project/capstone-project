@@ -5,7 +5,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { handleEvents, handleEventAsync } from "../../store/eventsSlice";
 import { getSingleEvent } from "../../store/singleEventSlice";
 import BigCalendar from "./BigCalendar";
-import { Button, Container, Row, Col, Nav } from "react-bootstrap";
+import { Button, Container, Row, Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
 // Define the UserEventsTwo component

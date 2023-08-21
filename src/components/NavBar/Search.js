@@ -3,7 +3,7 @@ import SearchBar from "./SearchComponents/SearchBar";
 import { useDispatch } from "react-redux";
 import { setQuery } from "../../store/searchSlice";
 import { useNavigate } from "react-router-dom";
-import { Button, Container } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "../style/index.css";

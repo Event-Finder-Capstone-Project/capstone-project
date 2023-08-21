@@ -1,5 +1,4 @@
 import React from "react";
-import { InputGroup, Form } from "react-bootstrap";
 import "../../style/index.css";
 
 const SearchBar = ({ onSubmit }) => {
