@@ -307,12 +307,18 @@ h1 {
 }
 
 .star-icon.active {
-  transform: scale(1.2); 
+  transform: scale(1.2);
+}
+
+.bg {
+  min-width: 100%;
+  min-height: 100%;
 }
 
 body {
-  background-image: url('../../../public/city.png');
+  background-image: url("../../../public/skyline2.png");
   background-repeat: no-repeat;
-  background-position: center bottom;
+  background-position: bottom;
   background-attachment: fixed;
+  background-size: contain;
 }
