@@ -151,7 +151,7 @@ const NavBarTwo = () => {
                           Login
                         </NavDropdown.Item>
 
-                        <NavDropdown.Item href="/today" className="navlink">
+                        <NavDropdown.Item href="/signup" className="navlink">
                           Signup
                         </NavDropdown.Item>
                         <LightDark />
