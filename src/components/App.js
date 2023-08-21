@@ -17,6 +17,7 @@ import {
   Today,
   Weekend,
   NavBarTwo,
+  LightDark,
 } from "./";
 import { setCityState, setLocation } from "../store/locationSlice";
 import mitt from "mitt";
