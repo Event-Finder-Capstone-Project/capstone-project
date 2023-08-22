@@ -14,10 +14,10 @@ const SingleEvent = () => {
   const { id } = useParams();
   const [userEvents, setUserEvents] = useState([]);
   const savedEventIds = useSelector((state) => state.events);
-  
+
   // Get reference to the event container element
   const eventContainer = document.getElementById("single-event-container");
-  
+
   // Get location and query parameters from URL
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -35,7 +35,6 @@ const SingleEvent = () => {
   // Get single event details from Redux state
   const event = useSelector((state) => state.singleEvent.singleEvent);
 
-
   // Format the event date and time
   const formatDate = (datetime_utc) => {
     const eventDate = new Date(datetime_utc);
@@ -49,7 +48,6 @@ const SingleEvent = () => {
     });
     return `${formattedDate} at ${formattedTime}`;
   };
-  
 
   // Fetch user's saved events from Firebase or local storage
   useEffect(() => {
@@ -99,9 +97,16 @@ const SingleEvent = () => {
     <Container
       style={{ marginTop: "3rem" }}
       fluid="lg"
-      className="event-details">
+      className="event-details"
+    >
       {event ? (
-        <Row xs={1} md={2} lg={2} className="single-event-container" id="single-event-container">
+        <Row
+          xs={1}
+          md={2}
+          lg={2}
+          className="single-event-container"
+          id="single-event-container"
+        >
           <Col>
             <Image
               src={event.performers[0].image}
@@ -122,7 +127,7 @@ const SingleEvent = () => {
                   </Col>
                   <Col>
                     <h5>
-                      {event.venue.address}
+                      <p>{event.venue.address}</p>
                       {event.venue.city}, {event.venue.state}
                     </h5>
                   </Col>
@@ -136,8 +141,16 @@ const SingleEvent = () => {
                       This event, organized by {event.venue.name_v2} is a{" "}
                       {event.type} featuring{" "}
                       {event.performers.length <= 1
-                        ? `${event.performers.name}`
-                        : event.performers.map((e) => `${e.name}, `)}
+                        ? `${event.performers[0].name}`
+                        : event.performers.map((e, index) => {
+                            if (index === 0) {
+                              return e.name;
+                            } else if (index === event.performers.length - 1) {
+                              return ` and ${e.name}`;
+                            } else {
+                              return `${e.name}, `;
+                            }
+                          })}
                       . Come enjoy this grand experience, bring your friends, or
                       don't! Take yourself out on a date! It'll be a blast,
                       we're sure. Tickets can be purchased through the link
@@ -151,7 +164,8 @@ const SingleEvent = () => {
                     <Button
                       style={{ marginRight: "1rem", marginBottom: "1rem" }}
                       variant="secondary"
-                      onClick={() => handleAddEvents(event.id)}>
+                      onClick={() => handleAddEvents(event.id)}
+                    >
                       Remove Event
                     </Button>
                   </>
@@ -159,7 +173,8 @@ const SingleEvent = () => {
                   <Button
                     style={{ marginRight: "1rem", marginBottom: "1rem" }}
                     variant="secondary"
-                    onClick={() => handleAddEvents(event.id)}>
+                    onClick={() => handleAddEvents(event.id)}
+                  >
                     Add Event
                   </Button>
                 )}
@@ -167,11 +182,12 @@ const SingleEvent = () => {
                 <Button
                   style={{ marginRight: "1rem", marginBottom: "1rem" }}
                   variant="secondary"
-                  onClick={handleLink}>
+                  onClick={handleLink}
+                >
                   Buy Tickets Here
                 </Button>
-                <BackButton page={page} filter={filter}/>
-                <ShareEvent eventId={event.id}/>
+                <BackButton page={page} filter={filter} />
+                <ShareEvent eventId={event.id} />
               </div>
             </Col>
           ) : null}
