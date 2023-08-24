@@ -93,6 +93,44 @@ const SingleEvent = () => {
     window.open(event.venue.url);
   };
 
+  const eventTypeMapping = {
+    pga: "sporting event",
+    minor_league_baseball: "sporting event",
+    extreme_sports: "extreme sporting event",
+    sports: "sporting event",
+    nfl: "sporting event",
+    wnba: "sporting event",
+    mlb: "sporting event",
+    ncaa_football: "sporting event",
+    mls: "sporting event",
+    tennis: "sporting event",
+    olympic_sports: "Olympic sporting event",
+    european_soccer: "sporting event",
+    soccer: "sporting event",
+    horse_racing: "sporting event",
+    rodeo: "sporting event",
+    auto_racing: "auto event",
+    nascar: "auto event",
+    monster_truck: "monster truck event",
+    minor_league_hockey: "sporting event",
+    womens_college_volleyball: "sporting event",
+    national_womens_soccer: "sporting event",
+    football: "sporting event",
+
+    dance_performance_tour: "dance performance",
+    
+    theater: "theater performance",
+    broadway_tickets_national: "broadway performance",
+    cirque_du_soleil: "performance",
+    
+    concert: "concert",
+    music_festival: "concert",
+    classical_orchestral_instrumental: "concert",
+    classical: "concert",
+
+    family: "family-friendly event"
+  };
+
   return (
     <Container
       style={{ marginTop: "3rem" }}
@@ -139,14 +177,12 @@ const SingleEvent = () => {
 
                     <p>
                       This event, organized by {event.venue.name_v2} is a{" "}
-                      {event.type} featuring{" "}
-                      {event.performers.length <= 1
-                        ? `${event.performers[0].name}`
+                      {eventTypeMapping[event.type] || event.type} featuring{" "}
+                      {event.performers.length === 1
+                        ? event.performers[0].name
                         : event.performers.map((e, index) => {
-                            if (index === 0) {
-                              return e.name;
-                            } else if (index === event.performers.length - 1) {
-                              return ` and ${e.name}`;
+                            if (index === event.performers.length - 1) {
+                              return `and ${e.name}`;
                             } else {
                               return `${e.name}, `;
                             }
