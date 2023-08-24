@@ -93,6 +93,44 @@ const SingleEvent = () => {
     window.open(event.venue.url);
   };
 
+  const eventTypeMapping = {
+    pga: "sporting event",
+    minor_league_baseball: "sporting event",
+    extreme_sports: "extreme sporting event",
+    sports: "sporting event",
+    nfl: "sporting event",
+    wnba: "sporting event",
+    mlb: "sporting event",
+    ncaa_football: "sporting event",
+    mls: "sporting event",
+    tennis: "sporting event",
+    olympic_sports: "Olympic sporting event",
+    european_soccer: "sporting event",
+    soccer: "sporting event",
+    horse_racing: "sporting event",
+    rodeo: "sporting event",
+    auto_racing: "auto event",
+    nascar: "auto event",
+    monster_truck: "monster truck event",
+    minor_league_hockey: "sporting event",
+    womens_college_volleyball: "sporting event",
+    national_womens_soccer: "sporting event",
+    football: "sporting event",
+
+    dance_performance_tour: "dance performance",
+    
+    theater: "theater performance",
+    broadway_tickets_national: "broadway performance",
+    cirque_du_soleil: "performance",
+    
+    concert: "concert",
+    music_festival: "concert",
+    classical_orchestral_instrumental: "concert",
+    classical: "concert",
+
+    family: "family-friendly event"
+  };
+
   return (
     <Container
       style={{ marginTop: "3rem" }}
@@ -138,17 +176,17 @@ const SingleEvent = () => {
                     <h5>About this Event</h5>
 
                     <p>
-                    This event, organized by {event.venue.name_v2} is a{" "}
-  {event.type} featuring{" "}
-  {event.performers.length === 1
-    ? event.performers[0].name
-    : event.performers.map((e, index) => {
-        if (index === event.performers.length - 1) {
-          return `and ${e.name}`;
-        } else {
-          return `${e.name}, `;
-        }
-      })}
+                      This event, organized by {event.venue.name_v2} is a{" "}
+                      {eventTypeMapping[event.type] || event.type} featuring{" "}
+                      {event.performers.length === 1
+                        ? event.performers[0].name
+                        : event.performers.map((e, index) => {
+                            if (index === event.performers.length - 1) {
+                              return `and ${e.name}`;
+                            } else {
+                              return `${e.name}, `;
+                            }
+                          })}
                       . Come enjoy this grand experience, bring your friends, or
                       don't! Take yourself out on a date! It'll be a blast,
                       we're sure. Tickets can be purchased through the link
