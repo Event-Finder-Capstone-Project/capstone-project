@@ -138,19 +138,17 @@ const SingleEvent = () => {
                     <h5>About this Event</h5>
 
                     <p>
-                      This event, organized by {event.venue.name_v2} is a{" "}
-                      {event.type} featuring{" "}
-                      {event.performers.length <= 1
-                        ? `${event.performers[0].name}`
-                        : event.performers.map((e, index) => {
-                            if (index === 0) {
-                              return e.name;
-                            } else if (index === event.performers.length - 1) {
-                              return ` and ${e.name}`;
-                            } else {
-                              return `${e.name}, `;
-                            }
-                          })}
+                    This event, organized by {event.venue.name_v2} is a{" "}
+  {event.type} featuring{" "}
+  {event.performers.length === 1
+    ? event.performers[0].name
+    : event.performers.map((e, index) => {
+        if (index === event.performers.length - 1) {
+          return `and ${e.name}`;
+        } else {
+          return `${e.name}, `;
+        }
+      })}
                       . Come enjoy this grand experience, bring your friends, or
                       don't! Take yourself out on a date! It'll be a blast,
                       we're sure. Tickets can be purchased through the link
